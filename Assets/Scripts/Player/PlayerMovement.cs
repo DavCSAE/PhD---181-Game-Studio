@@ -46,12 +46,12 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnEnable()
     {
-
+        PlayerEvents.JumpEvent += Jump; 
     }
 
     private void OnDisable()
     {
-
+        PlayerEvents.JumpEvent -= Jump;
     }
 
     private void Start()
@@ -230,12 +230,6 @@ public class PlayerMovement : MonoBehaviour
             if (player.rb.velocity != Vector3.zero)
             {
                 isMoving = true;
-
-                // Start run animation if moving on ground
-                if (isGrounded)
-                {
-                    player.animations.SetRunningState(true);
-                }
             }
             else
             {

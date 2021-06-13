@@ -93,9 +93,13 @@ public class InputManager : MonoBehaviour, PlayerControls.IPlayerActions
     // Space key
     public void OnJump(InputAction.CallbackContext context)
     {
+        print("jump1");
+
         if (context.started)
         {
+            print("jump2");
             jump = true;
+            PlayerEvents.JumpFunction();
             //Player.Singleton.movement.Jump();
         }
         else if (context.canceled)

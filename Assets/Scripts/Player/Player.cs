@@ -27,6 +27,8 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Cursor.visible = false;
+
         // PLAYER COMPONENTS
         movement = GetComponent<PlayerMovement>();
         movement.player = this;

@@ -10,7 +10,6 @@ public class PlayerAnimations : MonoBehaviour
     Animator anim;
 
     // STATES
-    bool isRunning;
 
     // Start is called before the first frame update
     void Start()
@@ -22,36 +21,44 @@ public class PlayerAnimations : MonoBehaviour
     void Update()
     {
         HandleRunAnimation();
+        HandleJumpAnimation();
+        HandleFallingAnimation();
     }
 
     void HandleRunAnimation()
     {
         if (player.movement.isGrounded && player.movement.isMoving)
         {
-            SetRunningState(true);
-        }
-        else if(isRunning)
-        {
-            SetRunningState(false);
-        }
-    }
-
-    public void SetRunningState(bool newState)
-    {
-        isRunning = newState;
-
-        if (isRunning)
-        {
             anim.SetBool("isRunning", true);
         }
-        else if (!isRunning)
+        else
         {
             anim.SetBool("isRunning", false);
         }
     }
 
-    public bool GetRunningState()
+    void HandleJumpAnimation()
     {
-        return isRunning;
+        if (player.movement.isJumping)
+        {
+            anim.SetBool("isJumping", true);
+        }
+        else
+        {
+            anim.SetBool("isJumping", false);
+        }
     }
+
+    void HandleFallingAnimation()
+    {
+        if (player.movement.isFalling)
+        {
+            anim.SetBool("isFalling", true);
+        }
+        else
+        {
+            anim.SetBool("isFalling", false);
+        }
+    }
+
 }
