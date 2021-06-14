@@ -183,7 +183,7 @@ public class PlayerMovement : MonoBehaviour
             player.rb.velocity = new Vector3(player.rb.velocity.x, 0, player.rb.velocity.z);
 
             // If landed on platform
-            if (false)
+            if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Moving Platform"))
             {
                 // Set player's parent object to the platform that they landed on
                 transform.parent = hit.collider.transform;
