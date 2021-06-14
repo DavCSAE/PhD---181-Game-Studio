@@ -170,6 +170,8 @@ public class PlayerMovement : MonoBehaviour
             if (onPlatform)
             {
                 onPlatform = false;
+
+                transform.localScale = Vector3.one;
             }
             
         }
@@ -449,6 +451,8 @@ public class PlayerMovement : MonoBehaviour
         if (onPlatform)
         {
             onPlatform = false;
+
+            transform.localScale = Vector3.one;
         }
     }
 
