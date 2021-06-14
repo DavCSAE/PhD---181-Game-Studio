@@ -44,7 +44,7 @@ public class PlayerMovement : MonoBehaviour
     public bool isJumping;
     public bool isFalling;
 
-    // Platform state
+    // Platform movement
     public bool onPlatform;
 
     private void OnEnable()
@@ -162,7 +162,7 @@ public class PlayerMovement : MonoBehaviour
             {
                 transform.parent = null;
 
-                onPlatform = false;
+                //onPlatform = false;
 
                 print("off PLatform!");
             }
@@ -171,7 +171,10 @@ public class PlayerMovement : MonoBehaviour
             {
                 onPlatform = false;
 
+                transform.parent = null;
+
                 transform.localScale = Vector3.one;
+
             }
             
         }
@@ -198,8 +201,11 @@ public class PlayerMovement : MonoBehaviour
             // Remove any 'y' velocity from player's velocity
             player.rb.velocity = new Vector3(player.rb.velocity.x, 0, player.rb.velocity.z);
 
+            // Is the hit object a moving platform?
+            bool hitMovingPlatform = (hit.collider.gameObject.layer == LayerMask.NameToLayer("Moving Platform"));
+
             // If landed on platform
-            if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Moving Platform") && !onPlatform)
+            if (hitMovingPlatform && !onPlatform)
             {
                 // Set player's parent object to the platform that they landed on
                 transform.parent = hit.collider.transform;
@@ -207,6 +213,11 @@ public class PlayerMovement : MonoBehaviour
                 print("onPlatform!");
 
                 onPlatform = true;
+            }
+            else if (!hitMovingPlatform && onPlatform)
+            {
+                onPlatform = false;
+                transform.parent = null;
             }
             
         }
