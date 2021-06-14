@@ -110,6 +110,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6695307095623971480}
+  - component: {fileID: 1144505454}
   m_Layer: 10
   m_Name: Dynamic Bones
   m_TagString: Untagged
@@ -134,6 +135,21 @@ Transform:
   m_Father: {fileID: 5912218971857306104}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1144505454
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1337952999155903599}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04313b301361793438aeabb0334e9c16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tailBone: {fileID: 8952959540315464100}
+  earBoneLeft: {fileID: 8435009449366322657}
+  earBoneRight: {fileID: 1101789100433490774}
 --- !u!1 &1519134674625836903
 GameObject:
   m_ObjectHideFlags: 0
@@ -574,7 +590,8 @@ PrefabInstance:
       propertyPath: m_LocalRotation.y
       value: 0.02357127
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5866666021909216657, guid: 61470f16c9a23b245aa7f05315a17323, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 61470f16c9a23b245aa7f05315a17323, type: 3}
 --- !u!4 &7109153630534839732 stripped
 Transform:

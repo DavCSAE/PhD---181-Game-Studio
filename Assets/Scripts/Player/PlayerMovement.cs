@@ -44,6 +44,9 @@ public class PlayerMovement : MonoBehaviour
     public bool isJumping;
     public bool isFalling;
 
+    // Platform state
+    public bool onPlatform;
+
     private void OnEnable()
     {
         PlayerEvents.JumpEvent += Jump; 
@@ -152,12 +155,23 @@ public class PlayerMovement : MonoBehaviour
                 player.animations.Flapped();
             }
             */
+            print("in air");
 
             // Release Plaftorm
             if (transform.parent != null)
             {
                 transform.parent = null;
+
+                onPlatform = false;
+
+                print("off PLatform!");
             }
+
+            if (onPlatform)
+            {
+                onPlatform = false;
+            }
+            
         }
 
         // If player is now on ground
@@ -183,11 +197,16 @@ public class PlayerMovement : MonoBehaviour
             player.rb.velocity = new Vector3(player.rb.velocity.x, 0, player.rb.velocity.z);
 
             // If landed on platform
-            if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Moving Platform"))
+            if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Moving Platform") && !onPlatform)
             {
                 // Set player's parent object to the platform that they landed on
                 transform.parent = hit.collider.transform;
+
+                print("onPlatform!");
+
+                onPlatform = true;
             }
+            
         }
     }
 
@@ -425,6 +444,11 @@ public class PlayerMovement : MonoBehaviour
         {
             // Remove platform from being player's parent object
             transform.parent = null;
+        }
+
+        if (onPlatform)
+        {
+            onPlatform = false;
         }
     }
 
