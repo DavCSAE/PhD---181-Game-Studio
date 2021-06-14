@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Shade Body (Material)
+  m_Name: Shade Enemy Body
   m_Shader: {fileID: -6465566751694194690, guid: 8ef6df79fc79d6b4785643fc9ef5517c, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
@@ -122,7 +122,7 @@ Material:
     - _ZWrite: 1
     m_Colors:
     - Color_1f17025a139847db8b49078e49043d36: {r: 0, g: 0, b: 0, a: 0}
-    - Color_917be5cb65e74f8d9a4b4b91625ad214: {r: 0.11372549, g: 0.023529412, b: 0.5764706, a: 0}
+    - Color_917be5cb65e74f8d9a4b4b91625ad214: {r: 0.14105372, g: 0.023529401, b: 0.5764706, a: 0}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
