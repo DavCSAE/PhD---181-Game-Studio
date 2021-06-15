@@ -4,5 +4,11 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/Dialogue System/DialogueScene.unity
+    guid: 1406a1917b3243a46bbacf0bf2d9dfcb
+  - enabled: 1
+    path: Assets/Scenes/Character Controller Testing/CharacterControllerTest.unity
+    guid: 7e065a18225dbee4b8093ee649a1b67d
   m_configObjects: {}
