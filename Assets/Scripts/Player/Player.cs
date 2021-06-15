@@ -27,7 +27,7 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Cursor.visible = false;
+        
 
         // PLAYER COMPONENTS
         movement = GetComponent<PlayerMovement>();
@@ -50,6 +50,15 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        CheckIfPlayerFell();
+    }
 
+    void CheckIfPlayerFell()
+    {
+        if (transform.position.y < -20f)
+        {
+            Vector3 respawnPos = new Vector3(0, 2, 0);
+            transform.position = respawnPos;
+        }
     }
 }
