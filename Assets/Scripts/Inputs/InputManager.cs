@@ -54,12 +54,12 @@ public class InputManager : MonoBehaviour, PlayerControls.IPlayerActions
 
     void Start()
     {
-        //DisableInputs();
+        DisableInputs();
     }
 
     public void EnableInputs()
     {
-        //playerControls.Enable();
+        playerControls.Enable();
     }
 
     public void DisableInputs()
