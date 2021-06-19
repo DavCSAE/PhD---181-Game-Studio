@@ -9,7 +9,7 @@ public class PlayerEvents : MonoBehaviour
     public static event Jump JumpEvent;
     // Function to do end of game cutscene
     // Function is 'static' - accessible from anywhere
-    public static void JumpFunction()
+    public static void TriggerJumpEvent()
     {
         // Make sure event has subscribers
         JumpEvent?.Invoke();

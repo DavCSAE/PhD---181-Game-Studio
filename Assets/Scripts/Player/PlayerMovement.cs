@@ -63,7 +63,6 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-
         if (player == null) return;
 
         // Don't do anything if frozen
@@ -92,6 +91,7 @@ public class PlayerMovement : MonoBehaviour
         // Prevents player from being stuck on ground when trying to jump
         if (isJumping) { return; }
 
+        // I set layer 8 as the 'player' layer in unity
         // Bit shift the index of the layer (8) to get a bit mask
         int layerMask = 1 << 8;
 
@@ -100,7 +100,6 @@ public class PlayerMovement : MonoBehaviour
         layerMask = ~layerMask; // Everything but player layer
 
         // Calculate position of bottom of collider to use as origin of raycast
-
         Vector3 botOfColl = transform.position + player.capsColl.center + Vector3.down * player.capsColl.height / 2;
 
         // Calculate how far to shoot ray
@@ -208,7 +207,7 @@ public class PlayerMovement : MonoBehaviour
             if (hitMovingPlatform && !onPlatform)
             {
                 // Set player's parent object to the platform that they landed on
-                transform.parent = hit.collider.transform;
+                transform.parent = hit.collider.transform.parent;
 
                 print("onPlatform!");
 
@@ -266,8 +265,6 @@ public class PlayerMovement : MonoBehaviour
             else
             {
                 isMoving = false;
-
-                
             }
 
             // Bit shift the index of the layer (8) to get a bit mask
@@ -333,13 +330,10 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-
     void HandleRotation()
     {
-
         // Create normalized direction vector out of movement inputs
         Vector3 direction = new Vector3(movementInput.x, 0f, movementInput.y).normalized;
-
 
         if (direction.magnitude > 0f)
         {
@@ -354,7 +348,6 @@ public class PlayerMovement : MonoBehaviour
             // Rotate the player by the smoothed out angle
             transform.rotation = Quaternion.Euler(0f, angle, 0f);
         }
-
     }
 
     void HandleJumping()
@@ -399,8 +392,6 @@ public class PlayerMovement : MonoBehaviour
         print("JUMP!");
 
         // If player is on the ground OR in the air and can double jump
-        // Player can't jump unless they are standing on the ground OR
-        // they are in the air and can double jump
         if (isGrounded || canDoubleJump)
         {
             // If player is in the air AND can double jump

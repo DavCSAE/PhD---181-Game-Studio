@@ -5,13 +5,32 @@ using UnityEngine.UI;
 
 public class LevelLoader : MonoBehaviour
 {
+    public static LevelLoader Singleton;
+
     public GameObject loadingScreen;
     public Slider slider;
     public Text progressText;
 
+    public bool isLoading;
+
+    private void Awake()
+    {
+        Singleton = this;
+    }
+
+    private void Update()
+    {
+        if (isLoading)
+        {
+
+        }
+    }
+
     public void LoadLevel(int sceneIndex)
     {
         StartCoroutine(LoadAsynchronously(sceneIndex));
+
+        isLoading = true;
         
     }
 
@@ -31,6 +50,17 @@ public class LevelLoader : MonoBehaviour
 
             yield return null;
         }
+
+        if (operation.isDone)
+        {
+            HideLoadingScreen();
+            StopCoroutine("LoadAsynchronously");
+        }
+    }
+
+    void HideLoadingScreen()
+    {
+        loadingScreen.SetActive(false);
     }
 
 }

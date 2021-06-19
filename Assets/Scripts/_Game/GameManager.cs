@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -27,7 +29,9 @@ public class GameManager : MonoBehaviour
     void StartGame()
     {
         InputManager.Singleton.EnableInputs();
-        StartScreenUI.Singleton.CloseStartScreen();
+        //StartScreenUI.Singleton.CloseStartScreen();
+
+        LevelLoader.Singleton.LoadLevel(1);
 
         BlackScreen.Singleton.FadeFromBlack();
     }

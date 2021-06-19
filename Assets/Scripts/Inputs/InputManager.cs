@@ -99,7 +99,7 @@ public class InputManager : MonoBehaviour, PlayerControls.IPlayerActions
         {
             print("jump2");
             jump = true;
-            PlayerEvents.JumpFunction();
+            PlayerEvents.TriggerJumpEvent();
             //Player.Singleton.movement.Jump();
         }
         else if (context.canceled)
