@@ -62,5 +62,4 @@ public class LevelLoader : MonoBehaviour
     {
         loadingScreen.SetActive(false);
     }
-
 }
