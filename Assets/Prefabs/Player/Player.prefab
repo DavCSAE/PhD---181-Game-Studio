@@ -363,6 +363,7 @@ GameObject:
   - component: {fileID: 5912218971857306100}
   - component: {fileID: 5912218971857306099}
   - component: {fileID: 5912218971857306098}
+  - component: {fileID: 6751320719060436127}
   m_Layer: 10
   m_Name: Player
   m_TagString: Untagged
@@ -472,6 +473,7 @@ MonoBehaviour:
   isGrounded: 0
   isJumping: 0
   isFalling: 0
+  onPlatform: 0
 --- !u!114 &5912218971857306098
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -485,6 +487,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
+--- !u!114 &6751320719060436127
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5912218971857306097}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2518b4bf74498ad449b6ed2ea9d43a16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputManagerPrefab: {fileID: 5610421359074119630, guid: 28af20712f8d41141b7de478c0613493, type: 3}
+  camTarget: {fileID: 5912218972121923991}
+  freeLookCinemachinePrefab: {fileID: 1918237310901353292, guid: d5201134604f3f343bda16cab5c03e1f, type: 3}
 --- !u!1 &5912218972121923990
 GameObject:
   m_ObjectHideFlags: 0
