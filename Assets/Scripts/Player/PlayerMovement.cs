@@ -202,7 +202,29 @@ public class PlayerMovement : MonoBehaviour
                 transform.localScale = Vector3.one;
 
             }
-            
+
+
+
+
+            // Stop from sinking into ground
+            Vector3 sinkCheckpos = botOfColl + new Vector3(0, 0.1f, 0);
+            if (Physics.Raycast(sinkCheckpos, Vector3.down, out hit, rayDistance * 0.9f, layerMask))
+            {
+                if (!isGrounded)
+                {
+                    // Stop dashing if dashing
+                    if (isDashing) isDashing = false;
+                }
+
+                // Player is on the ground
+                isGrounded = true;
+                isFalling = false;
+
+                // Enable dash if dashed while in air
+                if (!canDash) canDash = true;
+            }
+
+
         }
 
         // If player is now on ground
