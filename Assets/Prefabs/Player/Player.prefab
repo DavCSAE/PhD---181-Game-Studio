@@ -467,12 +467,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
-  moveSpeed: 2
-  jumpHeight: 3
   isMoving: 0
   isGrounded: 0
   isJumping: 0
   isFalling: 0
+  isDashing: 0
+  moveSpeed: 2
+  jumpHeight: 3
+  loseVelocityInAirSpeed: 1
+  dashSpeed: 15
+  dashLength: 3
   onPlatform: 0
 --- !u!114 &5912218971857306098
 MonoBehaviour:

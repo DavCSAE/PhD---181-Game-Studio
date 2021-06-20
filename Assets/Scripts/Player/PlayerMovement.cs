@@ -54,6 +54,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float dashLength = 3f;
     Vector3 dashDir;
     Vector3 dashStartPos;
+    Vector3 velocityBeforeDash;
+    bool canDash = true;
 
     [Header("MOVING PLATFORMS")]
     // Platform movement
@@ -130,9 +132,19 @@ public class PlayerMovement : MonoBehaviour
         {
             Debug.DrawRay(botOfColl, Vector3.down * rayDistance, Color.red);
 
+            if (!isGrounded)
+            {
+                // Stop dashing if dashing
+                if (isDashing) isDashing = false;
+            }
+
             // Player is on the ground
             isGrounded = true;
             isFalling = false;
+
+            // Enable dash if dashed while in air
+            if (!canDash) canDash = true;
+
         }
         else // In air
         {
@@ -239,6 +251,8 @@ public class PlayerMovement : MonoBehaviour
 
     void HandleMovement()
     {
+        //if (isDashing) return;
+
         // Create normalized direction vector out of movement inputs
         Vector3 direction = new Vector3(movementInput.x, 0f, movementInput.y).normalized;
 
@@ -296,26 +310,31 @@ public class PlayerMovement : MonoBehaviour
             if (Physics.Raycast(transform.position + Vector3.up / 2, transform.forward, player.capsColl.radius + 0.2f, layerMask))
             {
                 player.rb.velocity -= Vector3.Project(player.rb.velocity, transform.forward);
+                HitObstacle();
             }
             // Front-right
             if (Physics.Raycast(transform.position + Vector3.up / 2, transform.forward + transform.right, player.capsColl.radius + 0.2f, layerMask))
             {
                 player.rb.velocity -= Vector3.Project(player.rb.velocity, transform.forward + transform.right);
+                HitObstacle();
             }
             // Front-left
             if (Physics.Raycast(transform.position + Vector3.up / 2, transform.forward + -transform.right, player.capsColl.radius + 0.2f, layerMask))
             {
                 player.rb.velocity -= Vector3.Project(player.rb.velocity, transform.forward + -transform.right);
+                HitObstacle();
             }
             // Right
             if (Physics.Raycast(transform.position + Vector3.up / 2, transform.right, player.capsColl.radius + 0.2f, layerMask))
             {
                 player.rb.velocity -= Vector3.Project(player.rb.velocity, transform.right);
+                HitObstacle();
             }
             // Left
             if (Physics.Raycast(transform.position + Vector3.up / 2, -transform.right, player.capsColl.radius + 0.2f, layerMask))
             {
                 player.rb.velocity -= Vector3.Project(player.rb.velocity, -transform.right);
+                HitObstacle();
             }
         }
         // If there is no movement input and player is on the ground
@@ -342,6 +361,14 @@ public class PlayerMovement : MonoBehaviour
 
             // Set the player's velocity
             player.rb.velocity = newVelocity;
+        }
+    }
+
+    void HitObstacle()
+    {
+        if (isDashing)
+        {
+            isDashing = false;
         }
     }
 
@@ -487,18 +514,31 @@ public class PlayerMovement : MonoBehaviour
     {
         if (isDashing)
         {
-            player.rb.velocity += dashDir * dashSpeed;
+            // Change player velocity based on dash direction and dash speed (APPLY THE DASH)
+            player.rb.velocity = new Vector3(0, player.rb.velocity.y, 0) + (dashDir * dashSpeed);
 
+            // If player has dashed further than dashLength
             if (Vector3.Distance(dashStartPos, transform.position) >= dashLength)
             {
+                // Set player's velocity to 0 if player is on ground
                 if (isGrounded)
                 {
                     player.rb.velocity = Vector3.zero;
                 }
-                else
+                // Store velocity from the dash to use when falling
+                else 
                 {
                     velocityBeforeJump = player.rb.velocity;
                 }
+                
+                // Update state
+                isDashing = false;
+            }
+
+
+            // If player moves away from dash direction
+            if (Vector3.Angle(moveDirection, dashDir) > 100)
+            {
                 isDashing = false;
             }
         }
@@ -506,13 +546,32 @@ public class PlayerMovement : MonoBehaviour
 
     void Dash()
     {
+        // Don't dash if can't dash
+        if (!canDash) return;
+
+        // Don't dash if not moving
+        if (moveDirection == Vector3.zero) return;
+
+        // If dashing while in air, stop from dashing again
+        if (!isGrounded) canDash = false;
+
         print("DASH!");
 
+        // Store dash start position
         dashStartPos = transform.position;
 
+        // Store velocity from before dashing
+        velocityBeforeDash = player.rb.velocity;
+
+        // Update state
         isDashing = true;
 
+        // Store current move direction as dash direction
         dashDir = moveDirection.normalized;
+
+        // Rotate player toward dash direction
+        Vector3 targetPos = transform.position + moveDirection;
+        transform.LookAt(targetPos);
 
         //player.rb.AddForce(moveDirection * 100 * dashPower);
     }
