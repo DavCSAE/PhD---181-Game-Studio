@@ -18,6 +18,7 @@ public class InputManager : MonoBehaviour, PlayerControls.IPlayerActions
     Vector2 look;
 
     bool jump;
+    bool dash;
 
     private void Awake()
     {
@@ -93,14 +94,10 @@ public class InputManager : MonoBehaviour, PlayerControls.IPlayerActions
     // Space key
     public void OnJump(InputAction.CallbackContext context)
     {
-        print("jump1");
-
         if (context.started)
         {
-            print("jump2");
             jump = true;
             PlayerEvents.TriggerJumpEvent();
-            //Player.Singleton.movement.Jump();
         }
         else if (context.canceled)
         {
@@ -118,12 +115,25 @@ public class InputManager : MonoBehaviour, PlayerControls.IPlayerActions
         jump = false;
     }
 
+    public void OnDash(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            dash = true;
+            PlayerEvents.TriggerDashEvent();
+        }
+        else if (context.canceled)
+        {
+            dash = false;
+        }
+    }
+
     // Right Trigger // F key
     public void OnFire(InputAction.CallbackContext context)
     {
         if (context.started)
         {
-            ///GetComponent<FlameAbility>().ToggleFlameSoul();
+            
         }
     }
 }

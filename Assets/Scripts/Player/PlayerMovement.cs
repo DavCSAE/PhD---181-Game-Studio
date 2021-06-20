@@ -7,6 +7,14 @@ public class PlayerMovement : MonoBehaviour
     [HideInInspector]
     public Player player;
 
+    [Header("STATES")]
+    // Movement states
+    public bool isMoving;
+    public bool isGrounded;
+    public bool isJumping;
+    public bool isFalling;
+    public bool isDashing;
+
     // Inputs
     Vector2 movementInput;
     bool jumpInput;
@@ -16,17 +24,23 @@ public class PlayerMovement : MonoBehaviour
 
     // GROUNDING
     float footSnapDist = 0.01f;
-
+    
+    [Header("MOVEMENT")]
     // Horizontal movement
     [SerializeField]
     float moveSpeed = 3f;
     Vector3 moveDirection;
 
+    // Rotation
+    float turnSmoothTime = 0.1f;
+    float turnSmoothVelocity;
+
+    [Header("JUMPING")]
     // Jumping / Falling
     [SerializeField]
     float jumpHeight = 3f;
     Vector3 velocityBeforeJump;
-    float loseVelocityInAirSpeed = 3f;
+    [SerializeField] float loseVelocityInAirSpeed = 3f;
     float fallMultiplier = 2.5f;
     float lowJumpModifier = 2f;
     bool doubleJumpEnabled;
@@ -34,27 +48,27 @@ public class PlayerMovement : MonoBehaviour
     bool unlimitedJumpsEnabled;
     float jumpBoost = 5f;
 
-    // Rotation
-    float turnSmoothTime = 0.1f;
-    float turnSmoothVelocity;
+    [Header("DASHING")]
+    // Dashing
+    [SerializeField] float dashSpeed = 1f;
+    [SerializeField] float dashLength = 3f;
+    Vector3 dashDir;
+    Vector3 dashStartPos;
 
-    // Movement states
-    public bool isMoving;
-    public bool isGrounded;
-    public bool isJumping;
-    public bool isFalling;
-
+    [Header("MOVING PLATFORMS")]
     // Platform movement
     public bool onPlatform;
 
     private void OnEnable()
     {
-        PlayerEvents.JumpEvent += Jump; 
+        PlayerEvents.JumpEvent += Jump;
+        PlayerEvents.DashEvent += Dash;
     }
 
     private void OnDisable()
     {
         PlayerEvents.JumpEvent -= Jump;
+        PlayerEvents.DashEvent -= Dash;
     }
 
     private void Start()
@@ -74,6 +88,7 @@ public class PlayerMovement : MonoBehaviour
         HandleMovement();
         HandleRotation();
         HandleJumping();
+        HandleDashing();
     }
 
     void GetMovementInputs()
@@ -466,6 +481,40 @@ public class PlayerMovement : MonoBehaviour
     public void ToggleUnlimitedJumps()
     {
         unlimitedJumpsEnabled = !unlimitedJumpsEnabled;
+    }
+
+    void HandleDashing()
+    {
+        if (isDashing)
+        {
+            player.rb.velocity += dashDir * dashSpeed;
+
+            if (Vector3.Distance(dashStartPos, transform.position) >= dashLength)
+            {
+                if (isGrounded)
+                {
+                    player.rb.velocity = Vector3.zero;
+                }
+                else
+                {
+                    velocityBeforeJump = player.rb.velocity;
+                }
+                isDashing = false;
+            }
+        }
+    }
+
+    void Dash()
+    {
+        print("DASH!");
+
+        dashStartPos = transform.position;
+
+        isDashing = true;
+
+        dashDir = moveDirection.normalized;
+
+        //player.rb.AddForce(moveDirection * 100 * dashPower);
     }
 
     public void Unfreeze()
