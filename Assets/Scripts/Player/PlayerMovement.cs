@@ -181,16 +181,11 @@ public class PlayerMovement : MonoBehaviour
                 player.animations.Flapped();
             }
             */
-            print("in air");
-
             // Release Plaftorm
             if (transform.parent != null)
             {
                 transform.parent = null;
 
-                //onPlatform = false;
-
-                print("off PLatform!");
             }
 
             if (onPlatform)
@@ -453,8 +448,6 @@ public class PlayerMovement : MonoBehaviour
 
     public void Jump()
     {
-        print("JUMP!");
-
         // If player is on the ground OR in the air and can double jump
         if (isGrounded || canDoubleJump)
         {
@@ -576,8 +569,6 @@ public class PlayerMovement : MonoBehaviour
 
         // If dashing while in air, stop from dashing again
         if (!isGrounded) canDash = false;
-
-        print("DASH!");
 
         // Store dash start position
         dashStartPos = transform.position;
