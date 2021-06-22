@@ -9,6 +9,8 @@ public class Player : MonoBehaviour
     public PlayerMovement movement;
     //[HideInInspector]
     public PlayerAnimations animations;
+    [HideInInspector]
+    public PlayerCollision collision;
 
     // PHYSICS
     //[HideInInspector]
@@ -34,6 +36,8 @@ public class Player : MonoBehaviour
         movement.player = this;
         animations = GetComponent<PlayerAnimations>();
         animations.player = this;
+        collision = GetComponent<PlayerCollision>();
+        collision.player = this;
 
         // PHYSICS
         rb = GetComponent<Rigidbody>();

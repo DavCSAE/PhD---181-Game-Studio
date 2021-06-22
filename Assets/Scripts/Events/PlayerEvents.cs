@@ -4,14 +4,24 @@ using UnityEngine;
 
 public class PlayerEvents : MonoBehaviour
 {
-    // Event for playing end cutscene
+    // Event for player jump
     public delegate void Jump();
     public static event Jump JumpEvent;
-    // Function to do end of game cutscene
-    // Function is 'static' - accessible from anywhere
-    public static void JumpFunction()
+
+    public static void TriggerJumpEvent()
     {
-        // Make sure event has subscribers
+        // If event has subscribers, run event
         JumpEvent?.Invoke();
     }
+
+    // Event for player dash
+    public delegate void Dash();
+    public static event Dash DashEvent;
+
+    public static void TriggerDashEvent()
+    {
+        // If event has subscribers, run event
+        DashEvent?.Invoke();
+    }
+
 }

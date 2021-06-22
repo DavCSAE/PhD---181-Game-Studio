@@ -23,6 +23,7 @@ public class PlayerAnimations : MonoBehaviour
         HandleRunAnimation();
         HandleJumpAnimation();
         HandleFallingAnimation();
+        HandleDashAnimation();
     }
 
     void HandleRunAnimation()
@@ -58,6 +59,18 @@ public class PlayerAnimations : MonoBehaviour
         else
         {
             anim.SetBool("isFalling", false);
+        }
+    }
+
+    void HandleDashAnimation()
+    {
+        if (player.movement.isDashing)
+        {
+            anim.SetBool("isDashing", true);
+        }
+        else
+        {
+            anim.SetBool("isDashing", false);
         }
     }
 
