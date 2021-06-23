@@ -37,22 +37,30 @@ public class PlayerMovement : MonoBehaviour
     float turnSmoothTime = 0.1f;
     float turnSmoothVelocity;
 
+    float obstacleRaycastHeight = 0.05f;
+    float obstacleRaycastDistance = 0.4f;
+
     [Header("SLOPES")]
     // Slopes
     [SerializeField] float maxSlopeAngle = 35f;
     Vector3 slopeDir;
     float slopeAngle;
+    float slopeCheckLength = 0.3f;
+    Vector3 slopeNormal;
 
     [Header("SLIDING")]
     // Sliding
     [SerializeField] float slideSpeed = 5f;
+    [SerializeField] float slideTurnSpeed = 5f;
+    float currSlideTurnAngle;
+    [SerializeField] float slideRotateSpeed;
 
     [Header("JUMPING")]
     // Jumping / Falling
     [SerializeField]
     float jumpHeight = 3f;
     Vector3 velocityBeforeJump;
-    [SerializeField] float loseVelocityInAirSpeed = 3f;
+    [SerializeField] float loseVelocityInAirSpeed = 1f;
     float fallMultiplier = 2.5f;
     float lowJumpModifier = 2f;
     bool doubleJumpEnabled;
@@ -100,6 +108,7 @@ public class PlayerMovement : MonoBehaviour
 
         HandleGrounding();
         HandleMovement();
+        CheckForObstacles();
         HandleRotation();
         HandleSlopes();
         HandleSliding();
@@ -120,7 +129,7 @@ public class PlayerMovement : MonoBehaviour
     {
         // Don't do anything if starting jump
         // Prevents player from being stuck on ground when trying to jump
-        if (isJumping) { return; }
+        if (isJumping) return;
 
         // I set layer 8 as the 'player' layer in unity
         // Bit shift the index of the layer (8) to get a bit mask
@@ -138,13 +147,14 @@ public class PlayerMovement : MonoBehaviour
 
         // RaycastHit to store hit info
         RaycastHit hit;
+        Vector3 groundHitPos = new Vector3(0,0,0);
         // Does the ray intersect any objects excluding the player layer
         // Checks if the player is on the ground
 
         if (Physics.SphereCast(botOfColl, player.capsColl.radius,
             Vector3.down, out hit, rayDistance, layerMask))
         {
-            Debug.DrawRay(botOfColl, Vector3.down * rayDistance, Color.red);
+            //Debug.DrawRay(botOfColl, Vector3.down * rayDistance, Color.red);
 
             if (!isGrounded)
             {
@@ -161,12 +171,13 @@ public class PlayerMovement : MonoBehaviour
 
             // Store RaycastHit for ground
             groundingHit = hit;
+            groundHitPos = hit.point;
 
         }
         else // In air
         {
-            Debug.DrawRay(botOfColl, Vector3.down * rayDistance, Color.blue);
-            Debug.DrawRay(transform.position + player.capsColl.center + Vector3.down * player.capsColl.height / 2, Vector3.down * rayDistance, Color.green);
+            //Debug.DrawRay(botOfColl, Vector3.down * rayDistance, Color.blue);
+            //Debug.DrawRay(transform.position + player.capsColl.center + Vector3.down * player.capsColl.height / 2, Vector3.down * rayDistance, Color.green);
 
             // If stepped off platform or ledge and is now falling
             if (isGrounded)
@@ -216,9 +227,16 @@ public class PlayerMovement : MonoBehaviour
             }
 
             // Stop from sinking into ground
-            Vector3 sinkCheckpos = botOfColl + new Vector3(0, 0.1f, 0);
-            if (Physics.Raycast(sinkCheckpos, Vector3.down, out hit, rayDistance * 0.9f, layerMask))
+            Vector3 sinkCheckpos = botOfColl + new Vector3(0, 0.2f, 0);
+            Debug.DrawRay(sinkCheckpos, Vector3.down * rayDistance * 0.9f, Color.white);
+            if (Physics.Raycast(sinkCheckpos, Vector3.down, out hit, rayDistance, layerMask))
             {
+                Debug.DrawRay(sinkCheckpos, Vector3.down * rayDistance, Color.blue);
+
+                print("Prevented sink!");
+                groundingHit = hit;
+                groundHitPos = hit.point;
+
                 if (!isGrounded)
                 {
                     // Stop dashing if dashing
@@ -240,12 +258,24 @@ public class PlayerMovement : MonoBehaviour
         // If player is now on ground
         if (isGrounded)
         {
+            // Stop from sinking into ground
+            Vector3 sinkCheckpos = botOfColl + new Vector3(0, 0.2f, 0);
+            Debug.DrawRay(sinkCheckpos, Vector3.down * rayDistance * 0.9f, Color.white);
+            if (Physics.Raycast(sinkCheckpos, Vector3.down, out hit, rayDistance, layerMask))
+            {
+                Debug.DrawRay(sinkCheckpos, Vector3.down * rayDistance, Color.blue);
+
+                print("Prevented sink!");
+                groundingHit = hit;
+                groundHitPos = hit.point;
+            }
+
             // Turn off gravity
             player.rb.useGravity = false;
 
             // Set target y position to position the raycast hit
-            float yPosTarget = hit.point.y;
-
+            float yPosTarget = groundHitPos.y;
+            
             // Create a target position based off the players current position and the 'y target position'
             Vector3 targetPosition = transform.position;
             targetPosition.y = yPosTarget;
@@ -260,23 +290,28 @@ public class PlayerMovement : MonoBehaviour
             player.rb.velocity = new Vector3(player.rb.velocity.x, 0, player.rb.velocity.z);
 
             // Is the hit object a moving platform?
-            bool hitMovingPlatform = (hit.collider.gameObject.layer == LayerMask.NameToLayer("Moving Platform"));
-
-            // If landed on platform
-            if (hitMovingPlatform && !onPlatform)
+            
+            if (hit.collider != null)
             {
-                // Set player's parent object to the platform that they landed on
-                transform.parent = hit.collider.transform.parent;
+                bool hitMovingPlatform = (hit.collider.gameObject.layer == LayerMask.NameToLayer("Moving Platform"));
+                
+                // If landed on platform
+                if (hitMovingPlatform && !onPlatform)
+                {
+                    // Set player's parent object to the platform that they landed on
+                    transform.parent = hit.collider.transform.parent;
 
-                print("onPlatform!");
+                    print("onPlatform!");
 
-                onPlatform = true;
+                    onPlatform = true;
+                }
+                else if (!hitMovingPlatform && onPlatform)
+                {
+                    onPlatform = false;
+                    transform.parent = null;
+                }
             }
-            else if (!hitMovingPlatform && onPlatform)
-            {
-                onPlatform = false;
-                transform.parent = null;
-            }
+            
         }
     }
 
@@ -338,19 +373,22 @@ public class PlayerMovement : MonoBehaviour
             RaycastHit hit;
             // Stops player from getting too close to walls (Player will climb them if too close)
             // Front
-            if (Physics.Raycast(transform.position + Vector3.up / 2, transform.forward, player.capsColl.radius + 0.2f, layerMask))
+            if (Physics.Raycast(transform.position + Vector3.up / 2, transform.forward, player.capsColl.radius + 0.2f, layerMask)
+                && !isDashing)
             {
                 player.rb.velocity -= Vector3.Project(player.rb.velocity, transform.forward);
                 HitObstacle();
             }
             // Front-right
-            if (Physics.Raycast(transform.position + Vector3.up / 2, transform.forward + transform.right, player.capsColl.radius + 0.2f, layerMask))
+            if (Physics.Raycast(transform.position + Vector3.up / 2, transform.forward + transform.right, player.capsColl.radius + 0.2f, layerMask)
+                && !isDashing)
             {
                 player.rb.velocity -= Vector3.Project(player.rb.velocity, transform.forward + transform.right);
                 HitObstacle();
             }
             // Front-left
-            if (Physics.Raycast(transform.position + Vector3.up / 2, transform.forward + -transform.right, player.capsColl.radius + 0.2f, layerMask))
+            if (Physics.Raycast(transform.position + Vector3.up / 2, transform.forward + -transform.right, player.capsColl.radius + 0.2f, layerMask)
+                && !isDashing)
             {
                 player.rb.velocity -= Vector3.Project(player.rb.velocity, transform.forward + -transform.right);
                 HitObstacle();
@@ -395,6 +433,62 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    void CheckForObstacles()
+    {
+        // I set layer 8 as the 'player' layer in unity
+        // Bit shift the index of the layer (8) to get a bit mask
+        int layerMask = 1 << 8;
+
+        // This would cast rays only against colliders in layer 8.
+        // But instead we want to collide against everything except layer 8. The ~ operator does this, it inverts a bitmask.
+        layerMask = ~layerMask; // Everything but player layer
+
+        Vector3 rayOrigin = transform.position + new Vector3(0, obstacleRaycastHeight, 0);
+        Vector3 rayDirection = transform.forward;
+        rayDirection = rayDirection.normalized;
+        // RaycastHit to store hit info
+        RaycastHit hit;
+
+        Debug.DrawRay(rayOrigin, rayDirection * obstacleRaycastDistance, Color.white);
+
+        if (Physics.Raycast(rayOrigin, rayDirection, out hit, obstacleRaycastDistance, layerMask))
+        {
+            print("Obstacle!");
+
+            Debug.DrawRay(rayOrigin, rayDirection * obstacleRaycastDistance, Color.yellow);
+
+            if (velocityBeforeJump != Vector3.zero)
+            {
+                velocityBeforeJump = Vector3.zero;
+            }
+
+            float obstacleSlopeAngle = Vector3.Angle(hit.normal, Vector3.up);
+
+
+            if (obstacleSlopeAngle > maxSlopeAngle)
+            {
+                player.rb.velocity = new Vector3(0, player.rb.velocity.y, 0);
+
+                if (isDashing) isDashing = false;
+            }
+            else if (isDashing)
+            {
+                Vector3 left = Vector3.Cross(hit.normal, Vector3.up);
+                Vector3 obstacleSlopeUpDir = Vector3.Cross(hit.normal, left);
+                obstacleSlopeUpDir *= -1;
+                Debug.DrawRay(rayOrigin, obstacleSlopeUpDir, Color.red);
+
+                Vector3 temp = dashDir.normalized + obstacleSlopeUpDir;
+                dashDir = new Vector3(dashDir.x, obstacleSlopeUpDir.y + 0.1f,
+                    dashDir.z).normalized * dashDir.magnitude;
+
+
+                Debug.DrawRay(rayOrigin, dashDir, Color.green);
+            }
+
+        }
+    }
+
     void HandleSlopes()
     {
         if (!isGrounded) return;
@@ -404,8 +498,22 @@ public class PlayerMovement : MonoBehaviour
         print(slopeAngle);
 
         if (slopeAngle > maxSlopeAngle)
+
         {
-            isSliding = true;
+            if (CheckIfSlopeIsLongEnoughForSliding(groundingHit))
+            {
+                print("slope: " + slopeAngle);
+
+                isSliding = true;
+
+                player.rb.useGravity = false;
+                isGrounded = true;
+
+                slopeAngle = Vector3.Angle(groundingHit.normal, Vector3.up);
+
+                slopeNormal = groundingHit.normal;
+            }
+
 
             if (isDashing) isDashing = false;
         }
@@ -417,33 +525,181 @@ public class PlayerMovement : MonoBehaviour
 
     void HandleSliding()
     {
-        // Return if not sliding
-        if (!isSliding) return;
-
-        // Calculate downard slope direction
-        Vector3 left = Vector3.Cross(groundingHit.normal, Vector3.up);
-        slopeDir = Vector3.Cross(groundingHit.normal, left);
-
-        if (slopeDir.y > 0)
+        if (isSliding)
         {
-            slopeDir *= -1f;
+            // Get slope direction vector
+            Vector3 left = Vector3.Cross(slopeNormal, Vector3.up);
+            Vector3 slopeDir = Vector3.Cross(slopeNormal, left);
+
+            // Get direction to face while sliding
+            Vector3 directionToFaceWhileSliding = new Vector3(slopeNormal.x, 0, slopeNormal.z);
+            // Get rotation needed to rotate from current direction to slide facing direction
+            Quaternion newRot = Quaternion.FromToRotation(transform.forward, directionToFaceWhileSliding);
+            // Rotate player to face in slide direction
+            transform.rotation *= newRot;
+
+            // Get velocity to slide down slope
+            Vector3 slideVelocity = slopeDir.normalized * slideSpeed;
+
+
+            // Get move direction
+            Vector3 direction = new Vector3(movementInput.x, 0f, movementInput.y).normalized;
+
+            // Get the angle that the input direction needs to be rotated so that direction is based off camera
+            float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg
+                + player.cam.transform.eulerAngles.y;
+
+            // Get move direction based on camera
+            moveDirection = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
+
+            // Turning axis, initially points to the left of player
+            Vector3 moveAxis = Vector3.Cross(directionToFaceWhileSliding, Vector3.up);
+
+            //Debug.DrawRay(transform.position, moveAxis.normalized * 2, Color.blue);
+
+            // Do turning if getting movement inputs
+            if (direction != Vector3.zero)
+            {
+                // Figure out which way to turn
+                float angleFromSlideDirToLeftDir = Vector3.Angle(moveAxis, moveDirection);
+                float angleFromSlideDirToRightDir = Vector3.Angle(-moveAxis, moveDirection);
+
+
+                // If moving to the right
+                if (angleFromSlideDirToLeftDir > angleFromSlideDirToRightDir)
+                {
+                    if (angleFromSlideDirToRightDir <= 75)
+                    {
+                        // Add velocity to the right
+                        slideVelocity += -moveAxis * slideTurnSpeed;
+
+                        if (currSlideTurnAngle <= 30)
+                        {
+                            // Rotate to the right
+                            player.animations.rootBone.RotateAround(player.animations.rootBone.position,
+                                slopeNormal, slideRotateSpeed * Time.deltaTime);
+
+                            currSlideTurnAngle += slideRotateSpeed * Time.deltaTime;
+                        }
+
+                    }
+
+                }
+                // Else moving to the left
+                else
+                {
+                    if (angleFromSlideDirToLeftDir <= 75)
+                    {
+                        // Add velocity to the left
+                        slideVelocity += moveAxis * slideTurnSpeed;
+
+                        if (currSlideTurnAngle >= -30)
+                        {
+                            // Rotate to the right
+                            player.animations.rootBone.RotateAround(player.animations.rootBone.position,
+                                slopeNormal, -slideRotateSpeed * Time.deltaTime);
+
+                            currSlideTurnAngle -= slideRotateSpeed * Time.deltaTime;
+                        }
+
+                    }
+
+
+                }
+            }
+            // If no turning input and already turned
+            else if (currSlideTurnAngle != 0)
+            {
+                // If turned toward right side
+                if (currSlideTurnAngle > 0)
+                {
+                    // Turn back toward centre
+                    player.animations.rootBone.RotateAround(player.animations.rootBone.position,
+                                slopeNormal, -slideRotateSpeed / 2 * Time.deltaTime);
+                    currSlideTurnAngle -= slideRotateSpeed / 2 * Time.deltaTime;
+
+                    slideVelocity += -moveAxis * slideTurnSpeed * currSlideTurnAngle / 35;
+                }
+                // If turned toward left side
+                else if (currSlideTurnAngle < 0)
+                {
+                    // Turn back toward centre
+                    player.animations.rootBone.RotateAround(player.animations.rootBone.position,
+                                slopeNormal, slideRotateSpeed / 2 * Time.deltaTime);
+                    currSlideTurnAngle += slideRotateSpeed / 2 * Time.deltaTime;
+
+
+                    slideVelocity += moveAxis * slideTurnSpeed * currSlideTurnAngle / -35;
+                }
+
+                // If pretty much centred again
+                if (currSlideTurnAngle > -0.00001 && currSlideTurnAngle < 0.00001)
+                {
+                    // Centre slide rotation
+                    player.animations.rootBone.localEulerAngles = Vector3.zero;
+
+                    currSlideTurnAngle = 0;
+                }
+            }
+
+
+
+            // Set player velocity to sliding velocity
+            player.rb.velocity = slideVelocity;
+
+
+
         }
+        else if (currSlideTurnAngle != 0)
+        {
+            player.animations.rootBone.localEulerAngles = Vector3.zero;
 
-        Debug.DrawRay(transform.position + Vector3.up, slopeDir * 5f, Color.red);
-
-        player.rb.velocity = slopeDir * slideSpeed * Time.deltaTime * 100;
-
-        // Stop sliding if slope angle is less than max slope angle
-        if (slopeAngle <= maxSlopeAngle) isSliding = false;
+            currSlideTurnAngle = 0;
+        }
     }
 
-    void HitObstacle()
+    private bool CheckIfSlopeIsLongEnoughForSliding(RaycastHit hit)
     {
-        if (isDashing)
+        bool isLongEnough = false;
+
+        Vector3 left = Vector3.Cross(hit.normal, Vector3.up);
+        slopeDir = Vector3.Cross(hit.normal, left);
+
+        if (slopeDir.y >= 0)
         {
-            isDashing = false;
+            slopeDir = new Vector3(slopeDir.x, -slopeDir.y, slopeDir.z);
         }
+
+        Vector3 slopeCheckStartPoint = hit.point + hit.normal.normalized * 0.1f;
+
+        Vector3 slopeCheckingDir = slopeDir.normalized * slopeCheckLength;
+
+        Vector3 slopeCheckEndPoint = slopeCheckStartPoint + slopeCheckingDir;
+
+        int layerMask = 1 << 8;
+
+        layerMask = ~layerMask;
+
+        RaycastHit slopeCheckHit;
+
+        if (Physics.Raycast(slopeCheckEndPoint, -hit.normal, out slopeCheckHit, 0.15f, layerMask))
+        {
+
+            if (slopeCheckHit.normal == hit.normal)
+            {
+                isLongEnough = true;
+                print("Slope long enough");
+            }
+
+        }
+
+        Debug.DrawRay(slopeCheckStartPoint, slopeCheckEndPoint - slopeCheckStartPoint, Color.red);
+        Debug.DrawRay(slopeCheckEndPoint, -hit.normal, Color.blue);
+
+        return isLongEnough;
     }
+
+    
 
     void HandleRotation()
     {
@@ -550,8 +806,10 @@ public class PlayerMovement : MonoBehaviour
             // Create jump vector
             Vector3 jumpVector = new Vector3(0, jumpHeight, 0);
 
+
             // Add the jump vector as a force to the player
             // Add the player's current velocity as well to help player jump in direction they are moving
+            
             player.rb.AddForce(player.rb.velocity + jumpVector * 100);
         }
 
@@ -635,9 +893,6 @@ public class PlayerMovement : MonoBehaviour
         // Store dash start position
         dashStartPos = transform.position;
 
-        // Store velocity from before dashing
-        velocityBeforeDash = player.rb.velocity;
-
         // Update state
         isDashing = true;
 
@@ -649,6 +904,14 @@ public class PlayerMovement : MonoBehaviour
         transform.LookAt(targetPos);
 
         //player.rb.AddForce(moveDirection * 100 * dashPower);
+    }
+
+    void HitObstacle()
+    {
+        if (isDashing)
+        {
+            isDashing = false;
+        }
     }
 
     public void Unfreeze()
