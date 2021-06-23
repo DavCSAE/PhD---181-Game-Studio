@@ -41,6 +41,7 @@ public class PlayerMovement : MonoBehaviour
     // Slopes
     [SerializeField] float maxSlopeAngle = 35f;
     Vector3 slopeDir;
+    float slopeAngle;
 
     [Header("SLIDING")]
     // Sliding
@@ -231,6 +232,9 @@ public class PlayerMovement : MonoBehaviour
                 // Enable dash if dashed while in air
                 if (!canDash) canDash = true;
             }
+
+            // Stop sliding if sliding
+            if (isSliding) isSliding = false;
         }
 
         // If player is now on ground
@@ -395,9 +399,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (!isGrounded) return;
 
-        float slopeAngle = Vector3.Angle(Vector3.up, groundingHit.normal);
-
-        
+        slopeAngle = Vector3.Angle(Vector3.up, groundingHit.normal);
 
         print(slopeAngle);
 
@@ -430,6 +432,9 @@ public class PlayerMovement : MonoBehaviour
         Debug.DrawRay(transform.position + Vector3.up, slopeDir * 5f, Color.red);
 
         player.rb.velocity = slopeDir * slideSpeed * Time.deltaTime * 100;
+
+        // Stop sliding if slope angle is less than max slope angle
+        if (slopeAngle <= maxSlopeAngle) isSliding = false;
     }
 
     void HitObstacle()
