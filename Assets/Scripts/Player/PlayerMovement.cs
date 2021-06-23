@@ -14,6 +14,7 @@ public class PlayerMovement : MonoBehaviour
     public bool isJumping;
     public bool isFalling;
     public bool isDashing;
+    public bool isSliding;
 
     // Inputs
     Vector2 movementInput;
@@ -24,6 +25,7 @@ public class PlayerMovement : MonoBehaviour
 
     // GROUNDING
     float footSnapDist = 0.01f;
+    RaycastHit groundingHit;
     
     [Header("MOVEMENT")]
     // Horizontal movement
@@ -34,6 +36,15 @@ public class PlayerMovement : MonoBehaviour
     // Rotation
     float turnSmoothTime = 0.1f;
     float turnSmoothVelocity;
+
+    [Header("SLOPES")]
+    // Slopes
+    [SerializeField] float maxSlopeAngle = 35f;
+    Vector3 slopeDir;
+
+    [Header("SLIDING")]
+    // Sliding
+    [SerializeField] float slideSpeed = 5f;
 
     [Header("JUMPING")]
     // Jumping / Falling
@@ -89,6 +100,8 @@ public class PlayerMovement : MonoBehaviour
         HandleGrounding();
         HandleMovement();
         HandleRotation();
+        HandleSlopes();
+        HandleSliding();
         HandleJumping();
         HandleDashing();
     }
@@ -145,6 +158,9 @@ public class PlayerMovement : MonoBehaviour
             // Enable dash if dashed while in air
             if (!canDash) canDash = true;
 
+            // Store RaycastHit for ground
+            groundingHit = hit;
+
         }
         else // In air
         {
@@ -198,9 +214,6 @@ public class PlayerMovement : MonoBehaviour
 
             }
 
-
-
-
             // Stop from sinking into ground
             Vector3 sinkCheckpos = botOfColl + new Vector3(0, 0.1f, 0);
             if (Physics.Raycast(sinkCheckpos, Vector3.down, out hit, rayDistance * 0.9f, layerMask))
@@ -218,8 +231,6 @@ public class PlayerMovement : MonoBehaviour
                 // Enable dash if dashed while in air
                 if (!canDash) canDash = true;
             }
-
-
         }
 
         // If player is now on ground
@@ -262,7 +273,6 @@ public class PlayerMovement : MonoBehaviour
                 onPlatform = false;
                 transform.parent = null;
             }
-            
         }
     }
 
@@ -379,6 +389,47 @@ public class PlayerMovement : MonoBehaviour
             // Set the player's velocity
             player.rb.velocity = newVelocity;
         }
+    }
+
+    void HandleSlopes()
+    {
+        if (!isGrounded) return;
+
+        float slopeAngle = Vector3.Angle(Vector3.up, groundingHit.normal);
+
+        
+
+        print(slopeAngle);
+
+        if (slopeAngle > maxSlopeAngle)
+        {
+            isSliding = true;
+
+            if (isDashing) isDashing = false;
+        }
+        else
+        {
+            isSliding = false;
+        }
+    }
+
+    void HandleSliding()
+    {
+        // Return if not sliding
+        if (!isSliding) return;
+
+        // Calculate downard slope direction
+        Vector3 left = Vector3.Cross(groundingHit.normal, Vector3.up);
+        slopeDir = Vector3.Cross(groundingHit.normal, left);
+
+        if (slopeDir.y > 0)
+        {
+            slopeDir *= -1f;
+        }
+
+        Debug.DrawRay(transform.position + Vector3.up, slopeDir * 5f, Color.red);
+
+        player.rb.velocity = slopeDir * slideSpeed * Time.deltaTime * 100;
     }
 
     void HitObstacle()
@@ -531,6 +582,12 @@ public class PlayerMovement : MonoBehaviour
         {
             // Change player velocity based on dash direction and dash speed (APPLY THE DASH)
             player.rb.velocity = new Vector3(0, player.rb.velocity.y, 0) + (dashDir * dashSpeed);
+
+            // Align dash with slope
+            if (isGrounded)
+            {
+                //player.rb.velocity = new Vector3()
+            }
 
             // If player has dashed further than dashLength
             if (Vector3.Distance(dashStartPos, transform.position) >= dashLength)

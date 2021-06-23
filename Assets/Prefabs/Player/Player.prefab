@@ -6279,7 +6279,10 @@ MonoBehaviour:
   isJumping: 0
   isFalling: 0
   isDashing: 0
+  isSliding: 0
   moveSpeed: 2
+  maxSlopeAngle: 35
+  slideSpeed: 3
   jumpHeight: 3
   loseVelocityInAirSpeed: 1
   dashSpeed: 15
