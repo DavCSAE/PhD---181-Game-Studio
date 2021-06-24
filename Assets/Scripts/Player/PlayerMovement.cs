@@ -471,7 +471,7 @@ public class PlayerMovement : MonoBehaviour
 
                 if (isDashing) isDashing = false;
             }
-            else if (isDashing)
+            else if (isDashing && !isJumping && isGrounded)
             {
                 Vector3 left = Vector3.Cross(hit.normal, Vector3.up);
                 Vector3 obstacleSlopeUpDir = Vector3.Cross(hit.normal, left);
@@ -479,11 +479,14 @@ public class PlayerMovement : MonoBehaviour
                 Debug.DrawRay(rayOrigin, obstacleSlopeUpDir, Color.red);
 
                 Vector3 temp = dashDir.normalized + obstacleSlopeUpDir;
-                dashDir = new Vector3(dashDir.x, obstacleSlopeUpDir.y + 0.1f,
-                    dashDir.z).normalized * dashDir.magnitude;
+                dashDir = new Vector3(dashDir.x, obstacleSlopeUpDir.y + 0.1f, dashDir.z).normalized;
 
 
                 Debug.DrawRay(rayOrigin, dashDir, Color.green);
+            }
+            else if (isDashing)
+            {
+                dashDir = new Vector3(dashDir.x, 0, dashDir.z);
             }
 
         }
@@ -843,6 +846,12 @@ public class PlayerMovement : MonoBehaviour
     {
         if (isDashing)
         {
+            // Fix Dash direction if not on ground
+            if (!isGrounded)
+            {
+                dashDir = new Vector3(dashDir.x, 0, dashDir.z);
+            }
+
             // Change player velocity based on dash direction and dash speed (APPLY THE DASH)
             player.rb.velocity = new Vector3(0, player.rb.velocity.y, 0) + (dashDir * dashSpeed);
 
