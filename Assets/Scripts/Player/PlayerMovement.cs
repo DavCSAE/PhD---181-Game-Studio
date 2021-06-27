@@ -76,6 +76,7 @@ public class PlayerMovement : MonoBehaviour
     Vector3 dashStartPos;
     Vector3 velocityBeforeDash;
     bool canDash = true;
+    Collider dashStartGround;
 
     [Header("MOVING PLATFORMS")]
     // Platform movement
@@ -147,6 +148,7 @@ public class PlayerMovement : MonoBehaviour
 
         // RaycastHit to store hit info
         RaycastHit hit;
+        RaycastHit sinkPreventHit;
         Vector3 groundHitPos = new Vector3(0,0,0);
         // Does the ray intersect any objects excluding the player layer
         // Checks if the player is on the ground
@@ -156,9 +158,10 @@ public class PlayerMovement : MonoBehaviour
         {
             //Debug.DrawRay(botOfColl, Vector3.down * rayDistance, Color.red);
 
-            if (!isGrounded)
+            if (!isGrounded && dashStartGround != null && hit.collider != dashStartGround)
             {
                 // Stop dashing if dashing
+                print("ground stop dashing");
                 if (isDashing) isDashing = false;
             }
 
@@ -229,18 +232,19 @@ public class PlayerMovement : MonoBehaviour
             // Stop from sinking into ground
             Vector3 sinkCheckpos = botOfColl + new Vector3(0, 0.2f, 0);
             Debug.DrawRay(sinkCheckpos, Vector3.down * rayDistance * 0.9f, Color.white);
-            if (Physics.Raycast(sinkCheckpos, Vector3.down, out hit, rayDistance, layerMask))
+            if (Physics.Raycast(sinkCheckpos, Vector3.down, out sinkPreventHit, rayDistance, layerMask))
             {
                 Debug.DrawRay(sinkCheckpos, Vector3.down * rayDistance, Color.blue);
 
                 print("Prevented sink!");
-                groundingHit = hit;
-                groundHitPos = hit.point;
+                groundingHit = sinkPreventHit;
+                groundHitPos = sinkPreventHit.point;
 
                 if (!isGrounded)
                 {
                     // Stop dashing if dashing
-                    if (isDashing) isDashing = false;
+                    print("sink prevent stop dashing");
+                    if (isDashing && sinkPreventHit.collider != dashStartGround) isDashing = false;
                 }
 
                 // Player is on the ground
@@ -261,13 +265,13 @@ public class PlayerMovement : MonoBehaviour
             // Stop from sinking into ground
             Vector3 sinkCheckpos = botOfColl + new Vector3(0, 0.2f, 0);
             Debug.DrawRay(sinkCheckpos, Vector3.down * rayDistance * 0.9f, Color.white);
-            if (Physics.Raycast(sinkCheckpos, Vector3.down, out hit, rayDistance, layerMask))
+            if (Physics.Raycast(sinkCheckpos, Vector3.down, out sinkPreventHit, rayDistance, layerMask))
             {
                 Debug.DrawRay(sinkCheckpos, Vector3.down * rayDistance, Color.blue);
 
                 print("Prevented sink!");
-                groundingHit = hit;
-                groundHitPos = hit.point;
+                groundingHit = sinkPreventHit;
+                groundHitPos = sinkPreventHit.point;
             }
 
             // Turn off gravity
@@ -290,18 +294,19 @@ public class PlayerMovement : MonoBehaviour
             player.rb.velocity = new Vector3(player.rb.velocity.x, 0, player.rb.velocity.z);
 
             // Is the hit object a moving platform?
-            
+
+
             if (hit.collider != null)
             {
                 bool hitMovingPlatform = (hit.collider.gameObject.layer == LayerMask.NameToLayer("Moving Platform"));
-                
+
+
                 // If landed on platform
                 if (hitMovingPlatform && !onPlatform)
                 {
                     // Set player's parent object to the platform that they landed on
                     transform.parent = hit.collider.transform.parent;
 
-                    print("onPlatform!");
 
                     onPlatform = true;
                 }
@@ -468,7 +473,7 @@ public class PlayerMovement : MonoBehaviour
             if (obstacleSlopeAngle > maxSlopeAngle)
             {
                 player.rb.velocity = new Vector3(0, player.rb.velocity.y, 0);
-
+                print("slope stop dashing");
                 if (isDashing) isDashing = false;
             }
             else if (isDashing && !isJumping && isGrounded)
@@ -498,7 +503,7 @@ public class PlayerMovement : MonoBehaviour
 
         slopeAngle = Vector3.Angle(Vector3.up, groundingHit.normal);
 
-        print(slopeAngle);
+        //print(slopeAngle);
 
         if (slopeAngle > maxSlopeAngle)
 
@@ -518,7 +523,7 @@ public class PlayerMovement : MonoBehaviour
             }
 
 
-            if (isDashing) isDashing = false;
+            if (isDashing && slopeAngle != 90) isDashing = false;
         }
         else
         {
@@ -763,6 +768,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void Jump()
     {
+        
         // If player is on the ground OR in the air and can double jump
         if (isGrounded || canDoubleJump)
         {
@@ -883,6 +889,8 @@ public class PlayerMovement : MonoBehaviour
             // If player moves away from dash direction
             if (Vector3.Angle(moveDirection, dashDir) > 100)
             {
+                
+                print("Moved away");
                 isDashing = false;
             }
         }
@@ -890,6 +898,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Dash()
     {
+        
         // Don't dash if can't dash
         if (!canDash) return;
 
@@ -913,12 +922,22 @@ public class PlayerMovement : MonoBehaviour
         transform.LookAt(targetPos);
 
         //player.rb.AddForce(moveDirection * 100 * dashPower);
+
+        if (isGrounded)
+        {
+            dashStartGround = groundingHit.collider;
+        }
+        else
+        {
+            dashStartGround = null;
+        }
     }
 
     void HitObstacle()
     {
         if (isDashing)
         {
+            print("hit obstacle stop dash");
             isDashing = false;
         }
     }
