@@ -9,6 +9,8 @@ public class PlayerAnimations : MonoBehaviour
 
     Animator anim;
 
+    public Transform rootBone;
+
     // STATES
 
     // Start is called before the first frame update

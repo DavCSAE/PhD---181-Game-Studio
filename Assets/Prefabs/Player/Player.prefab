@@ -6279,7 +6279,12 @@ MonoBehaviour:
   isJumping: 0
   isFalling: 0
   isDashing: 0
+  isSliding: 0
   moveSpeed: 2
+  maxSlopeAngle: 35
+  slideSpeed: 10
+  slideTurnSpeed: 3
+  slideRotateSpeed: 100
   jumpHeight: 3
   loseVelocityInAirSpeed: 1
   dashSpeed: 15
@@ -6298,6 +6303,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
+  rootBone: {fileID: 7863908352169146126}
 --- !u!114 &6751320719060436127
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8214,6 +8220,11 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 5866666021909216657, guid: 61470f16c9a23b245aa7f05315a17323, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 61470f16c9a23b245aa7f05315a17323, type: 3}
+--- !u!4 &5362277464556958166 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3407204029958699913, guid: 61470f16c9a23b245aa7f05315a17323, type: 3}
+  m_PrefabInstance: {fileID: 7287511335465142879}
+  m_PrefabAsset: {fileID: 0}
 --- !u!137 &8617001949225732864 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: -7874599555743186593, guid: 61470f16c9a23b245aa7f05315a17323, type: 3}
@@ -8254,13 +8265,13 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3038335611433705195, guid: 61470f16c9a23b245aa7f05315a17323, type: 3}
   m_PrefabInstance: {fileID: 7287511335465142879}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &7863908352169146126 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8646834277493981871, guid: 61470f16c9a23b245aa7f05315a17323, type: 3}
+  m_PrefabInstance: {fileID: 7287511335465142879}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2134481391117980626 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -523187803487692403, guid: 61470f16c9a23b245aa7f05315a17323, type: 3}
-  m_PrefabInstance: {fileID: 7287511335465142879}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &5362277464556958166 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3407204029958699913, guid: 61470f16c9a23b245aa7f05315a17323, type: 3}
   m_PrefabInstance: {fileID: 7287511335465142879}
   m_PrefabAsset: {fileID: 0}

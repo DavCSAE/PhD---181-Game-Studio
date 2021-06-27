@@ -63,6 +63,8 @@ public class Player : MonoBehaviour
         {
             Vector3 respawnPos = new Vector3(0, 2, 0);
             transform.position = respawnPos;
+
+            print("respawn!");
         }
     }
 }
