@@ -12,6 +12,15 @@ public class PlayerAnimations : MonoBehaviour
     public Transform rootBone;
 
     // STATES
+    private void OnEnable()
+    {
+        PlayerEvents.AttackEvent += Attack1Animation;
+    }
+
+    private void OnDisable()
+    {
+        PlayerEvents.AttackEvent -= Attack1Animation;
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -93,6 +102,17 @@ public class PlayerAnimations : MonoBehaviour
     public void StartedFlapping()
     {
         anim.SetBool("startFlap", false);
+    }
+
+
+    void Attack1Animation()
+    {
+        anim.SetBool("attack1", true);
+    }
+
+    public void Attacked()
+    {
+        anim.SetBool("attack1", false);
     }
 
 }

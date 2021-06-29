@@ -24,4 +24,14 @@ public class PlayerEvents : MonoBehaviour
         DashEvent?.Invoke();
     }
 
+    // Event for player attack
+    public delegate void Attack();
+    public static event Attack AttackEvent;
+
+    public static void TriggerAttackEvent()
+    {
+        // If event has subscribers, run event
+        AttackEvent?.Invoke();
+    }
+
 }
