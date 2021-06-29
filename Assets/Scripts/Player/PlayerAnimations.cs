@@ -24,6 +24,7 @@ public class PlayerAnimations : MonoBehaviour
     {
         HandleRunAnimation();
         HandleJumpAnimation();
+        HandleWingFlapAnimation();
         HandleFallingAnimation();
         HandleDashAnimation();
     }
@@ -74,6 +75,24 @@ public class PlayerAnimations : MonoBehaviour
         {
             anim.SetBool("isDashing", false);
         }
+    }
+
+    void HandleWingFlapAnimation()
+    {
+        if (player.movement.isFlapping)
+        {
+            anim.SetBool("startFlap", true);
+            anim.SetBool("isFlapping", true);
+        }
+        else
+        {
+            anim.SetBool("isFlapping", false);
+        }
+    }
+
+    public void StartedFlapping()
+    {
+        anim.SetBool("startFlap", false);
     }
 
 }

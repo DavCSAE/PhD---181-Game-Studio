@@ -12,6 +12,7 @@ public class PlayerMovement : MonoBehaviour
     public bool isMoving;
     public bool isGrounded;
     public bool isJumping;
+    public bool isFlapping;
     public bool isFalling;
     public bool isDashing;
     public bool isSliding;
@@ -63,7 +64,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float loseVelocityInAirSpeed = 1f;
     float fallMultiplier = 2.5f;
     float lowJumpModifier = 2f;
-    bool doubleJumpEnabled;
+    bool doubleJumpEnabled = true;
     bool canDoubleJump;
     bool unlimitedJumpsEnabled;
     float jumpBoost = 5f;
@@ -163,7 +164,11 @@ public class PlayerMovement : MonoBehaviour
                 // Stop dashing if dashing
                 print("ground stop dashing");
                 if (isDashing) isDashing = false;
+            } else if (!isGrounded)
+            {
+                //if (isDashing) isDashing = false;
             }
+            
 
             // Player is on the ground
             isGrounded = true;
@@ -707,8 +712,6 @@ public class PlayerMovement : MonoBehaviour
         return isLongEnough;
     }
 
-    
-
     void HandleRotation()
     {
         // Create normalized direction vector out of movement inputs
@@ -748,6 +751,7 @@ public class PlayerMovement : MonoBehaviour
                 // Update movement states
                 isJumping = false;
                 isFalling = true;
+                isFlapping = false;
             }
         }
 
@@ -777,6 +781,7 @@ public class PlayerMovement : MonoBehaviour
             {
                 // Stop player from falling
                 player.rb.velocity = new Vector3(player.rb.velocity.x, 0, player.rb.velocity.z);
+                isFalling = false;
 
                 // If player can't jump unlimited times
                 if (!unlimitedJumpsEnabled)
@@ -786,7 +791,7 @@ public class PlayerMovement : MonoBehaviour
                 }
 
                 // Play 'Wing Flap' animation
-                //player.animations.FlapWings();
+                isFlapping = true;
 
                 // Give horizontal boost in movement direction
                 player.rb.velocity = new Vector3(player.rb.velocity.x + moveDirection.normalized.x * jumpBoost,
