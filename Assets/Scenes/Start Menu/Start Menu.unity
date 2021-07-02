@@ -510,10 +510,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: The Brightest Shade
+  m_text: The Brightest Shadow
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 5a7576d4250bd9a4da2ccb088cfff63a, type: 2}
+  m_sharedMaterial: {fileID: 5523526817895306355, guid: 5a7576d4250bd9a4da2ccb088cfff63a, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -543,7 +543,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -1892,6 +1892,7 @@ MonoBehaviour:
   loadingScreen: {fileID: 3066472531345520697}
   slider: {fileID: 3066472531054545085}
   progressText: {fileID: 3066472531921720537}
+  isLoading: 0
 --- !u!4 &3066472532527299741
 Transform:
   m_ObjectHideFlags: 0
