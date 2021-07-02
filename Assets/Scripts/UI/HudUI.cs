@@ -5,11 +5,15 @@ using UnityEngine.UI;
 
 public class HudUI : MonoBehaviour
 {
+    // Singleton
     public static HudUI Singleton;
 
+    // HUD UI STUFF
     [SerializeField] List<Image> heartsImages = new List<Image>();
+    Image fullHeart;
+    Image emptyHeart;
 
-
+    // Set Singleton
     private void Awake()
     {
         Singleton = this;
@@ -23,6 +27,11 @@ public class HudUI : MonoBehaviour
 
     // Update is called once per frame
     void Update()
+    {
+        
+    }
+
+    void SetHeartImages()
     {
         
     }
