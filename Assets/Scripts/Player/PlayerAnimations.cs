@@ -36,6 +36,7 @@ public class PlayerAnimations : MonoBehaviour
         HandleWingFlapAnimation();
         HandleFallingAnimation();
         HandleDashAnimation();
+
     }
 
     void HandleRunAnimation()
@@ -115,4 +116,5 @@ public class PlayerAnimations : MonoBehaviour
         anim.SetBool("attack1", false);
     }
 
+    
 }

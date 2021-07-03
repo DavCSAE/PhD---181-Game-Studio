@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Users;
 
 public class InputManager : MonoBehaviour, PlayerControls.IPlayerActions
 {
@@ -12,7 +13,11 @@ public class InputManager : MonoBehaviour, PlayerControls.IPlayerActions
     //public Player player;
 
     [SerializeField]
-    private PlayerControls playerControls;
+    public PlayerControls playerControls;
+
+    string currentDevice;
+
+
 
     Vector2 move;
     Vector2 look;
@@ -43,6 +48,8 @@ public class InputManager : MonoBehaviour, PlayerControls.IPlayerActions
         playerControls.Enable();
 
         ///EventManager.PlayerHasSpawnedEvent += EnableInputs;
+        ///
+
     }
 
     void OnDisable()
@@ -51,6 +58,7 @@ public class InputManager : MonoBehaviour, PlayerControls.IPlayerActions
 
 
         ///EventManager.PlayerHasSpawnedEvent -= EnableInputs;
+        ///
     }
 
     void Start()
@@ -68,6 +76,16 @@ public class InputManager : MonoBehaviour, PlayerControls.IPlayerActions
         playerControls.Disable();
     }
 
+    public void SetCurrentDevice(string device)
+    {
+        currentDevice = device;
+    }
+
+    public string GetCurrentDevice()
+    {
+        return currentDevice;
+    }
+
 
     // Left Joy-Stick // WASD keys // Arrow keys
     public void OnMove(InputAction.CallbackContext context)
@@ -77,6 +95,8 @@ public class InputManager : MonoBehaviour, PlayerControls.IPlayerActions
 
     public Vector2 GetMoveInput()
     {
+        print(move);
+
         return move;
     }
 
@@ -142,6 +162,22 @@ public class InputManager : MonoBehaviour, PlayerControls.IPlayerActions
         if (context.started)
         {
             
+        }
+    }
+
+    public void OnInteract(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            PlayerEvents.TriggerInteractEvent();
+        }
+    }
+
+    public void OnNextDialogue(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            PlayerEvents.TriggerNextDialogueEvent();
         }
     }
 }

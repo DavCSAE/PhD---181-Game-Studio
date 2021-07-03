@@ -22,7 +22,7 @@ public class PlayerMovement : MonoBehaviour
     bool jumpInput;
 
     // Stops all movement if true
-    bool isFrozen = false;
+    public bool isFrozen = false;
 
     // GROUNDING
     float footSnapDist = 0.01f;
@@ -87,12 +87,18 @@ public class PlayerMovement : MonoBehaviour
     {
         PlayerEvents.JumpEvent += Jump;
         PlayerEvents.DashEvent += Dash;
+
+        PlayerEvents.StartDialogueEvent += Freeze;
+        PlayerEvents.EndDialogueEvent += Unfreeze;
     }
 
     private void OnDisable()
     {
         PlayerEvents.JumpEvent -= Jump;
         PlayerEvents.DashEvent -= Dash;
+
+        PlayerEvents.StartDialogueEvent -= Freeze;
+        PlayerEvents.EndDialogueEvent -= Unfreeze;
     }
 
     private void Start()
@@ -773,7 +779,9 @@ public class PlayerMovement : MonoBehaviour
 
     public void Jump()
     {
-        
+        // Don't do anything if frozen
+        if (isFrozen) return;
+
         // If player is on the ground OR in the air and can double jump
         if (isGrounded || canDoubleJump)
         {
@@ -904,7 +912,9 @@ public class PlayerMovement : MonoBehaviour
 
     void Dash()
     {
-        
+        // Don't do anything if frozen
+        if (isFrozen) return;
+
         // Don't dash if can't dash
         if (!canDash) return;
 
@@ -952,7 +962,9 @@ public class PlayerMovement : MonoBehaviour
     {
         isFrozen = false;
 
-        InputManager.Singleton.EnableInputs();
+        
+
+        //InputManager.Singleton.EnableInputs();
     }
 
     public void Freeze()
@@ -962,6 +974,12 @@ public class PlayerMovement : MonoBehaviour
         player.rb.useGravity = false;
         player.rb.velocity = Vector3.zero;
 
-        InputManager.Singleton.DisableInputs();
+        isMoving = false;
+        isFalling = false;
+        isJumping = false;
+        isDashing = false;
+
+        
+        //InputManager.Singleton.DisableInputs();
     }
 }

@@ -50,6 +50,12 @@ public class DialogueManager : MonoBehaviour
             sentences.Enqueue(sentence);
         }
 
+        // Add DisplayNextSentence function to NextDialogue event
+        PlayerEvents.NextDialogueEvent += DisplayNextSentence;
+
+        // Trigger event
+        PlayerEvents.TriggerStartDialogueEvent();
+
         // Display the first sentence
         DisplayNextSentence();
     }
@@ -106,5 +112,11 @@ public class DialogueManager : MonoBehaviour
     {
         // Close the dialogue UI
         anim.SetBool("IsOpen", false);
+
+        // Remove DisplayNextSentence function from NextDialogue event
+        PlayerEvents.NextDialogueEvent -= DisplayNextSentence;
+
+        // Trigger event
+        PlayerEvents.TriggerEndDialogueEvent();
     }
 }
