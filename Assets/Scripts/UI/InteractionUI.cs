@@ -71,7 +71,6 @@ public class InteractionUI : MonoBehaviour
         nextPopUp.SetActive(true);
         currentPopUp = nextPopUp;
 
-        print(1);
     }
 
     public void HidePopUp()
@@ -81,24 +80,20 @@ public class InteractionUI : MonoBehaviour
         currentPopUp.SetActive(false);
         currentPopUp = null;
 
-        print(2);
     }
 
     void UpdateIcons()
     {
         string currDevice = InputManager.Singleton.GetCurrentDevice();
 
-        print("Update Icons: " + currDevice);
 
         if (currDevice == "keyboard")
         {
-            print("Keyboard icons!");
             talkIcon.sprite = icons.eIcon;
             nextIcon.sprite = icons.eIcon;
         }
         else if (currDevice == "gamepad")
         {
-            print("Gamepad icons!");
             talkIcon.sprite = icons.northButtonIcon;
             nextIcon.sprite = icons.southButtonIcon;
         }

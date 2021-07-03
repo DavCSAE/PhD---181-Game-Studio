@@ -57,6 +57,7 @@ public class PlayerInteractions : MonoBehaviour
 
     void DisplayInteraction()
     {
+        print("DISPLAY");
         showingInteraction = true;
 
         if (currentInteraction.interactionType == Interaction.interactionTypes.talk)
@@ -85,6 +86,8 @@ public class PlayerInteractions : MonoBehaviour
     void StartDialogueInteraction()
     {
         currentInteraction.GetComponent<DialogueTrigger>().TriggerDialogue();
+
+        showingInteraction = false;
 
         //HideInteraction();
 
