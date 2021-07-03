@@ -6,13 +6,18 @@ public class PlayerTestKit : MonoBehaviour
 {
     GameObject testKit;
 
+    // Input Manager
     [SerializeField] GameObject inputManagerPrefab;
     GameObject inputManagerObject;
 
+    // Camera
     [SerializeField] Transform camTarget;
     [SerializeField] GameObject freeLookCinemachinePrefab;
     GameObject freeLookCinemachineObj;
 
+    // Dialogue System
+    [SerializeField] GameObject DialogueManagerPrefab;
+    GameObject dialogueSystem;
 
     // Start is called before the first frame update
     void Awake()
@@ -27,7 +32,7 @@ public class PlayerTestKit : MonoBehaviour
 
         SpawnCameras();
 
-        
+        SpawnDialogueSystem();
     }
 
     void SpawnTestKit()
@@ -55,5 +60,10 @@ public class PlayerTestKit : MonoBehaviour
         Cinemachine.CinemachineFreeLook cinemachineFreeLook = freeLookCinemachineObj.GetComponent<Cinemachine.CinemachineFreeLook>();
         cinemachineFreeLook.Follow = transform;
         cinemachineFreeLook.LookAt = camTarget;
+    }
+
+    void SpawnDialogueSystem()
+    {
+        dialogueSystem = Instantiate(DialogueManagerPrefab, testKit.transform);
     }
 }
