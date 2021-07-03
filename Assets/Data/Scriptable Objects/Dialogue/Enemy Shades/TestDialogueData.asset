@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   npcName: Shade
   sentences:
-  - Hey!
-  - I'm a Shade. Hello I am the one the one eat a gun a gun! YEah!
-  - Bye! Let me see the window rising through the east.
+  - Hey! This is test dialogue!
+  - 'I''m going to say a bunch or meaningless words blah blah blah blah. '
+  - Thank you for talking to me! Bye!

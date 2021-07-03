@@ -4,7 +4,7 @@ using UnityEngine;
 
 [System.Serializable]
 [CreateAssetMenu(fileName = "ControlIconsData", menuName = "ControlIcons")]
-public class InputDeviceControlsIcons : ScriptableObject
+public class InteractionIcons : ScriptableObject
 {
     // Keyboard images
     public Sprite eIcon; // Interact image
@@ -13,6 +13,7 @@ public class InputDeviceControlsIcons : ScriptableObject
 
     // Gamepad Images
     public Sprite northButtonIcon;
+    public Sprite southButtonIcon;
 
    
 }

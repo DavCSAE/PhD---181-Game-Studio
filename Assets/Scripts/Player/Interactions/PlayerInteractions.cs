@@ -12,11 +12,15 @@ public class PlayerInteractions : MonoBehaviour
     private void OnEnable()
     {
         PlayerEvents.InteractEvent += Interact;
+
+        PlayerEvents.EndDialogueEvent += DisplayInteraction;
     }
 
     private void OnDisable()
     {
         PlayerEvents.InteractEvent -= Interact;
+
+        PlayerEvents.EndDialogueEvent -= DisplayInteraction;
     }
 
     // Start is called before the first frame update
@@ -82,7 +86,7 @@ public class PlayerInteractions : MonoBehaviour
     {
         currentInteraction.GetComponent<DialogueTrigger>().TriggerDialogue();
 
-        HideInteraction();
+        //HideInteraction();
 
     }
 }

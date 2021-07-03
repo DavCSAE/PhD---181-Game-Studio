@@ -63,7 +63,7 @@ public class DialogueManager : MonoBehaviour
     public void DisplayNextSentence()
     {
         // If there are no more sentences, then end the dialogue
-        if(sentences.Count == 0)
+        if(sentences.Count == 0 && sentenceFinished)
         {
             EndDialogue();
             return;

@@ -95,7 +95,7 @@ public class InputManager : MonoBehaviour, PlayerControls.IPlayerActions
 
     public Vector2 GetMoveInput()
     {
-        print(move);
+
 
         return move;
     }
