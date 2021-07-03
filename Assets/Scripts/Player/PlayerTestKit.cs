@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class PlayerTestKit : MonoBehaviour
 {
-    bool isTesting;
-
     GameObject testKit;
 
     [SerializeField] GameObject inputManagerPrefab;
@@ -19,16 +17,17 @@ public class PlayerTestKit : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
+        SpawnTestKit();
+
         // If there's no InputManager then this must be for testing
         if (InputManager.Singleton == null)
         {
-            isTesting = true;
+            SpawnInputManager();
         }
 
-        if (isTesting)
-        {
-            SpawnTestKit();
-        }
+        SpawnCameras();
+
+        
     }
 
     void SpawnTestKit()
@@ -39,17 +38,22 @@ public class PlayerTestKit : MonoBehaviour
         testKit.transform.parent = transform;
         // Reset test kit transforms
         testKit.transform.localPosition = Vector3.zero;
+    }
 
+    void SpawnInputManager()
+    {
         // Spawn InputManager
         inputManagerObject = Instantiate(inputManagerPrefab, testKit.transform);
         inputManagerObject.GetComponent<InputManager>().EnableInputs();
-    
+    }
+
+    void SpawnCameras()
+    {
         // Spawn Cinemachine Camera
         freeLookCinemachineObj = Instantiate(freeLookCinemachinePrefab, testKit.transform);
         // Setup Cinemachine Camera
         Cinemachine.CinemachineFreeLook cinemachineFreeLook = freeLookCinemachineObj.GetComponent<Cinemachine.CinemachineFreeLook>();
         cinemachineFreeLook.Follow = transform;
         cinemachineFreeLook.LookAt = camTarget;
-
     }
 }

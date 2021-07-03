@@ -23,7 +23,7 @@ Material:
   m_Name: Shade Player Body
   m_Shader: {fileID: -6465566751694194690, guid: 8ef6df79fc79d6b4785643fc9ef5517c, type: 3}
   m_ShaderKeywords: 
-  m_LightmapFlags: 4
+  m_LightmapFlags: 2
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1

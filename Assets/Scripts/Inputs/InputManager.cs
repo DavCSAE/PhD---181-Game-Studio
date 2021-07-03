@@ -133,6 +133,14 @@ public class InputManager : MonoBehaviour, PlayerControls.IPlayerActions
     {
         if (context.started)
         {
+            PlayerEvents.TriggerAttackEvent();
+        }
+    }
+
+    public void OnPauseMenu(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
             
         }
     }

@@ -18,14 +18,6 @@ public class LevelLoader : MonoBehaviour
         Singleton = this;
     }
 
-    private void Update()
-    {
-        if (isLoading)
-        {
-
-        }
-    }
-
     public void LoadLevel(int sceneIndex)
     {
         StartCoroutine(LoadAsynchronously(sceneIndex));
