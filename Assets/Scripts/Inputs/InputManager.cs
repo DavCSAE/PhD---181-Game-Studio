@@ -136,4 +136,12 @@ public class InputManager : MonoBehaviour, PlayerControls.IPlayerActions
             PlayerEvents.TriggerAttackEvent();
         }
     }
+
+    public void OnPauseMenu(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            
+        }
+    }
 }
