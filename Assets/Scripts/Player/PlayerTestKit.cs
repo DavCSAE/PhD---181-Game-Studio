@@ -22,6 +22,9 @@ public class PlayerTestKit : MonoBehaviour
     // Interaction UI
     [SerializeField] GameObject interactionUI;
 
+    //BlackScreen
+
+    [SerializeField] GameObject blackScreen;
     //Pause Menu UI
     [SerializeField] GameObject pauseMenuUI;
 
@@ -42,6 +45,10 @@ public class PlayerTestKit : MonoBehaviour
 
         SpawnInteractionUI();
 
+        if (BlackScreen.Singleton == null)
+        {
+            SpawnBlackScreen();
+        }
         SpawnPauseMenuUI();
     }
 
@@ -80,6 +87,11 @@ public class PlayerTestKit : MonoBehaviour
     void SpawnInteractionUI()
     {
         Instantiate(interactionUI, testKit.transform);
+    }
+
+    void SpawnBlackScreen()
+    {
+        Instantiate(blackScreen);
     }
 
     void SpawnPauseMenuUI()

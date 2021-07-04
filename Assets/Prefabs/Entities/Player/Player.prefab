@@ -6327,6 +6327,7 @@ MonoBehaviour:
   freeLookCinemachineObj: {fileID: 0}
   dialogueManagerPrefab: {fileID: 2487331274924634943, guid: 6418125c445642040ad0c08a6cf59696, type: 3}
   interactionUI: {fileID: 1554925347183846669, guid: 4bdeb55c936939a409e890b8f8cd0b9d, type: 3}
+  blackScreen: {fileID: 3782439498235882722, guid: 23fb4a5454398ac4cb2f110a6a827f0f, type: 3}
   pauseMenuUI: {fileID: 3745247794606915565, guid: f3e65a4ebcb8fae4bbc656a6fe9bdaf7, type: 3}
 --- !u!114 &1572634008
 MonoBehaviour:

@@ -50,6 +50,36 @@ public class BlackScreen : MonoBehaviour
         HandleFadingFrom();
     }
 
+    public void SetToBlack()
+    {
+        if (isFadingFrom) isFadingFrom = false;
+        if (isFadingTo) isFadingTo = false;
+
+        // Copy colour of black screen
+        Color blackScreenCol = blackScreen.color;
+        // Adjust alpha of colour
+        blackScreenCol.a = 1f;
+        // Set black screen to new colour
+        blackScreen.color = blackScreenCol;
+
+        blackScreen.gameObject.SetActive(true);
+    }
+
+    public void SetToTransparent()
+    {
+        if (isFadingFrom) isFadingFrom = false;
+        if (isFadingTo) isFadingTo = false;
+
+        // Copy colour of black screen
+        Color blackScreenCol = blackScreen.color;
+        // Adjust alpha of colour
+        blackScreenCol.a = 0f;
+        // Set black screen to new colour
+        blackScreen.color = blackScreenCol;
+
+        blackScreen.gameObject.SetActive(false);
+    }
+
     public void FadeToBlack()
     {
         if (!isFadingFrom) 
