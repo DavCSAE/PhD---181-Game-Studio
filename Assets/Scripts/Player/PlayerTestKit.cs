@@ -25,6 +25,8 @@ public class PlayerTestKit : MonoBehaviour
     //BlackScreen
 
     [SerializeField] GameObject blackScreen;
+    //Pause Menu UI
+    [SerializeField] GameObject pauseMenuUI;
 
     // Start is called before the first frame update
     void Awake()
@@ -47,6 +49,7 @@ public class PlayerTestKit : MonoBehaviour
         {
             SpawnBlackScreen();
         }
+        SpawnPauseMenuUI();
     }
 
     void SpawnTestKit()
@@ -89,5 +92,8 @@ public class PlayerTestKit : MonoBehaviour
     void SpawnBlackScreen()
     {
         Instantiate(blackScreen);
+    void SpawnPauseMenuUI()
+    {
+        Instantiate(pauseMenuUI, testKit.transform);
     }
 }
