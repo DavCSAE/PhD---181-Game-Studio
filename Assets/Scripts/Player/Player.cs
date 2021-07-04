@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
@@ -21,6 +22,7 @@ public class Player : MonoBehaviour
     // CAMERA
     [HideInInspector]
     public Camera cam;
+
 
     void Awake()
     {
@@ -50,6 +52,7 @@ public class Player : MonoBehaviour
         cam = Camera.main;
 
 
+
         // INPUTS
         InputManager.Singleton.EnableInputs();
     }
@@ -70,4 +73,6 @@ public class Player : MonoBehaviour
             print("respawn!");
         }
     }
+
+    
 }
