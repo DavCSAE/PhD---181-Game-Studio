@@ -22,6 +22,9 @@ public class PlayerTestKit : MonoBehaviour
     // Interaction UI
     [SerializeField] GameObject interactionUI;
 
+    //Pause Menu UI
+    [SerializeField] GameObject pauseMenuUI;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -38,6 +41,8 @@ public class PlayerTestKit : MonoBehaviour
         SpawnDialogueSystem();
 
         SpawnInteractionUI();
+
+        SpawnPauseMenuUI();
     }
 
     void SpawnTestKit()
@@ -75,5 +80,10 @@ public class PlayerTestKit : MonoBehaviour
     void SpawnInteractionUI()
     {
         Instantiate(interactionUI, testKit.transform);
+    }
+
+    void SpawnPauseMenuUI()
+    {
+        Instantiate(pauseMenuUI, testKit.transform);
     }
 }
