@@ -6323,6 +6323,9 @@ MonoBehaviour:
   inputManagerPrefab: {fileID: 5610421359074119630, guid: 28af20712f8d41141b7de478c0613493, type: 3}
   camTarget: {fileID: 5912218972121923991}
   freeLookCinemachinePrefab: {fileID: 1918237310901353292, guid: d5201134604f3f343bda16cab5c03e1f, type: 3}
+  freeLookCinemachineObj: {fileID: 0}
+  dialogueManagerPrefab: {fileID: 2487331274924634943, guid: 6418125c445642040ad0c08a6cf59696, type: 3}
+  interactionUI: {fileID: 1554925347183846669, guid: 4bdeb55c936939a409e890b8f8cd0b9d, type: 3}
 --- !u!114 &1572634008
 MonoBehaviour:
   m_ObjectHideFlags: 0
