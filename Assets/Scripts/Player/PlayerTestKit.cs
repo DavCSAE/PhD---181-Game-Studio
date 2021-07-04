@@ -92,6 +92,8 @@ public class PlayerTestKit : MonoBehaviour
     void SpawnBlackScreen()
     {
         Instantiate(blackScreen);
+    }
+
     void SpawnPauseMenuUI()
     {
         Instantiate(pauseMenuUI, testKit.transform);
