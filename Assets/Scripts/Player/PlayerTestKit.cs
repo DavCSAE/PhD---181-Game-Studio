@@ -22,6 +22,10 @@ public class PlayerTestKit : MonoBehaviour
     // Interaction UI
     [SerializeField] GameObject interactionUI;
 
+    //BlackScreen
+
+    [SerializeField] GameObject blackScreen;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -38,6 +42,11 @@ public class PlayerTestKit : MonoBehaviour
         SpawnDialogueSystem();
 
         SpawnInteractionUI();
+
+        if (BlackScreen.Singleton == null)
+        {
+            SpawnBlackScreen();
+        }
     }
 
     void SpawnTestKit()
@@ -75,5 +84,10 @@ public class PlayerTestKit : MonoBehaviour
     void SpawnInteractionUI()
     {
         Instantiate(interactionUI, testKit.transform);
+    }
+
+    void SpawnBlackScreen()
+    {
+        Instantiate(blackScreen);
     }
 }

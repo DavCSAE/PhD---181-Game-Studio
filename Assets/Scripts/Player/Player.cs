@@ -5,6 +5,8 @@ using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
+    public static Player Singleton;
+
     // PLAYER COMPONENTS
     //[HideInInspector]
     public PlayerMovement movement;
@@ -26,7 +28,7 @@ public class Player : MonoBehaviour
 
     void Awake()
     {
-        
+        Singleton = this;
     }
 
 
