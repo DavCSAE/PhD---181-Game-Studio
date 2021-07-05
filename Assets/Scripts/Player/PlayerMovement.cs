@@ -962,7 +962,8 @@ public class PlayerMovement : MonoBehaviour
     {
         isFrozen = false;
 
-        
+
+        if (!player.capsColl.enabled) player.capsColl.enabled = true;
 
         //InputManager.Singleton.EnableInputs();
     }
