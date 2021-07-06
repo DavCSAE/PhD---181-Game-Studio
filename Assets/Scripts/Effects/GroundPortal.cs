@@ -37,6 +37,6 @@ public class GroundPortal : MonoBehaviour
 
     public void PortalOpened()
     {
-        anim.SetBool("portalActivated", false);
+        //anim.SetBool("portalActivated", false);
     }
 }

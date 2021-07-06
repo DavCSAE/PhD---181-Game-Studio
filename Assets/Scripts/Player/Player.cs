@@ -76,5 +76,9 @@ public class Player : MonoBehaviour
         }
     }
 
+    public void UnParent()
+    {
+        transform.parent = null;
+    }
     
 }

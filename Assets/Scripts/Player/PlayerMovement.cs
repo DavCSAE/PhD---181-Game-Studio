@@ -962,7 +962,6 @@ public class PlayerMovement : MonoBehaviour
     {
         isFrozen = false;
 
-        
 
         //InputManager.Singleton.EnableInputs();
     }
