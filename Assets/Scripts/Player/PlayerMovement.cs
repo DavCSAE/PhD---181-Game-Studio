@@ -8,7 +8,6 @@ public class PlayerMovement : MonoBehaviour
     public Player player;
 
     [Header("STATES")]
-    // Movement states
     public bool isMoving;
     public bool isGrounded;
     public bool isJumping;
@@ -332,6 +331,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    
     void HandleMovement()
     {
         //if (isDashing) return;
