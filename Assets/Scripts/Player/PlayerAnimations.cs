@@ -5,13 +5,15 @@ using UnityEngine;
 public class PlayerAnimations : MonoBehaviour
 {
     [HideInInspector]
-    public Player player;
+    Player player;
 
     Animator anim;
 
     public Transform rootBone;
 
-    // STATES
+
+
+
     private void OnEnable()
     {
         PlayerEvents.AttackEvent += Attack1Animation;
@@ -25,6 +27,7 @@ public class PlayerAnimations : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        player = GetComponent<Player>();
         anim = GetComponent<Animator>();
     }
 
@@ -36,6 +39,7 @@ public class PlayerAnimations : MonoBehaviour
         HandleWingFlapAnimation();
         HandleFallingAnimation();
         HandleDashAnimation();
+        HandleSpawnAnimation();
     }
 
     void HandleRunAnimation()
@@ -113,6 +117,27 @@ public class PlayerAnimations : MonoBehaviour
     public void Attacked()
     {
         anim.SetBool("attack1", false);
+    }
+
+    void HandleSpawnAnimation()
+    {
+        if (player.spawning.GetPreparingToSpawnState())
+        {
+            anim.SetBool("isPreparingToSpawn", true);
+        }
+        else
+        {
+            anim.SetBool("isPreparingToSpawn", false);
+        }
+
+        if (player.spawning.GetSpawningState())
+        {
+            anim.SetBool("isSpawning", true);
+        }
+        else
+        {
+            anim.SetBool("isSpawning", false);
+        }
     }
 
 }

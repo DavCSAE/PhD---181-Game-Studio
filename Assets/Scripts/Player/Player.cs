@@ -13,6 +13,8 @@ public class Player : MonoBehaviour
     //[HideInInspector]
     public PlayerAnimations animations;
     [HideInInspector]
+    public PlayerSpawning spawning;
+    [HideInInspector]
     public PlayerCollision collision;
 
     // PHYSICS
@@ -25,26 +27,19 @@ public class Player : MonoBehaviour
     [HideInInspector]
     public Camera cam;
 
-
     void Awake()
     {
         Singleton = this;
     }
 
-
-
     // Start is called before the first frame update
     void Start()
     {
-        
-
         // PLAYER COMPONENTS
         movement = GetComponent<PlayerMovement>();
-        movement.player = this;
         animations = GetComponent<PlayerAnimations>();
-        animations.player = this;
+        spawning = GetComponent<PlayerSpawning>();
         collision = GetComponent<PlayerCollision>();
-        collision.player = this;
 
         // PHYSICS
         rb = GetComponent<Rigidbody>();
@@ -52,8 +47,6 @@ public class Player : MonoBehaviour
 
         // CAMERA
         cam = Camera.main;
-
-
 
         // INPUTS
         InputManager.Singleton.EnableInputs();

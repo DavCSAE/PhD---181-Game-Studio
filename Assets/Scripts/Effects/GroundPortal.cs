@@ -30,13 +30,13 @@ public class GroundPortal : MonoBehaviour
         }
     }
 
-    void OpenPortal()
+    public void OpenPortal()
     {
         anim.SetBool("portalActivated", true);
     }
 
     public void PortalOpened()
     {
-        //anim.SetBool("portalActivated", false);
+        anim.SetBool("portalActivated", false);
     }
 }

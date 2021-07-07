@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     [HideInInspector]
-    public Player player;
+    Player player;
 
     [Header("STATES")]
     public bool isMoving;
@@ -102,7 +102,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Start()
     {
-        
+        player = GetComponent<Player>();
     }
 
     private void FixedUpdate()

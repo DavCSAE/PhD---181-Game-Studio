@@ -4,7 +4,21 @@ using UnityEngine;
 
 public class PlayerCollision : MonoBehaviour
 {
-    public Player player;
+    Player player;
+
+    
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        player = GetComponent<Player>();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
 
     public void OnCollisionEnter(Collision collision)
     {
@@ -12,17 +26,5 @@ public class PlayerCollision : MonoBehaviour
         {
             player.movement.isDashing = false;
         }
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }
