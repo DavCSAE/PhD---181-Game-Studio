@@ -33,6 +33,16 @@ public class IntroCutsceneManager : MonoBehaviour
         BlackScreen.Singleton.FadeFromBlack();
     }
 
+    public void SpawnPlayer()
+    {
+        Player.Singleton.spawning.PrepareToSpawn();
+    }
+
+    public void StayPreparedToSpawn()
+    {
+        Player.Singleton.spawning.StayPreparedToSpawn();
+    }
+
     public void LockCameraControl()
     {
         FreeLookAddOn.Singleton.Lock();

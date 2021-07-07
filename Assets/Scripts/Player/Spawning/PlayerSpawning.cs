@@ -39,6 +39,7 @@ public class PlayerSpawning : MonoBehaviour
 
     public void PrepareToSpawn()
     {
+
         // Set player position to spawn point position
         transform.position = targetSpawnPoint.transform.position;
 
@@ -100,4 +101,8 @@ public class PlayerSpawning : MonoBehaviour
         targetSpawnPoint = sp;
     }
 
+    public void StayPreparedToSpawn()
+    {
+        isPreparingToSpawn = true;
+    }
 }
