@@ -8784,6 +8784,7 @@ GameObject:
   - component: {fileID: 5912218971857306098}
   - component: {fileID: 6751320719060436127}
   - component: {fileID: 1572634008}
+  - component: {fileID: 9213095187522180395}
   m_Layer: 10
   m_Name: Player
   m_TagString: Untagged
@@ -8873,6 +8874,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movement: {fileID: 0}
   animations: {fileID: 0}
+  spawning: {fileID: 0}
   collision: {fileID: 0}
   rb: {fileID: 0}
   capsColl: {fileID: 0}
@@ -8889,7 +8891,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56d7556be1b1f8f4dbb4409db4ee06d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
   isMoving: 0
   isGrounded: 0
   isJumping: 0
@@ -8920,7 +8921,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90cbb4c0910f3cc4c8af96ff990a331a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
   rootBone: {fileID: 7863908352169146126}
 --- !u!114 &6751320719060436127
 MonoBehaviour:
@@ -8954,7 +8954,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b990aee765abfd409cfea1dd5c994b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
+--- !u!114 &9213095187522180395
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5912218971857306097}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5da598e64ae1f2a40a9d0eefda6c9580, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetSpawnPoint: {fileID: 0}
 --- !u!1 &5912218972121923990
 GameObject:
   m_ObjectHideFlags: 0
