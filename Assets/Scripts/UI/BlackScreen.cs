@@ -15,7 +15,6 @@ public class BlackScreen : MonoBehaviour
     // Timer
     float fadingTimer; // Current timer
     [SerializeField]float fadeLength; // Total length timer should go to
-    float adjustedFadeLength;
     bool isSpeedChanged;
 
     // FADING TO
@@ -40,8 +39,6 @@ public class BlackScreen : MonoBehaviour
         // Turn black screen off
         FadeFromBlack();
 
-        // Set initial fadeLength
-        adjustedFadeLength = fadeLength;
     }
 
     private void Update()
@@ -90,10 +87,10 @@ public class BlackScreen : MonoBehaviour
         }
     }
 
-    public void FadeToBlack(float speedMultiplier)
+    public void FadeToBlack(float timeInSeconds)
     {
         // Set speed
-        adjustedFadeLength = fadeLength / speedMultiplier;
+        fadeLength = timeInSeconds;
         isSpeedChanged = true;
 
         FadeToBlack();
@@ -108,10 +105,10 @@ public class BlackScreen : MonoBehaviour
         FadeToBlack();
     }
 
-    public void FadeToBlack(AfterFadeCallback method, float speedMultiplier)
+    public void FadeToBlack(AfterFadeCallback method, float timeInSeconds)
     {
         // Set speed
-        adjustedFadeLength = fadeLength / speedMultiplier;
+        fadeLength = timeInSeconds;
         isSpeedChanged = true;
 
         FadeToBlack(method);
@@ -126,9 +123,9 @@ public class BlackScreen : MonoBehaviour
         fadingTimer += Time.deltaTime;
 
         // If fading finished
-        if (fadingTimer >= adjustedFadeLength)
+        if (fadingTimer >= fadeLength)
         {
-            fadingTimer = adjustedFadeLength;
+            fadingTimer = fadeLength;
             isFadingTo = false;
 
             FinishedFading();
@@ -137,7 +134,7 @@ public class BlackScreen : MonoBehaviour
         // Copy colour of black screen
         Color blackScreenCol = blackScreen.color;
         // Adjust alpha of colour
-        blackScreenCol.a = fadingTimer / adjustedFadeLength;
+        blackScreenCol.a = fadingTimer / fadeLength;
         // Set black screen to new colour
         blackScreen.color = blackScreenCol;
     }
@@ -150,10 +147,10 @@ public class BlackScreen : MonoBehaviour
         }
     }
 
-    public void FadeFromBlack(float speedMultiplier)
+    public void FadeFromBlack(float timeInSeconds)
     {
         // Set speed
-        adjustedFadeLength = fadeLength / speedMultiplier;
+        fadeLength = timeInSeconds;
         isSpeedChanged = true;
 
         FadeFromBlack();
@@ -168,9 +165,9 @@ public class BlackScreen : MonoBehaviour
         fadingTimer += Time.deltaTime;
 
         // If fading finished
-        if (fadingTimer >= adjustedFadeLength)
+        if (fadingTimer >= fadeLength)
         {
-            fadingTimer = adjustedFadeLength;
+            fadingTimer = fadeLength;
             isFadingFrom = false;
 
             blackScreen.gameObject.SetActive(false);
@@ -181,7 +178,7 @@ public class BlackScreen : MonoBehaviour
         // Copy colour of black screen
         Color blackScreenCol = blackScreen.color;
         // Adjust alpha of colour
-        blackScreenCol.a = (adjustedFadeLength - fadingTimer) / adjustedFadeLength;
+        blackScreenCol.a = (fadeLength - fadingTimer) / fadeLength;
         // Set black screen to new colour
         blackScreen.color = blackScreenCol;
     }
@@ -201,7 +198,7 @@ public class BlackScreen : MonoBehaviour
         // Reset animator speed
         if (isSpeedChanged)
         {
-            adjustedFadeLength = fadeLength;
+            fadeLength = 1f;
             isSpeedChanged = false;
         }
 
