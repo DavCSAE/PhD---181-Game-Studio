@@ -62,8 +62,7 @@ public class Player : MonoBehaviour
     {
         if (transform.position.y < -20f)
         {
-            Vector3 respawnPos = new Vector3(0, 2, 0);
-            transform.position = respawnPos;
+            spawning.FadeForSpawn();
 
             print("respawn!");
         }
