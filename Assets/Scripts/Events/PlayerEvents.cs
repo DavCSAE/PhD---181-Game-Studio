@@ -83,4 +83,14 @@ public class PlayerEvents : MonoBehaviour
         // If event has subscribers, run event
         InputDeviceChangeEvent?.Invoke();
     }
+
+    // Event for pause menu button
+    public delegate void PauseMenuButton();
+    public static event PauseMenuButton PauseMenuButtonEvent;
+
+    public static void TriggerPauseMenuButtonEvent()
+    {
+        // If event has subscribers, run event
+        PauseMenuButtonEvent?.Invoke();
+    }
 }
