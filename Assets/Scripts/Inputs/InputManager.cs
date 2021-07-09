@@ -173,7 +173,7 @@ public class InputManager : MonoBehaviour, PlayerControls.IPlayerActions
     {
         if (context.started)
         {
-            
+            PlayerEvents.TriggerPauseMenuButtonEvent();
         }
     }
 
