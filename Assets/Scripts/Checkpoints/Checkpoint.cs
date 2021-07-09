@@ -7,11 +7,6 @@ public class Checkpoint : MonoBehaviour
 {
     bool isUnlocked;
 
-    public GroundPortal GetPortal()
-    {
-        return portal;
-    }
-
     public void UnlockCheckpoint()
     {
         if (isUnlocked) return;

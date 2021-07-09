@@ -46,6 +46,9 @@ public class PlayerSpawning : MonoBehaviour
         // Update state so PlayerAnimations knows what to do
         isPreparingToSpawn = true;
 
+        // Freeze Player movement
+        player.movement.Freeze();
+
         // Fade from the black screen
         BlackScreen.Singleton.FadeFromBlack();
 
@@ -101,6 +104,9 @@ public class PlayerSpawning : MonoBehaviour
     public void StayPreparedToSpawn()
     {
         isPreparingToSpawn = true;
+
+        // Freeze Player movement
+        player.movement.Freeze();
 
         PositionCamera();
         SetPlayerRotation();
