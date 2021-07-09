@@ -73,6 +73,8 @@ public class PlayerInteractions : MonoBehaviour
         InteractionUI.Singleton.HidePopUp();
 
         showingInteraction = false;
+
+        currentInteraction = null;
     }
 
     void Interact()

@@ -32,7 +32,6 @@ public class InteractionUI : MonoBehaviour
 
         PlayerEvents.StartDialogueEvent += ShowNextPopUp;
 
-        PlayerEvents.EndDialogueEvent += ShowTalkPopUp;
     }
 
     private void OnDisable()
@@ -41,7 +40,6 @@ public class InteractionUI : MonoBehaviour
 
         PlayerEvents.StartDialogueEvent -= ShowNextPopUp;
 
-        PlayerEvents.EndDialogueEvent -= ShowTalkPopUp;
     }
 
     // Start is called before the first frame update

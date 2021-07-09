@@ -21,6 +21,7 @@ public class IntroSceneBirdArrivalCutscene : MonoBehaviour
     void Start()
     {
         birdArrivalDialogueTrigger = GetComponent<DialogueTrigger>();
+        birdArrivalDialogueData = birdArrivalDialogueTrigger.GetDialogueData();
     }
 
     // Update is called once per frame
@@ -51,6 +52,8 @@ public class IntroSceneBirdArrivalCutscene : MonoBehaviour
         BlackScreen.Singleton.FadeToBlack(StartCutscene, 1f);
 
         InputManager.Singleton.FreezeMoveInput();
+        InputManager.Singleton.FreezeJumpInput();
+        InputManager.Singleton.FreezeAttackInput();
 
         FreeLookAddOn.Singleton.Lock();
     }
@@ -86,9 +89,32 @@ public class IntroSceneBirdArrivalCutscene : MonoBehaviour
         
     }
 
+    public void SetInitialName()
+    {
+        birdArrivalDialogueData.npcName = "???";
+
+        DialogueManager.Singleton.UpdateNameText();
+    }
+
     public void UpdateName()
     {
         birdArrivalDialogueData.npcName = "Order";
+
+        DialogueManager.Singleton.UpdateNameText();
+    }
+
+    public void FinishedBirdArrivalDialogue()
+    {
+        birdArrivalCutscene.playableGraph.GetRootPlayable(0).SetSpeed(1);
+
+        InputManager.Singleton.UnFreezeMoveInput();
+        InputManager.Singleton.UnFreezeJumpInput();
+        InputManager.Singleton.UnFreezeAttackInput();
+
+        FreeLookAddOn.Singleton.Unlock();
+
+        // Disable virtual camera
+        virtualCamera.SetActive(false);
     }
     
 }

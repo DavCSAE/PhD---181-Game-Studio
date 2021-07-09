@@ -12,7 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c34a32497f420f2409301e13e3c987be, type: 3}
   m_Name: Bird Arrival Dialogue
   m_EditorClassIdentifier: 
-  npcName: ???
+  npcName: Order
   sentences:
   - I have finally found you!
-  - Goodbye!
+  - You can call me Order. We don't have much time.
+  - The Great Darkness has gone mad and seeks to devour the Bright Realm!
+  - That CANNOT be allowed to happen. It would plunge the two realms into Chaos!
+  - Only you, the Bright Shade, can stop the approaching calamity.
+  - I have brought Gifts that will help you unlock your true power.
+  - The first one is just ahead. I'll meet you there!

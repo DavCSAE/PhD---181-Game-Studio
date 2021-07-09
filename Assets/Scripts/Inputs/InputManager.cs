@@ -25,6 +25,10 @@ public class InputManager : MonoBehaviour, PlayerControls.IPlayerActions
     Vector2 look;
 
     bool jump;
+    bool isJumpFrozen;
+
+    bool isAttackFrozen;
+
     bool dash;
 
     private void Awake()
@@ -126,6 +130,8 @@ public class InputManager : MonoBehaviour, PlayerControls.IPlayerActions
     // Space key
     public void OnJump(InputAction.CallbackContext context)
     {
+        if (isJumpFrozen) return;
+        
         if (context.started)
         {
             jump = true;
@@ -139,12 +145,24 @@ public class InputManager : MonoBehaviour, PlayerControls.IPlayerActions
 
     public bool GetJumpInput()
     {
+        if (isJumpFrozen) jump = false;
+
         return jump;
     }
 
     public void TurnOffJumpInput()
     {
         jump = false;
+    }
+
+    public void FreezeJumpInput()
+    {
+        isJumpFrozen = true;
+    }
+
+    public void UnFreezeJumpInput()
+    {
+        isJumpFrozen = false;
     }
 
     public void OnDash(InputAction.CallbackContext context)
@@ -163,10 +181,22 @@ public class InputManager : MonoBehaviour, PlayerControls.IPlayerActions
     // Right Trigger // F key
     public void OnFire(InputAction.CallbackContext context)
     {
+        if (isAttackFrozen) return;
+
         if (context.started)
         {
             PlayerEvents.TriggerAttackEvent();
         }
+    }
+
+    public void FreezeAttackInput()
+    {
+        isAttackFrozen = true;
+    }
+
+    public void UnFreezeAttackInput()
+    {
+        isAttackFrozen = false;
     }
 
     public void OnPauseMenu(InputAction.CallbackContext context)
