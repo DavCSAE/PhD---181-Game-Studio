@@ -98,7 +98,7 @@ public class IntroSceneBirdArrivalCutscene : MonoBehaviour
 
     public void UpdateName()
     {
-        birdArrivalDialogueData.npcName = "Order";
+        birdArrivalDialogueData.npcName = "<color=#FFDA00>Order</color>";
 
         DialogueManager.Singleton.UpdateNameText();
     }

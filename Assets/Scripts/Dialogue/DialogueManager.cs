@@ -128,14 +128,49 @@ public class DialogueManager : MonoBehaviour
         // Empty the dialogue text
         dialogueText.text = "";
 
+        char[] charArray = sentence.ToCharArray();
+
         // Add each letter in the sentence to the dialogue text, one at a time
-        foreach(char letter in sentence.ToCharArray())
+        for (int i = 0; i < charArray.Length; i++)
         {
-            dialogueText.text += letter;
+            char currLetter = charArray[i];
 
-            if (dialogueText.text == sentence) sentenceFinished = true;
+            if (currLetter == '<')
+            {
+                string richText = "";
+                for (int j = i; richText == ""; j++)
+                {
+                    if (charArray[j] == '>')
+                    {
+                        int lengthOfRichText = j + 1;
 
-            yield return new WaitForSeconds(timeBetweenLetters);
+                        for (int k = i; k < lengthOfRichText; k++)
+                        {
+                            richText += charArray[k];
+                        }
+
+                        dialogueText.text += richText;
+
+                        i = j;
+                    }
+                }
+
+
+                if (dialogueText.text == sentence) sentenceFinished = true;
+
+                yield return new WaitForSeconds(timeBetweenLetters);
+
+            }
+            else
+            {
+                dialogueText.text += currLetter;
+
+                if (dialogueText.text == sentence) sentenceFinished = true;
+
+                yield return new WaitForSeconds(timeBetweenLetters);
+            }
+
+            
         }
     }
 
