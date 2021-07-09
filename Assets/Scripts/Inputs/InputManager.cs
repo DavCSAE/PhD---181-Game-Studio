@@ -20,6 +20,8 @@ public class InputManager : MonoBehaviour, PlayerControls.IPlayerActions
 
 
     Vector2 move;
+    bool isMoveFrozen;
+
     Vector2 look;
 
     bool jump;
@@ -95,9 +97,19 @@ public class InputManager : MonoBehaviour, PlayerControls.IPlayerActions
 
     public Vector2 GetMoveInput()
     {
-
+        if (isMoveFrozen) move = Vector2.zero;
 
         return move;
+    }
+
+    public void FreezeMoveInput()
+    {
+        isMoveFrozen = true;
+    }
+
+    public void UnFreezeMoveInput()
+    {
+        isMoveFrozen = false;
     }
 
     // Right Joy-Stick // Mouse

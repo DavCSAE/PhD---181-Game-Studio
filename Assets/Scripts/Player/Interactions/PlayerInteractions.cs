@@ -57,6 +57,8 @@ public class PlayerInteractions : MonoBehaviour
 
     void DisplayInteraction()
     {
+        if (!currentInteraction) return;
+
         print("DISPLAY");
         showingInteraction = true;
 
