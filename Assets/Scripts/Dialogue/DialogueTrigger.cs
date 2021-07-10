@@ -10,8 +10,8 @@ public class DialogueTrigger : MonoBehaviour
 
     [SerializeField] UnityEvent startDialogueEvent;
     [SerializeField] List<UnityEvent> afterSentenceEvents = new List<UnityEvent>();
+    [SerializeField] UnityEvent endDialogueEvent;
 
-    
     public void TriggerDialogue()
     {
         // If there is an event at the start of dialogue, then trigger it
@@ -22,6 +22,8 @@ public class DialogueTrigger : MonoBehaviour
 
     public void TriggerAfterSenteceEvent(int index)
     {
+        if (index >= afterSentenceEvents.Count) return;
+
         // If there is an event after current sentence, then trigger it
         afterSentenceEvents[index]?.Invoke();
     }
@@ -29,5 +31,10 @@ public class DialogueTrigger : MonoBehaviour
     public DialogueData GetDialogueData()
     {
         return dialogue;
+    }
+
+    public void TriggerEndDialogueFunction()
+    {
+        endDialogueEvent?.Invoke();
     }
 }

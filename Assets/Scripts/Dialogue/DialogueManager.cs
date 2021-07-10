@@ -185,6 +185,9 @@ public class DialogueManager : MonoBehaviour
         // Hide interaction UI
         InteractionUI.Singleton.HidePopUp();
 
+        // Trigger end digalogue function, if one exists
+        currDialogueTrigger.TriggerEndDialogueFunction();
+
         // Trigger event
         PlayerEvents.TriggerEndDialogueEvent();
     }

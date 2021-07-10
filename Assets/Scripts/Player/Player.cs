@@ -18,6 +18,8 @@ public class Player : MonoBehaviour
     public PlayerCollision collision;
     [HideInInspector]
     public PlayerAppearance appearance;
+    [HideInInspector]
+    public PlayerReceivableItems receivables;
 
     // PHYSICS
     [HideInInspector]
@@ -52,6 +54,8 @@ public class Player : MonoBehaviour
         animations = GetComponent<PlayerAnimations>();
         spawning = GetComponent<PlayerSpawning>();
         collision = GetComponent<PlayerCollision>();
+        appearance = GetComponent<PlayerAppearance>();
+        receivables = GetComponent<PlayerReceivableItems>();
 
         // PHYSICS
         rb = GetComponent<Rigidbody>();

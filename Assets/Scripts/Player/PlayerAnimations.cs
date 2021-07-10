@@ -11,9 +11,6 @@ public class PlayerAnimations : MonoBehaviour
 
     public Transform rootBone;
 
-
-
-
     private void OnEnable()
     {
         PlayerEvents.AttackEvent += Attack1Animation;
@@ -138,6 +135,16 @@ public class PlayerAnimations : MonoBehaviour
         {
             anim.SetBool("isSpawning", false);
         }
+    }
+
+    public void StartReceiveItemAnim()
+    {
+        anim.SetBool("isReceivingItem", true);
+    }
+
+    public void StopReceiveItemAnim()
+    {
+        anim.SetBool("isReceivingItem", false);
     }
 
 }
