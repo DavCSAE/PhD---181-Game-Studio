@@ -7333,7 +7333,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3097241895990618278
 Transform:
   m_ObjectHideFlags: 0
@@ -8100,7 +8100,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6470009360815985237
 Transform:
   m_ObjectHideFlags: 0
@@ -8394,7 +8394,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7678451598463923750
 Transform:
   m_ObjectHideFlags: 0
@@ -8785,6 +8785,7 @@ GameObject:
   - component: {fileID: 6751320719060436127}
   - component: {fileID: 1572634008}
   - component: {fileID: 9213095187522180395}
+  - component: {fileID: 9116601134492929258}
   m_Layer: 10
   m_Name: Player
   m_TagString: Untagged
@@ -8876,9 +8877,14 @@ MonoBehaviour:
   animations: {fileID: 0}
   spawning: {fileID: 0}
   collision: {fileID: 0}
+  appearance: {fileID: 0}
   rb: {fileID: 0}
   capsColl: {fileID: 0}
   cam: {fileID: 0}
+  isMaskUnlocked: 0
+  isSwordUnlocked: 0
+  isDashUnlocked: 0
+  areWingsUnlocked: 0
 --- !u!114 &5912218971857306099
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8942,6 +8948,7 @@ MonoBehaviour:
   interactionUI: {fileID: 1554925347183846669, guid: 4bdeb55c936939a409e890b8f8cd0b9d, type: 3}
   blackScreen: {fileID: 3782439498235882722, guid: 23fb4a5454398ac4cb2f110a6a827f0f, type: 3}
   pauseMenuUI: {fileID: 3745247794606915565, guid: f3e65a4ebcb8fae4bbc656a6fe9bdaf7, type: 3}
+  hudUI: {fileID: 477327529471235129, guid: c8c80a5c11f5c12408b7837928fc7d91, type: 3}
 --- !u!114 &1572634008
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8967,6 +8974,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetSpawnPoint: {fileID: 0}
+--- !u!114 &9116601134492929258
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5912218971857306097}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b4e9654e6b7fb94f814f264e8531ea3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mask: {fileID: 4963639958079667479}
+  sword: {fileID: 3316472819797809221}
+  wings: {fileID: 5280105386813862599}
 --- !u!1 &5912218972121923990
 GameObject:
   m_ObjectHideFlags: 0

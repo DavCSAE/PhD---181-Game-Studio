@@ -15,9 +15,10 @@ MonoBehaviour:
   npcName: <color=#FFDA00>Order</color>
   sentences:
   - I have finally found you!
-  - You can call me <color=#FFDA00>Order</color>. We don't have much time.
-  - "The <color=#9900FF>Great Darkness</color> has gone mad and seeks to \ndevour
-    the <color=#49B8FD>Bright Realm!</color>"
+  - "I am <color=#FFDA00>Order</color>, Keeper of The Balance. We don't \nhave much
+    time."
+  - "The <color=#9900FF>Great Dark</color> has gone mad and seeks to \ndevour the
+    <color=#49B8FD>Bright Realm!</color>"
   - "That CANNOT be allowed to happen. It would \nplunge the two realms into Chaos!"
   - "Only you, the <color=#49B8FD>Bright</color> <color=#9900FF>Shade</color>, can
     stop the \napproaching calamity."

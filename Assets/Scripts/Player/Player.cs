@@ -8,24 +8,36 @@ public class Player : MonoBehaviour
     public static Player Singleton;
 
     // PLAYER COMPONENTS
-    //[HideInInspector]
+    [HideInInspector]
     public PlayerMovement movement;
-    //[HideInInspector]
+    [HideInInspector]
     public PlayerAnimations animations;
     [HideInInspector]
     public PlayerSpawning spawning;
     [HideInInspector]
     public PlayerCollision collision;
+    [HideInInspector]
+    public PlayerAppearance appearance;
 
     // PHYSICS
-    //[HideInInspector]
+    [HideInInspector]
     public Rigidbody rb;
-    //[HideInInspector]
+    [HideInInspector]
     public CapsuleCollider capsColl;
 
     // CAMERA
     [HideInInspector]
     public Camera cam;
+
+    // Unlockables
+    [HideInInspector]
+    public bool isMaskUnlocked;
+    [HideInInspector]
+    public bool isSwordUnlocked;
+    [HideInInspector]
+    public bool isDashUnlocked;
+    [HideInInspector]
+    public bool areWingsUnlocked;
 
     void Awake()
     {
@@ -71,6 +83,11 @@ public class Player : MonoBehaviour
     public void UnParent()
     {
         transform.parent = null;
+    }
+
+    public void UnlockMask()
+    {
+
     }
     
 }

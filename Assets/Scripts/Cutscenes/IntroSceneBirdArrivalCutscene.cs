@@ -5,7 +5,7 @@ using UnityEngine.Playables;
 using UnityEngine.InputSystem;
 public class IntroSceneBirdArrivalCutscene : MonoBehaviour
 {
-    [SerializeField] PlayableDirector birdArrivalCutscene;
+    PlayableDirector birdArrivalCutscene;
 
     [SerializeField] GameObject virtualCamera;
 
@@ -20,6 +20,8 @@ public class IntroSceneBirdArrivalCutscene : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        birdArrivalCutscene = GetComponent<PlayableDirector>();
+
         birdArrivalDialogueTrigger = GetComponent<DialogueTrigger>();
         birdArrivalDialogueData = birdArrivalDialogueTrigger.GetDialogueData();
     }
