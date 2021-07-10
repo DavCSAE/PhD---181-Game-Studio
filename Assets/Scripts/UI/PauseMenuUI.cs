@@ -7,6 +7,8 @@ public class PauseMenuUI : MonoBehaviour
 {
     public static PauseMenuUI Singleton;
 
+    public bool isOpen = false;
+
     [SerializeField] GameObject pauseMenu;
     Animator anim;
 
@@ -26,7 +28,14 @@ public class PauseMenuUI : MonoBehaviour
     {
         if(Keyboard.current.escapeKey.wasPressedThisFrame)
         {
-            PrepareToOpenPauseMenu();
+            if (isOpen == false)
+            {
+                PrepareToOpenPauseMenu();
+            }
+            else
+            {
+                PrepareToClosePauseMenu();
+            }
         }
     }
 
@@ -41,6 +50,8 @@ public class PauseMenuUI : MonoBehaviour
         pauseMenu.SetActive(true);
 
         BlackScreen.Singleton.FadeFromBlack();
+
+        isOpen = true;
     }
 
     public void PrepareToClosePauseMenu()
@@ -53,5 +64,7 @@ public class PauseMenuUI : MonoBehaviour
         pauseMenu.SetActive(false);
 
         BlackScreen.Singleton.FadeFromBlack();
+
+        isOpen = false;
     }
 }
