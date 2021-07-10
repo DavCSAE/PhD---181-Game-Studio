@@ -13,7 +13,7 @@ public class FreeLookAddOn : MonoBehaviour
     public bool invertY = true;
     private CinemachineFreeLook _freeLookComponent;
 
-    bool isLocked = true;
+    bool isLocked;
 
     private void Awake()
     {

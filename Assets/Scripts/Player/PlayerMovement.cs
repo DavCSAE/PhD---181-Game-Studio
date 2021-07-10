@@ -5,10 +5,9 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     [HideInInspector]
-    public Player player;
+    Player player;
 
     [Header("STATES")]
-    // Movement states
     public bool isMoving;
     public bool isGrounded;
     public bool isJumping;
@@ -103,7 +102,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Start()
     {
-        
+        player = GetComponent<Player>();
     }
 
     private void FixedUpdate()
@@ -332,6 +331,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    
     void HandleMovement()
     {
         //if (isDashing) return;
@@ -962,7 +962,6 @@ public class PlayerMovement : MonoBehaviour
     {
         isFrozen = false;
 
-        
 
         //InputManager.Singleton.EnableInputs();
     }
