@@ -11,14 +11,15 @@ public class PlayerAnimations : MonoBehaviour
 
     public Transform rootBone;
 
+    public delegate void AttackFinishedCallback();
+    AttackFinishedCallback attackFinishedCallback;
+
     private void OnEnable()
     {
-        PlayerEvents.AttackEvent += Attack1Animation;
     }
 
     private void OnDisable()
     {
-        PlayerEvents.AttackEvent -= Attack1Animation;
     }
 
     // Start is called before the first frame update
@@ -106,14 +107,18 @@ public class PlayerAnimations : MonoBehaviour
     }
 
 
-    void Attack1Animation()
+    public void Attack1Animation(AttackFinishedCallback callback)
     {
         anim.SetBool("attack1", true);
+
+        attackFinishedCallback = callback;
     }
 
     public void Attacked()
     {
         anim.SetBool("attack1", false);
+
+        attackFinishedCallback();
     }
 
     void HandleSpawnAnimation()
