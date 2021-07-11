@@ -34,7 +34,10 @@ public class ControllerButtonSystem : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        InputManager.Singleton.EnableInputs();
+
         currentButton.GetComponent<Animator>().SetTrigger("Highlighted");
+        buttons.Remove(currentButton);
     }
 
     // Update is called once per frame
@@ -59,9 +62,11 @@ public class ControllerButtonSystem : MonoBehaviour
         if (moveInput.x > 0) horDir = HorizontalDirection.Right;
 
         if (moveInput.y == 0) verDir = VerticalDirection.None;
-        if (moveInput.y < 0) verDir = VerticalDirection.Up;
-        if (moveInput.y > 0) verDir = VerticalDirection.Down;
+        if (moveInput.y > 0) verDir = VerticalDirection.Up;
+        if (moveInput.y < 0) verDir = VerticalDirection.Down;
 
+        print(horDir);
+        print(verDir);
 
         //Make a new list to store the buttons in the direction of the input
         List<Button> buttonsInDirection = new List<Button>();
@@ -77,24 +82,28 @@ public class ControllerButtonSystem : MonoBehaviour
                     //Check if button is to the left of the current button
                     if (button.transform.position.x < currentButton.transform.position.x)
                     {
+                        print("button is to the left");
                         //button is to the left
                     }
                     else
                     {
+                        print(1);
                         //button isn't in input direction so do nothing
-                        return;
+                        continue;
                     }
                     break;
                 case HorizontalDirection.Right:
                     //Check if button is to the right of the current button
                     if (button.transform.position.x > currentButton.transform.position.x)
                     {
+                        print("button is to the right");
                         //button is to the right
                     }
                     else
                     {
+                        print(2);
                         //button isn't in input direction so do nothing
-                        return;
+                        continue;
                     }
                     break;
             }
@@ -107,30 +116,36 @@ public class ControllerButtonSystem : MonoBehaviour
                     //Check if button is above the current button
                     if (button.transform.position.y > currentButton.transform.position.y)
                     {
+                        print("button above added");
                         //button is above
                         buttonsInDirection.Add(button);
                     }
                     else
                     {
+                        print(3);
                         //button isn't in input direction so do nothing
-                        return;
+                        continue;
                     }
                     break;
                 case VerticalDirection.Down:
                     //Check if button is below the current button
                     if (button.transform.position.y < currentButton.transform.position.y)
                     {
+                        print("button below added");
                         //button is below
                         buttonsInDirection.Add(button);
                     }
                     else
                     {
+                        print(4);
                         //button isn't in input direction so do nothing
-                        return;
+                        continue;
                     }
                     break;
             }
         }
+
+        print("buttons in direction " + buttonsInDirection.Count);
 
         //If there are no buttons in the input direction then return
         if (buttonsInDirection.Count == 0) return;
@@ -153,11 +168,17 @@ public class ControllerButtonSystem : MonoBehaviour
 
     void ChangeCurrentButton(Button button)
     {
+        print("changed button");
+
         //return previously selected button to normal state
         currentButton.GetComponent<Animator>().SetTrigger("Normal");
 
+        buttons.Add(currentButton);
+
         //set currently selected button to new button
         currentButton = button;
+
+        buttons.Remove(currentButton);
 
         //set new button to highlighted state
         currentButton.GetComponent<Animator>().SetTrigger("Highlighted");

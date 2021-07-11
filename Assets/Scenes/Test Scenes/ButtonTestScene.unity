@@ -792,7 +792,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ec460e4caa748a4e915b3e61584d6c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buttons: []
+  buttons:
+  - {fileID: 841766802}
+  - {fileID: 201574064}
+  - {fileID: 608089147}
+  - {fileID: 9970121}
+  - {fileID: 20258017}
+  - {fileID: 1782040173}
   currentButton: {fileID: 841766802}
 --- !u!4 &340430137
 Transform:
