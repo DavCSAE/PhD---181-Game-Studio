@@ -57,6 +57,8 @@ public class PlayerInteractions : MonoBehaviour
 
     void DisplayInteraction()
     {
+        if (!currentInteraction) return;
+
         print("DISPLAY");
         showingInteraction = true;
 
@@ -71,6 +73,8 @@ public class PlayerInteractions : MonoBehaviour
         InteractionUI.Singleton.HidePopUp();
 
         showingInteraction = false;
+
+        currentInteraction = null;
     }
 
     void Interact()

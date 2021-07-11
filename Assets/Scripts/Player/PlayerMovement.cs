@@ -40,6 +40,12 @@ public class PlayerMovement : MonoBehaviour
     float obstacleRaycastHeight = 0.05f;
     float obstacleRaycastDistance = 0.4f;
 
+    bool isRotatingTowardDirection;
+    float rotateTowardOriginalY;
+    float rotateTowardTargetY;
+    float rotateTowardCurrTime;
+    float rotateTowardTotalTime;
+
     [Header("SLOPES")]
     // Slopes
     [SerializeField] float maxSlopeAngle = 35f;
@@ -122,6 +128,11 @@ public class PlayerMovement : MonoBehaviour
         HandleSliding();
         HandleJumping();
         HandleDashing();
+    }
+
+    private void Update()
+    {
+        HandleRotatingTowardDirection();
     }
 
     void GetMovementInputs()
@@ -956,6 +967,74 @@ public class PlayerMovement : MonoBehaviour
             print("hit obstacle stop dash");
             isDashing = false;
         }
+    }
+
+    public void RotateToward(float targetYEulerAngle, float timeInSeconds)
+    {
+        // Store info in references
+        rotateTowardOriginalY = transform.localEulerAngles.y;
+        rotateTowardTargetY = targetYEulerAngle;
+        rotateTowardCurrTime = 0f;
+        rotateTowardTotalTime = timeInSeconds;
+
+
+        isRotatingTowardDirection = true;
+        print("START ROTATING");
+
+    }
+
+    void HandleRotatingTowardDirection()
+    {
+
+        // Dont do anything if not rotating toward a direction
+        if (!isRotatingTowardDirection) return;
+
+        // Calculate time since started rotating toward direction
+        rotateTowardCurrTime += Time.deltaTime;
+
+        // Calculate current percentage through rotation
+        float percentageThroughRotation = rotateTowardCurrTime / rotateTowardTotalTime;
+
+        print("percentage(" + percentageThroughRotation + "%) = currTime("
+            + rotateTowardCurrTime + ") / totalTime(" + rotateTowardTotalTime
+            + ")");
+
+        // Calculate difference between original and target rotation direction
+        float differenceBetweenRotations = Mathf.Abs((rotateTowardOriginalY - rotateTowardTargetY));
+
+        print("Difference between rotations: " + differenceBetweenRotations);
+
+        // If the difference is negative, make it positive
+        //if (differenceBetweenRotations < 0) differenceBetweenRotations *= -1;
+
+        // Calculate percentage of the difference, to add the original rotation
+        float newRotationY = rotateTowardOriginalY
+            + (differenceBetweenRotations * percentageThroughRotation);
+
+        print("Original rot: " + rotateTowardOriginalY);
+        print("New rot: " + newRotationY);
+        print("Target rot: " + rotateTowardTargetY);
+
+        // Create new rotation euler
+        Vector3 newRotationEuler = new Vector3(
+            transform.localEulerAngles.x,
+            newRotationY,
+            transform.localEulerAngles.z);
+
+        // Set players rotation to new rotation
+        transform.localEulerAngles = newRotationEuler;
+
+        // If rotation should be complete
+        if (rotateTowardCurrTime >= rotateTowardTotalTime)
+        {
+            isRotatingTowardDirection = false;
+
+            transform.localEulerAngles = new Vector3(
+                transform.localEulerAngles.x,
+                rotateTowardTargetY,
+                transform.localEulerAngles.z);
+        }
+
     }
 
     public void Unfreeze()

@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c34a32497f420f2409301e13e3c987be, type: 3}
+  m_Name: Bird Arrival Dialogue
+  m_EditorClassIdentifier: 
+  npcName: <color=#FFDA00>Order</color>
+  sentences:
+  - I have finally found you!
+  - "I am <color=#FFDA00>Order</color>, Keeper of The Balance. We don't \nhave much
+    time."
+  - "The <color=#9900FF>Great Dark</color> has gone mad and seeks to \ndevour the
+    <color=#49B8FD>Bright Realm!</color>"
+  - "That CANNOT be allowed to happen. It would \nplunge the two realms into Chaos!"
+  - "Only you, the <color=#49B8FD>Bright</color> <color=#9900FF>Shade</color>, can
+    stop the \napproaching calamity."
+  - "I have brought  <color=#FFDA00>Gifts</color> that will help you unlock \nyour
+    true power."
+  - The first one is just ahead. I'll meet you there!

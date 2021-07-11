@@ -39,24 +39,25 @@ public class PlayerSpawning : MonoBehaviour
 
     public void PrepareToSpawn()
     {
+
         // Set player position to spawn point position
         transform.position = targetSpawnPoint.transform.position;
 
         // Update state so PlayerAnimations knows what to do
         isPreparingToSpawn = true;
 
+        // Freeze Player movement
+        player.movement.Freeze();
+
         // Fade from the black screen
         BlackScreen.Singleton.FadeFromBlack();
 
         // Position the camera based on spawn point data
-        cmFreeLook.m_XAxis.Value = targetSpawnPoint.GetCamXAxis();
-        cmFreeLook.m_YAxis.Value = targetSpawnPoint.GetCamYAxis();
+        PositionCamera();
 
         // Rotate the player based on spawn point data
-        transform.localEulerAngles = new Vector3(
-            transform.localEulerAngles.x, // Keep x rotation
-            targetSpawnPoint.GetPlayerYRot(), // New y rotation
-            transform.localEulerAngles.z); // Keep z rotation
+        SetPlayerRotation();
+
 
         // Open the spawn portal after the black screen is gone
         Invoke("OpenPortal", 1f);
@@ -100,4 +101,28 @@ public class PlayerSpawning : MonoBehaviour
         targetSpawnPoint = sp;
     }
 
+    public void StayPreparedToSpawn()
+    {
+        isPreparingToSpawn = true;
+
+        // Freeze Player movement
+        player.movement.Freeze();
+
+        PositionCamera();
+        SetPlayerRotation();
+    }
+
+    void PositionCamera()
+    {
+        cmFreeLook.m_XAxis.Value = targetSpawnPoint.GetCamXAxis();
+        cmFreeLook.m_YAxis.Value = targetSpawnPoint.GetCamYAxis();
+    }
+
+    void SetPlayerRotation()
+    {
+        transform.localEulerAngles = new Vector3(
+            transform.localEulerAngles.x, // Keep x rotation
+            targetSpawnPoint.GetPlayerYRot(), // New y rotation
+            transform.localEulerAngles.z); // Keep z rotation
+    }
 }

@@ -23,10 +23,13 @@ public class PlayerTestKit : MonoBehaviour
     [SerializeField] GameObject interactionUI;
 
     //BlackScreen
-
     [SerializeField] GameObject blackScreen;
+
     //Pause Menu UI
     [SerializeField] GameObject pauseMenuUI;
+
+    // In game HUD UI
+    [SerializeField] GameObject hudUI;
 
     // Start is called before the first frame update
     void Awake()
@@ -49,7 +52,10 @@ public class PlayerTestKit : MonoBehaviour
         {
             SpawnBlackScreen();
         }
+
         SpawnPauseMenuUI();
+
+        SpawnHUDUI();
     }
 
     void SpawnTestKit()
@@ -97,5 +103,10 @@ public class PlayerTestKit : MonoBehaviour
     void SpawnPauseMenuUI()
     {
         Instantiate(pauseMenuUI, testKit.transform);
+    }
+
+    void SpawnHUDUI()
+    {
+        Instantiate(hudUI, testKit.transform);
     }
 }

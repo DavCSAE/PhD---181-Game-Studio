@@ -17,8 +17,14 @@ public class DialogueManager : MonoBehaviour
 
     [SerializeField] float timeBetweenLetters = 0.1f;
 
+    bool hasShownFirstSentence;
+
     string currentSentence;
     bool sentenceFinished = true;
+
+    int currSentenceNumber;
+    DialogueTrigger currDialogueTrigger;
+    DialogueData currDialogueData;
 
     private void Awake()
     {
@@ -33,8 +39,20 @@ public class DialogueManager : MonoBehaviour
         sentences = new Queue<string>();
     }
 
-    public void StartDialogue(DialogueData dialogue)
+    public void StartDialogue(DialogueData dialogue, DialogueTrigger trigger)
     {
+        // Reset currSentenceNumber
+        currSentenceNumber = 0;
+
+        // Haven't shown first sentence in dialogue yet
+        hasShownFirstSentence = false;
+
+        // Store reference to dialogue data
+        currDialogueData = dialogue;
+
+        // Store reference to trigger
+        currDialogueTrigger = trigger;
+
         // Show Dialogue UI on screen
         anim.SetBool("IsOpen", true);
 
@@ -63,8 +81,11 @@ public class DialogueManager : MonoBehaviour
     public void DisplayNextSentence()
     {
         // If there are no more sentences, then end the dialogue
-        if(sentences.Count == 0 && sentenceFinished)
+        if (sentences.Count == 0 && sentenceFinished)
         {
+            // Do an event for 'after current sentence' if there's an event
+            currDialogueTrigger.TriggerAfterSenteceEvent(currSentenceNumber);
+
             EndDialogue();
             return;
         }
@@ -79,6 +100,13 @@ public class DialogueManager : MonoBehaviour
             return;
         }
 
+        if (hasShownFirstSentence)
+        {
+            // Do an event for 'after current sentence' if there's an event
+            currDialogueTrigger.TriggerAfterSenteceEvent(currSentenceNumber);
+            currSentenceNumber++;
+        }
+        
         // Get the next sentence from the queue
         currentSentence = sentences.Dequeue();
 
@@ -90,6 +118,9 @@ public class DialogueManager : MonoBehaviour
 
         // Start typing the next sentence
         StartCoroutine(TypeSentence(currentSentence));
+        
+        // First sentence has been shown
+        if (!hasShownFirstSentence) hasShownFirstSentence = true;
     }    
 
     IEnumerator TypeSentence(string sentence)
@@ -97,14 +128,49 @@ public class DialogueManager : MonoBehaviour
         // Empty the dialogue text
         dialogueText.text = "";
 
+        char[] charArray = sentence.ToCharArray();
+
         // Add each letter in the sentence to the dialogue text, one at a time
-        foreach(char letter in sentence.ToCharArray())
+        for (int i = 0; i < charArray.Length; i++)
         {
-            dialogueText.text += letter;
+            char currLetter = charArray[i];
 
-            if (dialogueText.text == sentence) sentenceFinished = true;
+            if (currLetter == '<')
+            {
+                string richText = "";
+                for (int j = i; richText == ""; j++)
+                {
+                    if (charArray[j] == '>')
+                    {
+                        int lengthOfRichText = j + 1;
 
-            yield return new WaitForSeconds(timeBetweenLetters);
+                        for (int k = i; k < lengthOfRichText; k++)
+                        {
+                            richText += charArray[k];
+                        }
+
+                        dialogueText.text += richText;
+
+                        i = j;
+                    }
+                }
+
+
+                if (dialogueText.text == sentence) sentenceFinished = true;
+
+                yield return new WaitForSeconds(timeBetweenLetters);
+
+            }
+            else
+            {
+                dialogueText.text += currLetter;
+
+                if (dialogueText.text == sentence) sentenceFinished = true;
+
+                yield return new WaitForSeconds(timeBetweenLetters);
+            }
+
+            
         }
     }
 
@@ -116,7 +182,20 @@ public class DialogueManager : MonoBehaviour
         // Remove DisplayNextSentence function from NextDialogue event
         PlayerEvents.NextDialogueEvent -= DisplayNextSentence;
 
+        // Hide interaction UI
+        InteractionUI.Singleton.HidePopUp();
+
+        // Trigger end digalogue function, if one exists
+        currDialogueTrigger.TriggerEndDialogueFunction();
+
         // Trigger event
         PlayerEvents.TriggerEndDialogueEvent();
+    }
+
+    public void UpdateNameText()
+    {
+        if (!currDialogueData) return;
+
+        nameText.text = currDialogueData.npcName;
     }
 }

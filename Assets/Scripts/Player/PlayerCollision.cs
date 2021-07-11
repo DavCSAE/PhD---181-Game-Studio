@@ -27,4 +27,5 @@ public class PlayerCollision : MonoBehaviour
             player.movement.isDashing = false;
         }
     }
+
 }

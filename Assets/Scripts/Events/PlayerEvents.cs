@@ -93,4 +93,14 @@ public class PlayerEvents : MonoBehaviour
         // If event has subscribers, run event
         PauseMenuButtonEvent?.Invoke();
     }
+
+    // Event for unlocking mask
+    public delegate void UnlockMask();
+    public static event UnlockMask UnlockMaskEvent;
+
+    public static void TriggerUnlockMaskEvent()
+    {
+        // If event has subscribers, run event
+        UnlockMaskEvent?.Invoke();
+    }
 }
