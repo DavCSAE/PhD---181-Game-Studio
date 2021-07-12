@@ -103,4 +103,14 @@ public class PlayerEvents : MonoBehaviour
         // If event has subscribers, run event
         UnlockMaskEvent?.Invoke();
     }
+
+    // Event for player dying
+    public delegate void PlayerDeath();
+    public static event UnlockMask PlayerDeathEvent;
+
+    public static void TriggerPlayerDeathEvent()
+    {
+        // If event has subscribers, run event
+        PlayerDeathEvent?.Invoke();
+    }
 }

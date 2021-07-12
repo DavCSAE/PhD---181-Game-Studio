@@ -44,6 +44,7 @@ public class PlayerStats : MonoBehaviour
             currHealth = 0;
 
             // Player died
+            Death();
         }
 
         // Make player flash red
@@ -88,6 +89,11 @@ public class PlayerStats : MonoBehaviour
     public int GetCurrentHealth()
     {
         return currHealth;
+    }
+
+    void Death()
+    {
+        PlayerEvents.TriggerPlayerDeathEvent();
     }
 
 }
