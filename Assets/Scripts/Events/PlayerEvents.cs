@@ -113,4 +113,14 @@ public class PlayerEvents : MonoBehaviour
         // If event has subscribers, run event
         PlayerDeathEvent?.Invoke();
     }
+
+    // Event for player revived
+    public delegate void PlayerRevived();
+    public static event UnlockMask PlayerRevivedEvent;
+
+    public static void TriggerPlayerRevivedEvent()
+    {
+        // If event has subscribers, run event
+        PlayerRevivedEvent?.Invoke();
+    }
 }

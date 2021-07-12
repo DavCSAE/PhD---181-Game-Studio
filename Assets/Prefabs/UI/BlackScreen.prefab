@@ -219,6 +219,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fd734645bd2903449dcae5af24ca968, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  menuRoot: {fileID: 3782439497648959212}
   blackScreen: {fileID: 3782439496931314542}
   fadeLength: 2
   isFadingTo: 0

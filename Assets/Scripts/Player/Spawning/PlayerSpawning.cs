@@ -84,6 +84,12 @@ public class PlayerSpawning : MonoBehaviour
         isSpawning = false;
 
         player.movement.Unfreeze();
+
+        InputManager.Singleton.UnFreezeMoveInput();
+        InputManager.Singleton.UnFreezeJumpInput();
+        InputManager.Singleton.UnFreezeAttackInput();
+
+        FreeLookAddOn.Singleton.Unlock();
     }
 
     public bool GetSpawningState()

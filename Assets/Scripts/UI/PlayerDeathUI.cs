@@ -48,10 +48,26 @@ public class PlayerDeathUI : MonoBehaviour
         
     }
 
+    public void FadeForLeaveDeathUI()
+    {
+
+        PlayerSpawning spawning = Player.Singleton.spawning;
+
+        List<BlackScreen.AfterFadeCallback> callbacks = new List<BlackScreen.AfterFadeCallback>();
+        
+        callbacks.Add(HideDeathUI);
+        callbacks.Add(PlayerEvents.TriggerPlayerRevivedEvent);
+        callbacks.Add(spawning.PrepareToSpawn);
+
+        BlackScreen.Singleton.FadeToBlack(callbacks);
+    }
+
     void HideDeathUI()
     {
         menuRoot.SetActive(false);
 
         anim.SetBool("isShowing", false);
+
     }
+
 }

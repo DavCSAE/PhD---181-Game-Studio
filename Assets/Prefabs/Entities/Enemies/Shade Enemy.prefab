@@ -1,5 +1,31 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!65 &185400141779331851
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5447979996102455825}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 0
+  serializedVersion: 2
+  m_Size: {x: 0.06, y: 0.020335909, z: 0.6790068}
+  m_Center: {x: 0.00000027391542, y: 0.00000008392853, z: 0.25293964}
+--- !u!114 &1834154331149074951
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5447979996102455825}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 055114a1771e0fb488873839d335ba6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  coll: {fileID: 0}
 --- !u!1 &9006572294894629781
 GameObject:
   m_ObjectHideFlags: 0
@@ -16,6 +42,7 @@ GameObject:
   - component: {fileID: 759671312909826872}
   - component: {fileID: 8195944590199148425}
   - component: {fileID: 6808500270578817665}
+  - component: {fileID: 3098863898073621252}
   m_Layer: 0
   m_Name: Shade Enemy
   m_TagString: Untagged
@@ -69,6 +96,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17f891fe44e050b4989aebc520323d37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canIdle: 0
   isSitting: 0
   isLying: 0
   defaultColl: {fileID: 9135753606384490586}
@@ -128,6 +156,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82d0082e541221e41bb67aa16289ae52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  anim: {fileID: 0}
 --- !u!114 &6808500270578817665
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -142,6 +171,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 3
   bodySMR: {fileID: 6882338687269263326}
+--- !u!114 &3098863898073621252
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9006572294894629781}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1312a9417d5d854e82a92c0eee0375d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sword: {fileID: 1834154331149074951}
+  hasSword: 0
+  hasStartedAttacking: 0
 --- !u!1001 &5563414481128019585
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -171,7 +215,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8742002480722172784, guid: 61470f16c9a23b245aa7f05315a17323, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8701097872435035295, guid: 61470f16c9a23b245aa7f05315a17323, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1353,6 +1397,18 @@ PrefabInstance:
       propertyPath: m_LocalRotation.z
       value: -0.00000013240822
       objectReference: {fileID: 0}
+    - target: {fileID: 3117475923667862361, guid: 61470f16c9a23b245aa7f05315a17323, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 98b1b10a0fa5f40418e12da8ca4fc3ef, type: 2}
+    - target: {fileID: 3117475923667862361, guid: 61470f16c9a23b245aa7f05315a17323, type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: 98b1b10a0fa5f40418e12da8ca4fc3ef, type: 2}
+    - target: {fileID: 3117475923667862361, guid: 61470f16c9a23b245aa7f05315a17323, type: 3}
+      propertyPath: m_Materials.Array.data[2]
+      value: 
+      objectReference: {fileID: 2100000, guid: 98b1b10a0fa5f40418e12da8ca4fc3ef, type: 2}
     - target: {fileID: 3198896233827727512, guid: 61470f16c9a23b245aa7f05315a17323, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -2012,5 +2068,10 @@ Transform:
 --- !u!137 &6882338687269263326 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: -7874599555743186593, guid: 61470f16c9a23b245aa7f05315a17323, type: 3}
+  m_PrefabInstance: {fileID: 5563414481128019585}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &5447979996102455825 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -8742002480722172784, guid: 61470f16c9a23b245aa7f05315a17323, type: 3}
   m_PrefabInstance: {fileID: 5563414481128019585}
   m_PrefabAsset: {fileID: 0}

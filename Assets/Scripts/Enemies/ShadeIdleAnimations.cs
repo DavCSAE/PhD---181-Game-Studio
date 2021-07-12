@@ -6,6 +6,8 @@ public class ShadeIdleAnimations : MonoBehaviour
 {
     Animator anim;
 
+
+    [SerializeField] bool canIdle;
     [SerializeField] bool isSitting;
     [SerializeField] bool isLying;
 
@@ -28,6 +30,8 @@ public class ShadeIdleAnimations : MonoBehaviour
 
     void HandleSitting()
     {
+        if (!canIdle) return;
+
         bool currSitState = anim.GetBool("isSitting");
 
         if (isSitting && !currSitState)
@@ -46,6 +50,8 @@ public class ShadeIdleAnimations : MonoBehaviour
 
     void HandleLying()
     {
+        if (!canIdle) return;
+
         bool currLyingState = anim.GetBool("isLying");
 
         if (isLying && !currLyingState)
@@ -69,5 +75,18 @@ public class ShadeIdleAnimations : MonoBehaviour
         if (lyingColl != coll) lyingColl.enabled = false;
 
         coll.enabled = true;
+    }
+
+    public void StopIdling()
+    {
+        if (isLying) isLying = false;
+        if (isSitting) isSitting = false;
+
+        canIdle = false;
+    }
+
+    public void AllowIdling()
+    {
+        canIdle = true;
     }
 }
