@@ -93,6 +93,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
+    - Boolean_89957134eae345a2b8e89e7d02f25d83: 0
     - _AlphaClip: 0
     - _Blend: 0
     - _BumpScale: 1
@@ -120,6 +121,8 @@ Material:
     - _WindQuality: 0
     - _WorkflowMode: 1
     - _ZWrite: 1
+    - _isTakingDamage: 0
+    - _takingDamage: 0
     m_Colors:
     - Color_1f17025a139847db8b49078e49043d36: {r: 0, g: 0, b: 0, a: 0}
     - Color_917be5cb65e74f8d9a4b4b91625ad214: {r: 0.023529401, g: 0.13538563, b: 0.5764706, a: 0}

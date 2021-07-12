@@ -9,6 +9,8 @@ public class Player : MonoBehaviour
 
     // PLAYER COMPONENTS
     [HideInInspector]
+    public PlayerStats stats;
+    [HideInInspector]
     public PlayerMovement movement;
     [HideInInspector]
     public PlayerAnimations animations;
@@ -20,6 +22,8 @@ public class Player : MonoBehaviour
     public PlayerAppearance appearance;
     [HideInInspector]
     public PlayerReceivableItems receivables;
+    [HideInInspector]
+    public PlayerCombat combat;
 
     // PHYSICS
     [HideInInspector]
@@ -34,21 +38,19 @@ public class Player : MonoBehaviour
     // Unlockables
     [HideInInspector]
     public bool isMaskUnlocked;
-    [HideInInspector]
+    //[HideInInspector]
     public bool isSwordUnlocked;
     [HideInInspector]
     public bool isDashUnlocked;
     [HideInInspector]
     public bool areWingsUnlocked;
 
+    // Respawning
+
     void Awake()
     {
         Singleton = this;
-    }
 
-    // Start is called before the first frame update
-    void Start()
-    {
         // PLAYER COMPONENTS
         movement = GetComponent<PlayerMovement>();
         animations = GetComponent<PlayerAnimations>();
@@ -56,6 +58,14 @@ public class Player : MonoBehaviour
         collision = GetComponent<PlayerCollision>();
         appearance = GetComponent<PlayerAppearance>();
         receivables = GetComponent<PlayerReceivableItems>();
+        combat = GetComponent<PlayerCombat>();
+        stats = GetComponent<PlayerStats>();
+    }
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        
 
         // PHYSICS
         rb = GetComponent<Rigidbody>();
@@ -79,8 +89,6 @@ public class Player : MonoBehaviour
         if (transform.position.y < -20f)
         {
             spawning.FadeForSpawn();
-
-            print("respawn!");
         }
     }
 

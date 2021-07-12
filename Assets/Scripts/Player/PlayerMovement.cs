@@ -481,7 +481,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (Physics.Raycast(rayOrigin, rayDirection, out hit, obstacleRaycastDistance, layerMask))
         {
-            print("Obstacle!");
+            
 
             Debug.DrawRay(rayOrigin, rayDirection * obstacleRaycastDistance, Color.yellow);
 
@@ -496,7 +496,7 @@ public class PlayerMovement : MonoBehaviour
             if (obstacleSlopeAngle > maxSlopeAngle)
             {
                 player.rb.velocity = new Vector3(0, player.rb.velocity.y, 0);
-                print("slope stop dashing");
+
                 if (isDashing) isDashing = false;
             }
             else if (isDashing && !isJumping && isGrounded)
