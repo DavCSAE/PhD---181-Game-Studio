@@ -56,6 +56,10 @@ public class InputDeviceHandler : MonoBehaviour
         {
             tempDevice = Devices.gamepad;
         }
+        else
+        {
+            tempDevice = Devices.gamepad;
+        }
 
 
         if (tempDevice == device)

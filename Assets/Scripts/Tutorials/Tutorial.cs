@@ -20,6 +20,8 @@ public class Tutorial : MonoBehaviour
         // Check current device
         string currDevice = InputManager.Singleton.GetCurrentDevice();
 
+        print("tut device: " + currDevice);
+
         // Show appropriate tutorial depending on device
         if (currDevice == "keyboard")
         {

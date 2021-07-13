@@ -33,12 +33,12 @@ public class EnemyCombat : MonoBehaviour
         if (inCombat && !currentlyAttacking) Attack();
     }
 
-    void ActivateSword()
+    public void ActivateSword()
     {
         sword.gameObject.SetActive(true);
     }
 
-    void StartAttacking()
+    public void StartAttacking()
     {
 
 

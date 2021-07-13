@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   npcName: <color=#9900FF>Shade</color>
   sentences:
-  - Over there is the path towards the Light Realm.
-  - They say that whoever crosses between the realms is said to resolve the conflict
-    between the two.
-  - I wish I could was the one to do that.
+  - That's the Bright Gate, the path to the Bright Realm.
+  - No one's allowed near it.
+  - I wonder why.

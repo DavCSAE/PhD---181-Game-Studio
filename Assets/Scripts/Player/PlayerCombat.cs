@@ -28,6 +28,16 @@ public class PlayerCombat : MonoBehaviour
         player = GetComponent<Player>();
 
         sword.SetPlayerCombatManager(this);
+
+        if (player.isSwordUnlocked)
+        {
+            canAttack = true;
+            ShowSword();
+        }
+        else
+        {
+            HideSword();
+        }
     }
 
     // Update is called once per frame
@@ -35,9 +45,26 @@ public class PlayerCombat : MonoBehaviour
     {
         
     }
+    public void UnlockSword()
+    {
+        canAttack = true;
+        ShowSword();
+    }
+
+    public void ShowSword()
+    {
+        sword.gameObject.SetActive(true);
+    }
+
+    public void HideSword()
+    {
+        sword.gameObject.SetActive(false);
+    }
 
     void Attack()
     {
+        if (!canAttack) return;
+
         // Don't attack if currently attacking
         if (isAttacking) return;
 
@@ -46,8 +73,17 @@ public class PlayerCombat : MonoBehaviour
         // Play animation
         player.animations.Attack1Animation(FinishedAttack);
 
+        // Play sound
+        PlaySwordSwingSound();
+
         // Enable sword collider
         sword.ActivateCollider();
+    }
+
+    // Animation event
+    public void PlaySwordSwingSound()
+    {
+        SoundManager.Singleton.Play("Sword Swing");
     }
 
     void FinishedAttack()

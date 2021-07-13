@@ -43,8 +43,11 @@ public class PlayerDeathUI : MonoBehaviour
     void ShowDeathUI()
     {
         menuRoot.SetActive(true);
+        BlackScreen.Singleton.TurnOff();
 
         anim.SetBool("isShowing", true);
+
+        Cursor.visible = true;
         
     }
 
@@ -67,6 +70,8 @@ public class PlayerDeathUI : MonoBehaviour
         menuRoot.SetActive(false);
 
         anim.SetBool("isShowing", false);
+
+        Cursor.visible = false;
 
     }
 

@@ -5538,8 +5538,10 @@ MonoBehaviour:
   slideRotateSpeed: 100
   jumpHeight: 3
   loseVelocityInAirSpeed: 1
+  doubleJumpEnabled: 0
   dashSpeed: 15
   dashLength: 3
+  isDashUnlocked: 0
   onPlatform: 0
 --- !u!114 &5912218971857306098
 MonoBehaviour:
@@ -5553,7 +5555,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90cbb4c0910f3cc4c8af96ff990a331a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rootBone: {fileID: 0}
+  rootBone: {fileID: 6001097077247928507}
 --- !u!114 &6751320719060436127
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -51,6 +51,11 @@ public class BlackScreen : MonoBehaviour
         HandleFadingFrom();
     }
 
+    public void TurnOff()
+    {
+        menuRoot.SetActive(false);
+    }
+
     public void SetToBlack()
     {
         if (isFadingFrom) isFadingFrom = false;

@@ -64,6 +64,8 @@ public class PauseMenuUI : MonoBehaviour
         BlackScreen.Singleton.FadeFromBlack();
 
         isOpen = true;
+
+        Cursor.visible = true;
     }
 
     public void PrepareToClosePauseMenu()
@@ -78,5 +80,7 @@ public class PauseMenuUI : MonoBehaviour
         BlackScreen.Singleton.FadeFromBlack();
 
         isOpen = false;
+
+        Cursor.visible = false;
     }
 }

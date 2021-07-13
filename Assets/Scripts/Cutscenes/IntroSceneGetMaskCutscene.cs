@@ -9,7 +9,6 @@ public class IntroSceneGetMaskCutscene : MonoBehaviour
 
     PlayableDirector getMaskCutscene;
 
-
     [SerializeField] GameObject virtualCamera;
 
     [SerializeField] Vector3 playerStartPos;
@@ -70,7 +69,7 @@ public class IntroSceneGetMaskCutscene : MonoBehaviour
 
     public void GetMask()
     {
-        // Start animtion
+        // Start animation
         Player.Singleton.animations.StartReceiveItemAnim();
 
         // Rotate player toward camera
@@ -100,7 +99,6 @@ public class IntroSceneGetMaskCutscene : MonoBehaviour
 
         PlayerEvents.TriggerUnlockMaskEvent();
 
-
         // Hide mask that player is holding in hands
         Player.Singleton.receivables.HideMask();
 
@@ -110,6 +108,66 @@ public class IntroSceneGetMaskCutscene : MonoBehaviour
             playerTransform.localEulerAngles.x,
             180,
             playerTransform.localEulerAngles.z);
+
+        GetDash();
+    }
+
+    void GetDash()
+    {
+        // Start animation
+        Player.Singleton.animations.StartReceiveItemAnim();
+
+        // Unlock Dash
+        Player.Singleton.UnlockDash();
+
+        // Show receive item UI
+        ReceivedItemUI.Singleton.ShowDashText();
+
+        PlayerEvents.NextDialogueEvent += GottenDash;
+    }
+
+    void GottenDash()
+    {
+        PlayerEvents.NextDialogueEvent -= GottenMask;
+
+        Player.Singleton.animations.StopReceiveItemAnim();
+
+        GetWings();
+    }
+
+    void GetWings()
+    {
+        // Start animation
+        Player.Singleton.animations.StartReceiveItemAnim();
+
+        // Unlock Wings
+        Player.Singleton.UnlockWings();
+
+        // Show receive item UI
+        ReceivedItemUI.Singleton.ShowWingsText();
+
+        PlayerEvents.NextDialogueEvent += GottenWings;
+    }
+
+    void GottenWings()
+    {
+        PlayerEvents.NextDialogueEvent -= GottenWings;
+
+        Player.Singleton.animations.StopReceiveItemAnim();
+
+        ExitCutscene();
+    }
+
+    void ExitCutscene()
+    {
+        InputManager.Singleton.UnFreezeMoveInput();
+        InputManager.Singleton.UnFreezeJumpInput();
+        InputManager.Singleton.UnFreezeAttackInput();
+
+        FreeLookAddOn.Singleton.Unlock();
+
+        // Disable virtual camera
+        virtualCamera.SetActive(false);
     }
 
     public void PauseCutscene()

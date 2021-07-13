@@ -15,5 +15,5 @@ MonoBehaviour:
   npcName: <color=#9900FF>Shade</color>
   sentences:
   - The Moon is so cool! Wouldn't you agree?
-  - It big, round and shining with bright lights!
-  - We never get anything like this in the Shadow Realm.
+  - It is big, round and shining with bright light!
+  - There's nothing else like it in the <color=#9900FF>Shadow Realm</color>!

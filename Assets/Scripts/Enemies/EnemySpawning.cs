@@ -27,6 +27,10 @@ public class EnemySpawning : MonoBehaviour
         isSpawning = true;
         isPreparingToSpawn = false;
         targetSpawnPoint.OpenPortal();
+        GetComponent<EnemyCombat>().ActivateSword();
+
+        SoundManager.Singleton.Stop("Opening Intro");
+        SoundManager.Singleton.Play("Battle");
     }
 
     public void Spawned()
@@ -34,6 +38,8 @@ public class EnemySpawning : MonoBehaviour
         
         isSpawning = false;
         TurnCollidersOn();
+
+        GetComponent<EnemyCombat>().StartAttacking();
     }
 
     void TurnCollidersOff()

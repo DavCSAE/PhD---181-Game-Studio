@@ -9,6 +9,9 @@ public class ReceivedItemUI : MonoBehaviour
     [SerializeField] GameObject canvas;
 
     [SerializeField] GameObject maskText;
+    [SerializeField] GameObject dashText;
+    [SerializeField] GameObject wingsText;
+    [SerializeField] GameObject swordText;
 
     GameObject activeText;
 
@@ -39,6 +42,45 @@ public class ReceivedItemUI : MonoBehaviour
         maskText.SetActive(true);
 
         activeText = maskText;
+
+        InteractionUI.Singleton.ShowNextPopUp();
+
+        PlayerEvents.NextDialogueEvent += HideAllText;
+    }
+
+    public void ShowDashText()
+    {
+        canvas.SetActive(true);
+
+        dashText.SetActive(true);
+
+        activeText = dashText;
+
+        InteractionUI.Singleton.ShowNextPopUp();
+
+        PlayerEvents.NextDialogueEvent += HideAllText;
+    }
+
+    public void ShowWingsText()
+    {
+        canvas.SetActive(true);
+
+        wingsText.SetActive(true);
+
+        activeText = wingsText;
+
+        InteractionUI.Singleton.ShowNextPopUp();
+
+        PlayerEvents.NextDialogueEvent += HideAllText;
+    }
+
+    public void ShowSwordText()
+    {
+        canvas.SetActive(true);
+
+        swordText.SetActive(true);
+
+        activeText = swordText;
 
         InteractionUI.Singleton.ShowNextPopUp();
 

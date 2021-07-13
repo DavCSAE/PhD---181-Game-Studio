@@ -152,4 +152,8 @@ public class PlayerAnimations : MonoBehaviour
         anim.SetBool("isReceivingItem", false);
     }
 
+    public void FootstepAnimEvent()
+    {
+        SoundManager.Singleton.Play("Footstep");
+    }
 }

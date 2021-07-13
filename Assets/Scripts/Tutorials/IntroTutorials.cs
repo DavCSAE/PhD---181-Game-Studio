@@ -12,7 +12,10 @@ public class IntroTutorials : MonoBehaviour
     [SerializeField] Tutorial jumpingTutorial;
     bool jumpingTutorialActive;
 
-    
+    // High Jumping Tutorial
+    [SerializeField] Tutorial highJumpingTutorial;
+    bool highJumpingTutorialActive;
+
 
     // Start is called before the first frame update
     void Start()
@@ -68,4 +71,33 @@ public class IntroTutorials : MonoBehaviour
             jumpingTutorial.CompletedTutorial();
         }
     }
+
+    public void ActivateHighJumpingTutorial()
+    {
+        highJumpingTutorialActive = true;
+
+        highJumpingTutorial.StartTutorial();
+    }
+
+    void HandleHighJumpingTutorial()
+    {
+        // If movement tutorial is not active, don't do anything
+        if (!highJumpingTutorialActive) return;
+
+        // Ff player has used the movement controls, tutorial is complete
+        if (InputManager.Singleton.GetJumpInput())
+        {
+            highJumpingTutorialActive = false;
+
+            highJumpingTutorial.CompletedTutorial();
+        }
+    }
+
+    public void CompletedHighJumpingTutorial()
+    {
+        highJumpingTutorialActive = false;
+
+        highJumpingTutorial.CompletedTutorial();
+    }
+
 }

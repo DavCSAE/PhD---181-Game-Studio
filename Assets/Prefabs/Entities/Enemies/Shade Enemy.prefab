@@ -57,7 +57,7 @@ GameObject:
   - component: {fileID: 3098863898073621252}
   - component: {fileID: 2209352726999395637}
   - component: {fileID: 599376906530822042}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Shade Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -354,7 +354,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8742002480722172784, guid: 61470f16c9a23b245aa7f05315a17323, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8701097872435035295, guid: 61470f16c9a23b245aa7f05315a17323, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1539,15 +1539,15 @@ PrefabInstance:
     - target: {fileID: 3117475923667862361, guid: 61470f16c9a23b245aa7f05315a17323, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 98b1b10a0fa5f40418e12da8ca4fc3ef, type: 2}
+      objectReference: {fileID: 2100000, guid: e9dc677aa99158847ba70b174ed668cd, type: 2}
     - target: {fileID: 3117475923667862361, guid: 61470f16c9a23b245aa7f05315a17323, type: 3}
       propertyPath: m_Materials.Array.data[1]
       value: 
-      objectReference: {fileID: 2100000, guid: 98b1b10a0fa5f40418e12da8ca4fc3ef, type: 2}
+      objectReference: {fileID: 2100000, guid: e9dc677aa99158847ba70b174ed668cd, type: 2}
     - target: {fileID: 3117475923667862361, guid: 61470f16c9a23b245aa7f05315a17323, type: 3}
       propertyPath: m_Materials.Array.data[2]
       value: 
-      objectReference: {fileID: 2100000, guid: 98b1b10a0fa5f40418e12da8ca4fc3ef, type: 2}
+      objectReference: {fileID: 2100000, guid: e9dc677aa99158847ba70b174ed668cd, type: 2}
     - target: {fileID: 3198896233827727512, guid: 61470f16c9a23b245aa7f05315a17323, type: 3}
       propertyPath: m_IsActive
       value: 0

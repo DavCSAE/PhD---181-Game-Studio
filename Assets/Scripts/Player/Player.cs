@@ -80,6 +80,11 @@ public class Player : MonoBehaviour
     void Update()
     {
         CheckIfPlayerFell();
+
+        if (Keyboard.current.pKey.wasPressedThisFrame)
+        {
+            SoundManager.Singleton.Play("Item sound");
+        }
     }
 
     void CheckIfPlayerFell()
@@ -98,6 +103,22 @@ public class Player : MonoBehaviour
     public void UnlockMask()
     {
 
+    }
+
+    public void UnlockSword()
+    {
+        combat.UnlockSword();
+    }
+
+    public void UnlockDash()
+    {
+        movement.isDashUnlocked = true;
+    }
+
+    public void UnlockWings()
+    {
+        movement.doubleJumpEnabled = true;
+        appearance.ShowWings();
     }
     
 }

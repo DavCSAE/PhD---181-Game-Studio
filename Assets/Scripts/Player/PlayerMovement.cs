@@ -69,7 +69,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float loseVelocityInAirSpeed = 1f;
     float fallMultiplier = 2.5f;
     float lowJumpModifier = 2f;
-    bool doubleJumpEnabled = true;
+    public bool doubleJumpEnabled;
     bool canDoubleJump;
     bool unlimitedJumpsEnabled;
     float jumpBoost = 5f;
@@ -82,6 +82,7 @@ public class PlayerMovement : MonoBehaviour
     Vector3 dashStartPos;
     Vector3 velocityBeforeDash;
     bool canDash = true;
+    public bool isDashUnlocked;
     Collider dashStartGround;
 
     [Header("MOVING PLATFORMS")]
@@ -923,6 +924,9 @@ public class PlayerMovement : MonoBehaviour
 
     void Dash()
     {
+        // Don't do anything if dash locked
+        if (!isDashUnlocked) return;
+
         // Don't do anything if frozen
         if (isFrozen) return;
 

@@ -23,12 +23,12 @@ public class EnemySpawner : MonoBehaviour
     {
         if (Keyboard.current.zKey.wasPressedThisFrame)
         {
-            print("SPAWN ENEMIES : " + enemies.Count);
-            SpawnEnemies();
+            //print("SPAWN ENEMIES : " + enemies.Count);
+            //SpawnEnemies();
         }
     }
 
-    void SpawnEnemies()
+    public void SpawnEnemies()
     {
         foreach (Enemy enemy in enemies)
         {

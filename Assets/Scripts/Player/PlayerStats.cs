@@ -16,6 +16,10 @@ public class PlayerStats : MonoBehaviour
     float flashRedCurrTime;
     float flashRedTimeLength = 0.15f;
 
+    bool isAlive = true;
+
+    
+
     private void OnEnable()
     {
         PlayerEvents.PlayerRevivedEvent += Revived;
@@ -39,7 +43,7 @@ public class PlayerStats : MonoBehaviour
     {
         if (Keyboard.current.fKey.wasPressedThisFrame)
         {
-            TakeDamage(1);
+            //TakeDamage(1);
         }
 
         HandleFlashingRed();
@@ -47,6 +51,8 @@ public class PlayerStats : MonoBehaviour
 
     public void TakeDamage(int amount)
     {
+        if (!isAlive) return;
+
         currHealth -= amount;
 
         if (currHealth <= 0)
@@ -110,6 +116,9 @@ public class PlayerStats : MonoBehaviour
         InputManager.Singleton.FreezeAttackInput();
 
         FreeLookAddOn.Singleton.Lock();
+
+        isAlive = false;
+
     }
 
     void Revived()
@@ -117,6 +126,8 @@ public class PlayerStats : MonoBehaviour
         currHealth = maxHealth;
 
         HudUI.Singleton.UpdateHearts();
+
+        isAlive = true;
     }
 
 }

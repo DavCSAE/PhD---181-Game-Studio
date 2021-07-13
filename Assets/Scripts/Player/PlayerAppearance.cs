@@ -43,17 +43,17 @@ public class PlayerAppearance : MonoBehaviour
         if (player.areWingsUnlocked) ShowWings();
     }
 
-    void ShowMask()
+    public void ShowMask()
     {
         mask.SetActive(true);
     }
 
-    void ShowSword()
+    public void ShowSword()
     {
         sword.SetActive(true);
     }
 
-    void ShowWings()
+    public void ShowWings()
     {
         wings.SetActive(true);
     }

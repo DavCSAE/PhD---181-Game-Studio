@@ -28,13 +28,18 @@ public class PlayerSpawning : MonoBehaviour
     {
         if (Keyboard.current.rKey.wasPressedThisFrame)
         {
-            FadeForSpawn();
+            //FadeForSpawn();
         }
     }
 
     public void FadeForSpawn()
     {
         BlackScreen.Singleton.FadeToBlack(PrepareToSpawn);
+
+
+        SoundManager.Singleton.Stop("Battle");
+        SoundManager.Singleton.Stop("Epic");
+        SoundManager.Singleton.Play("Opening Intro");
     }
 
     public void PrepareToSpawn()
