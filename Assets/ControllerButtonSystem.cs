@@ -12,6 +12,8 @@ public class ControllerButtonSystem : MonoBehaviour
     [SerializeField]
     Button currentButton;
 
+    bool isActivated;
+
     bool isInputLeft;
     bool isInputUp;
 
@@ -36,6 +38,18 @@ public class ControllerButtonSystem : MonoBehaviour
 
     VerticalDirection verDir;
 
+    private void OnEnable()
+    {
+        PlayerEvents.InputDeviceChangeEvent += HandleDeviceChange;
+        PlayerEvents.NextDialogueEvent += PressButton;
+    }
+
+    private void OnDisable()
+    {
+        PlayerEvents.InputDeviceChangeEvent -= HandleDeviceChange;
+        PlayerEvents.NextDialogueEvent -= PressButton;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -55,8 +69,43 @@ public class ControllerButtonSystem : MonoBehaviour
         if(!isTimerActive) HandleButtonSelection();
         //}
     }
+
+    void PressButton()
+    {
+        currentButton.Select();
+    }
+
+    void HandleDeviceChange()
+    {
+        string currentDevice = InputManager.Singleton.GetCurrentDevice();
+
+        if(currentDevice == "keyboard")
+        {
+            SetUpForKeyboard();
+        }
+
+        if (currentDevice == "gamepad")
+        {
+            SetUpForGamepad();
+        }
+    }
+
+    void SetUpForKeyboard()
+    {
+        currentButton.GetComponent<Animator>().SetTrigger("Normal");
+        isActivated = false;
+    }
+
+    void SetUpForGamepad()
+    {
+        currentButton.GetComponent<Animator>().SetTrigger("Highlighted");
+        isActivated = true;
+    }
+
     void HandleButtonSelection()
     {
+        if (!isActivated) return;
+
         //Getting the direction of the input
         Vector2 moveInput = InputManager.Singleton.GetMoveInput();
 
@@ -74,11 +123,6 @@ public class ControllerButtonSystem : MonoBehaviour
         if (moveInput.y == 0) verDir = VerticalDirection.None;
         if (moveInput.y > 0) verDir = VerticalDirection.Up;
         if (moveInput.y < 0) verDir = VerticalDirection.Down;
-
-        print(moveInput.x);
-        print(moveInput.y);
-        print(horDir);
-        print(verDir);
 
         //Make a new list to store the buttons in the direction of the input
         List<Button> buttonsInDirection = new List<Button>();
@@ -178,7 +222,7 @@ public class ControllerButtonSystem : MonoBehaviour
             }
         }
 
-        print("buttons in direction " + buttonsInDirection.Count);
+        //print("buttons in direction " + buttonsInDirection.Count);
 
         //If there are no buttons in the input direction then return
         if (buttonsInDirection.Count == 0) return;
