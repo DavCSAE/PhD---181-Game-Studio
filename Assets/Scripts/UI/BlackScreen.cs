@@ -8,13 +8,15 @@ public class BlackScreen : MonoBehaviour
     // SELF SINGLETON
     public static BlackScreen Singleton;
 
+    [SerializeField] GameObject menuRoot;
+
     // BlACK SCREEN IMAGE
     [SerializeField]
     Image blackScreen;
 
     // Timer
     float fadingTimer; // Current timer
-    [SerializeField]float fadeLength; // Total length timer should go to
+    [SerializeField] float fadeLength; // Total length timer should go to
     bool isSpeedChanged;
 
     // FADING TO
@@ -25,9 +27,11 @@ public class BlackScreen : MonoBehaviour
 
     // AFTER FADE CALLBACK METHOD
     bool isCallback;
+    bool isCallbacks;
 
     public delegate void AfterFadeCallback();
     AfterFadeCallback afterFadeCallback;
+    List<AfterFadeCallback> afterFadeCallbacks = new List<AfterFadeCallback>();
 
     private void Awake()
     {
@@ -79,11 +83,13 @@ public class BlackScreen : MonoBehaviour
 
     public void FadeToBlack()
     {
-        if (!isFadingFrom) 
+        if (!isFadingFrom)
         {
             isFadingTo = true;
 
             blackScreen.gameObject.SetActive(true);
+
+            menuRoot.SetActive(true);
         }
     }
 
@@ -114,6 +120,16 @@ public class BlackScreen : MonoBehaviour
         FadeToBlack(method);
     }
 
+    public void FadeToBlack(List<AfterFadeCallback> methods)
+    {
+        afterFadeCallbacks.Clear();
+        afterFadeCallbacks = methods;
+
+        isCallbacks = true;
+
+        FadeToBlack();
+    }
+
     void HandleFadingTo()
     {
         // Return if not fading to black
@@ -142,8 +158,10 @@ public class BlackScreen : MonoBehaviour
     public void FadeFromBlack()
     {
         if (!isFadingTo)
-        { 
+        {
             isFadingFrom = true;
+
+            menuRoot.SetActive(true);
         }
     }
 
@@ -185,12 +203,15 @@ public class BlackScreen : MonoBehaviour
 
     void FinishedFading()
     {
-        if (isFadingFrom) 
+        if (isFadingFrom)
         {
             isFadingFrom = false;
+
+
+            menuRoot.SetActive(false);
         }
 
-        if (isFadingTo) 
+        if (isFadingTo)
         {
             isFadingTo = false;
         }
@@ -206,6 +227,7 @@ public class BlackScreen : MonoBehaviour
         fadingTimer = 0;
 
         HandleAfterFadeFunction();
+
     }
 
     void HandleAfterFadeFunction()
@@ -218,6 +240,19 @@ public class BlackScreen : MonoBehaviour
 
             // Reset for next fade
             isCallback = false;
+        }
+
+        if (isCallbacks)
+        {
+            // Run all functions that are meant to be run after fading
+            foreach (AfterFadeCallback callback in afterFadeCallbacks)
+            {
+                // Run functions
+                callback();
+            }
+
+            // Reset for next fade
+            isCallbacks = false;
         }
     }
 }

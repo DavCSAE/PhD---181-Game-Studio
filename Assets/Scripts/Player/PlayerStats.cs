@@ -16,6 +16,16 @@ public class PlayerStats : MonoBehaviour
     float flashRedCurrTime;
     float flashRedTimeLength = 0.15f;
 
+    private void OnEnable()
+    {
+        PlayerEvents.PlayerRevivedEvent += Revived;
+    }
+
+    private void OnDisable()
+    {
+        PlayerEvents.PlayerRevivedEvent -= Revived;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -44,6 +54,7 @@ public class PlayerStats : MonoBehaviour
             currHealth = 0;
 
             // Player died
+            Death();
         }
 
         // Make player flash red
@@ -88,6 +99,24 @@ public class PlayerStats : MonoBehaviour
     public int GetCurrentHealth()
     {
         return currHealth;
+    }
+
+    void Death()
+    {
+        PlayerEvents.TriggerPlayerDeathEvent();
+
+        InputManager.Singleton.FreezeMoveInput();
+        InputManager.Singleton.FreezeJumpInput();
+        InputManager.Singleton.FreezeAttackInput();
+
+        FreeLookAddOn.Singleton.Lock();
+    }
+
+    void Revived()
+    {
+        currHealth = maxHealth;
+
+        HudUI.Singleton.UpdateHearts();
     }
 
 }

@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerTestKit : MonoBehaviour
+public class RequiredForPlay : MonoBehaviour
 {
-    GameObject testKit;
+    GameObject requiredForPlay;
 
     // Input Manager
     [SerializeField] GameObject inputManagerPrefab;
@@ -34,7 +34,7 @@ public class PlayerTestKit : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        SpawnTestKit();
+        SpawnRequiredObjects();
 
         // If there's no InputManager then this must be for testing
         if (InputManager.Singleton == null)
@@ -58,27 +58,27 @@ public class PlayerTestKit : MonoBehaviour
         SpawnHUDUI();
     }
 
-    void SpawnTestKit()
+    void SpawnRequiredObjects()
     {
         // Create test kit object to hold test kit
-        testKit = new GameObject("Test Kit");
+        requiredForPlay = new GameObject("Required For Play");
         // Make test kit child of player object
-        testKit.transform.parent = transform;
+        requiredForPlay.transform.parent = transform;
         // Reset test kit transforms
-        testKit.transform.localPosition = Vector3.zero;
+        requiredForPlay.transform.localPosition = Vector3.zero;
     }
 
     void SpawnInputManager()
     {
         // Spawn InputManager
-        inputManagerObject = Instantiate(inputManagerPrefab, testKit.transform);
+        inputManagerObject = Instantiate(inputManagerPrefab, requiredForPlay.transform);
         inputManagerObject.GetComponent<InputManager>().EnableInputs();
     }
 
     void SpawnCameras()
     {
         // Spawn Cinemachine Camera
-        freeLookCinemachineObj = Instantiate(freeLookCinemachinePrefab, testKit.transform);
+        freeLookCinemachineObj = Instantiate(freeLookCinemachinePrefab, requiredForPlay.transform);
         // Setup Cinemachine Camera
         Cinemachine.CinemachineFreeLook cinemachineFreeLook = freeLookCinemachineObj.GetComponent<Cinemachine.CinemachineFreeLook>();
         cinemachineFreeLook.Follow = transform;
@@ -87,12 +87,12 @@ public class PlayerTestKit : MonoBehaviour
 
     void SpawnDialogueSystem()
     {
-        dialogueSystem = Instantiate(dialogueManagerPrefab, testKit.transform);
+        dialogueSystem = Instantiate(dialogueManagerPrefab, requiredForPlay.transform);
     }
 
     void SpawnInteractionUI()
     {
-        Instantiate(interactionUI, testKit.transform);
+        Instantiate(interactionUI, requiredForPlay.transform);
     }
 
     void SpawnBlackScreen()
@@ -102,11 +102,11 @@ public class PlayerTestKit : MonoBehaviour
 
     void SpawnPauseMenuUI()
     {
-        Instantiate(pauseMenuUI, testKit.transform);
+        Instantiate(pauseMenuUI, requiredForPlay.transform);
     }
 
     void SpawnHUDUI()
     {
-        Instantiate(hudUI, testKit.transform);
+        Instantiate(hudUI, requiredForPlay.transform);
     }
 }

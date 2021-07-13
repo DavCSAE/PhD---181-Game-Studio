@@ -65,8 +65,6 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
-
         // PHYSICS
         rb = GetComponent<Rigidbody>();
         capsColl = GetComponent<CapsuleCollider>();

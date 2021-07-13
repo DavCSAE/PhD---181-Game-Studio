@@ -25,6 +25,7 @@ public class HudUI : MonoBehaviour
         Singleton = this;
     }
 
+
     // Start is called before the first frame update
     void Start()
     {
@@ -66,6 +67,8 @@ public class HudUI : MonoBehaviour
                 activeHearts[i].sprite = emptyHeart;
             }
         }
+
+        damagableHeart = activeHearts[currentHealth - 1];
     }
 
     public void DamageHeart()
