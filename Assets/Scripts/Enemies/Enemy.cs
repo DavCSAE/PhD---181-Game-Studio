@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
+    [SerializeField] bool preparedForSpawning;
 
-
-    EnemyStats stats;
-    EnemyCombat combat;
+    public EnemyStats stats;
+    public EnemyCombat combat;
+    public EnemyAnimations animations;
+    public EnemySpawning spawning;
 
     [HideInInspector]
     public Animator anim;
@@ -17,6 +19,7 @@ public class Enemy : MonoBehaviour
     {
         stats = GetComponent<EnemyStats>();
         combat = GetComponent<EnemyCombat>();
+        spawning = GetComponent<EnemySpawning>();
 
         anim = GetComponent<Animator>();
     }
@@ -30,5 +33,10 @@ public class Enemy : MonoBehaviour
     public void TakeDamage(int amount)
     {
         stats.TakeDamage(amount);
+    }
+
+    public void Spawn()
+    {
+        GetComponent<EnemySpawning>().Spawn();
     }
 }

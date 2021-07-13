@@ -15,10 +15,19 @@ public class ShadeIdleAnimations : MonoBehaviour
     [SerializeField] Collider sitColl;
     [SerializeField] Collider lyingColl;
 
+    Collider currentColl;
+
+    private void Awake()
+    {
+        SetInitialCurrCollider();
+    }
+
     // Start is called before the first frame update
     void Start()
     {
         anim = GetComponent<Animator>();
+
+        
     }
 
     // Update is called once per frame
@@ -26,6 +35,11 @@ public class ShadeIdleAnimations : MonoBehaviour
     {
         HandleSitting();
         HandleLying();
+    }
+
+    void SetInitialCurrCollider()
+    {
+        currentColl = defaultColl;
     }
 
     void HandleSitting()
@@ -75,6 +89,8 @@ public class ShadeIdleAnimations : MonoBehaviour
         if (lyingColl != coll) lyingColl.enabled = false;
 
         coll.enabled = true;
+
+        currentColl = coll;
     }
 
     public void StopIdling()
@@ -88,5 +104,16 @@ public class ShadeIdleAnimations : MonoBehaviour
     public void AllowIdling()
     {
         canIdle = true;
+    }
+
+    public void ActivateColliders()
+    {
+        print("ACTIVATED");
+        currentColl.enabled = true;
+    }
+
+    public void DeactivateColldiers()
+    {
+        currentColl.enabled = false;
     }
 }

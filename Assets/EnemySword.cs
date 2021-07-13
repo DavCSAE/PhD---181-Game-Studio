@@ -40,7 +40,6 @@ public class EnemySword : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-
         print("hit " + other.name);
 
         if (other.GetComponent<PlayerStats>())
