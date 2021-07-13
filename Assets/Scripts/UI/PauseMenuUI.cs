@@ -17,6 +17,16 @@ public class PauseMenuUI : MonoBehaviour
         Singleton = this;
     }
 
+    private void OnEnable()
+    {
+        PlayerEvents.PauseMenuButtonEvent += TogglePauseMenu;
+    }
+
+    private void OnDisable()
+    {
+        PlayerEvents.PauseMenuButtonEvent -= TogglePauseMenu;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -26,16 +36,18 @@ public class PauseMenuUI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Keyboard.current.escapeKey.wasPressedThisFrame)
+    
+    }
+
+    void TogglePauseMenu()
+    {
+        if (isOpen == false)
         {
-            if (isOpen == false)
-            {
-                PrepareToOpenPauseMenu();
-            }
-            else
-            {
-                PrepareToClosePauseMenu();
-            }
+            PrepareToOpenPauseMenu();
+        }
+        else
+        {
+            PrepareToClosePauseMenu();
         }
     }
 
