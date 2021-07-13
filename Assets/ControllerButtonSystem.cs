@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 
 public class ControllerButtonSystem : MonoBehaviour
 {
@@ -13,6 +14,10 @@ public class ControllerButtonSystem : MonoBehaviour
 
     bool isInputLeft;
     bool isInputUp;
+
+    float delayLength = 0.5f;
+    float currentTime;
+    bool isTimerActive;
 
     enum HorizontalDirection
     {
@@ -43,7 +48,12 @@ public class ControllerButtonSystem : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        HandleButtonSelection();
+        HandleDelay();
+        //if(Keyboard.current.wKey.wasPressedThisFrame && Keyboard.current.aKey.wasPressedThisFrame
+           // && Keyboard.current.sKey.wasPressedThisFrame && Keyboard.current.dKey.wasPressedThisFrame)
+        //{ 
+        if(!isTimerActive) HandleButtonSelection();
+        //}
     }
     void HandleButtonSelection()
     {
@@ -65,6 +75,8 @@ public class ControllerButtonSystem : MonoBehaviour
         if (moveInput.y > 0) verDir = VerticalDirection.Up;
         if (moveInput.y < 0) verDir = VerticalDirection.Down;
 
+        print(moveInput.x);
+        print(moveInput.y);
         print(horDir);
         print(verDir);
 
@@ -77,31 +89,35 @@ public class ControllerButtonSystem : MonoBehaviour
             {
                 case HorizontalDirection.None:
                     //do nothing
+                    /*if (verDir == VerticalDirection.None)
+                    {
+                        return;
+                    }*/
                     break;
                 case HorizontalDirection.Left:
                     //Check if button is to the left of the current button
-                    if (button.transform.position.x < currentButton.transform.position.x)
+                    if (button.transform.position.x <= currentButton.transform.position.x)
                     {
-                        print("button is to the left");
+                        //print("button is to the left");
                         //button is to the left
                     }
                     else
                     {
-                        print(1);
+                        //print(1);
                         //button isn't in input direction so do nothing
                         continue;
                     }
                     break;
                 case HorizontalDirection.Right:
                     //Check if button is to the right of the current button
-                    if (button.transform.position.x > currentButton.transform.position.x)
+                    if (button.transform.position.x >= currentButton.transform.position.x)
                     {
-                        print("button is to the right");
+                        //print("button is to the right");
                         //button is to the right
                     }
                     else
                     {
-                        print(2);
+                        //print(2);
                         //button isn't in input direction so do nothing
                         continue;
                     }
@@ -110,34 +126,51 @@ public class ControllerButtonSystem : MonoBehaviour
             switch (verDir)
             {
                 case VerticalDirection.None:
-                    //do nothing
+                    //if there is a left input check if button is left of current button
+                    if (horDir == HorizontalDirection.Left)
+                    {
+                        //if button is to the left of the current button, then button is in input direction
+                        if(button.transform.position.x < currentButton.transform.position.x)
+                        {
+                            buttonsInDirection.Add(button);
+                        }
+                    }
+                    //if there is a right input check if button is right of current button
+                    if (horDir == HorizontalDirection.Right)
+                    {
+                        //if button is to the right of the current button, then button is in input direction
+                        if (button.transform.position.x > currentButton.transform.position.x)
+                        {
+                            buttonsInDirection.Add(button);
+                        }
+                    }
                     break;
                 case VerticalDirection.Up:
                     //Check if button is above the current button
-                    if (button.transform.position.y > currentButton.transform.position.y)
+                    if (button.transform.position.y >= currentButton.transform.position.y)
                     {
-                        print("button above added");
+                        //print("button above added");
                         //button is above
                         buttonsInDirection.Add(button);
                     }
                     else
                     {
-                        print(3);
+                        //print(3);
                         //button isn't in input direction so do nothing
                         continue;
                     }
                     break;
                 case VerticalDirection.Down:
                     //Check if button is below the current button
-                    if (button.transform.position.y < currentButton.transform.position.y)
+                    if (button.transform.position.y <= currentButton.transform.position.y)
                     {
-                        print("button below added");
+                        //print("button below added");
                         //button is below
                         buttonsInDirection.Add(button);
                     }
                     else
                     {
-                        print(4);
+                        //print(4);
                         //button isn't in input direction so do nothing
                         continue;
                     }
@@ -163,12 +196,13 @@ public class ControllerButtonSystem : MonoBehaviour
         }
 
         ChangeCurrentButton(currentClosestButton);
+        StartDelay();
     }
 
 
     void ChangeCurrentButton(Button button)
     {
-        print("changed button");
+        //print("changed button");
 
         //return previously selected button to normal state
         currentButton.GetComponent<Animator>().SetTrigger("Normal");
@@ -182,5 +216,23 @@ public class ControllerButtonSystem : MonoBehaviour
 
         //set new button to highlighted state
         currentButton.GetComponent<Animator>().SetTrigger("Highlighted");
+    }
+
+    void StartDelay()
+    {
+        isTimerActive = true;
+        currentTime = 0f;
+    }
+
+    void HandleDelay()
+    {
+        if (!isTimerActive) return;
+
+        currentTime += Time.deltaTime;
+
+        if (currentTime >= delayLength)
+        {
+            isTimerActive = false;
+        }
     }
 }
