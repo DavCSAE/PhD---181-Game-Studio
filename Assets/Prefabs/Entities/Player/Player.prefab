@@ -924,7 +924,7 @@ ParticleSystem:
           m_RotationOrder: 4
     m_Mesh: {fileID: 0}
     m_MeshRenderer: {fileID: 0}
-    m_SkinnedMeshRenderer: {fileID: 0}
+    m_SkinnedMeshRenderer: {fileID: 3063637584276885219}
     m_Sprite: {fileID: 0}
     m_SpriteRenderer: {fileID: 0}
     m_UseMeshMaterialIndex: 0
@@ -5539,6 +5539,7 @@ MonoBehaviour:
   jumpHeight: 3
   loseVelocityInAirSpeed: 1
   doubleJumpEnabled: 0
+  wingBoost: 3
   dashSpeed: 15
   dashLength: 3
   isDashUnlocked: 0

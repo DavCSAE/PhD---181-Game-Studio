@@ -72,7 +72,7 @@ public class PlayerMovement : MonoBehaviour
     public bool doubleJumpEnabled;
     bool canDoubleJump;
     bool unlimitedJumpsEnabled;
-    float jumpBoost = 5f;
+    [SerializeField] float wingBoost = 5f;
 
     [Header("DASHING")]
     // Dashing
@@ -371,7 +371,47 @@ public class PlayerMovement : MonoBehaviour
             if (!isGrounded)
             {
                 // Reduce speed
-                speed *= 0.25f;
+                //speed *= 0.5f;
+
+                if (movementInput != Vector2.zero)
+                {
+                    if (Vector3.Angle(movDir, velocityBeforeJump) < 45)
+                    {
+                        // Reduce air velocity
+                        loseVelocityInAirSpeed = 1f;
+
+                        // Reduce speed
+                        speed *= 0.4f;
+                    }
+                    else if (Vector3.Angle(movDir, velocityBeforeJump) >= 45
+                        && Vector3.Angle(movDir, velocityBeforeJump) < 90)
+                    {
+                        // Reduce air velocity
+                        loseVelocityInAirSpeed = 2f;
+
+                        // Reduce speed
+                        speed *= 0.5f;
+                    }
+                    else if (Vector3.Angle(movDir, velocityBeforeJump) >= 90
+                        && Vector3.Angle(movDir, velocityBeforeJump) < 135)
+                    {
+                        // Reduce air velocity
+                        loseVelocityInAirSpeed = 3f;
+
+                        // Reduce speed
+                        speed *= 0.6f;
+                    }
+                    else if (Vector3.Angle(movDir, velocityBeforeJump) >= 135)
+                    {
+                        // Reduce air velocity
+                        loseVelocityInAirSpeed = 4f;
+
+                        // Reduce speed
+                        speed *= 0.7f;
+                    }
+                }
+
+                
             }
 
             // Calculate players new velocity
@@ -815,8 +855,8 @@ public class PlayerMovement : MonoBehaviour
                 isFlapping = true;
 
                 // Give horizontal boost in movement direction
-                player.rb.velocity = new Vector3(player.rb.velocity.x + moveDirection.normalized.x * jumpBoost,
-                    player.rb.velocity.y, player.rb.velocity.z + moveDirection.z * jumpBoost);
+                player.rb.velocity = new Vector3(player.rb.velocity.x + moveDirection.normalized.x * wingBoost,
+                    player.rb.velocity.y, player.rb.velocity.z + moveDirection.z * wingBoost);
             }
             else
             {
@@ -831,6 +871,9 @@ public class PlayerMovement : MonoBehaviour
             // Update states
             isJumping = true;
             isGrounded = false;
+
+            // Reset loseVelocityInAirSpeed
+            loseVelocityInAirSpeed = 1f;
 
             // Store velocity before jump to player's velocity at time of starting jump
             velocityBeforeJump = player.rb.velocity;

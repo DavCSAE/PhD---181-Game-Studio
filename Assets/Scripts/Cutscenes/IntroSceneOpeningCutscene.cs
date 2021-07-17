@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 
 public class IntroSceneOpeningCutscene : MonoBehaviour
 {
-    [SerializeField] PlayableDirector openingCutscene;
+    [SerializeField] PlayableDirector playableDirector;
 
 
 
@@ -20,9 +20,9 @@ public class IntroSceneOpeningCutscene : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if (Keyboard.current.tabKey.wasPressedThisFrame) Skip();
+        if (Keyboard.current.tabKey.wasPressedThisFrame) Skip();
 
-        //if (Gamepad.current.buttonEast.wasPressedThisFrame) Skip();
+        if (Gamepad.current.buttonEast.wasPressedThisFrame) Skip();
     }
 
 
@@ -68,7 +68,7 @@ public class IntroSceneOpeningCutscene : MonoBehaviour
 
     void Skip()
     {
-        openingCutscene.time = 45f;
+        playableDirector.time = 54f;
     }
 
     public void StartCutsceneMusic()
