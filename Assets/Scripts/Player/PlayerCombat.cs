@@ -8,9 +8,17 @@ public class PlayerCombat : MonoBehaviour
 
     bool canAttack;
 
-    bool isAttacking;
+    [SerializeField] bool isAttacking;
+
+    [SerializeField] bool inSwing1;
+    [SerializeField] bool inSwing2;
+    [SerializeField] bool canChainSwing;
 
     [SerializeField] PlayerSword sword;
+
+    [SerializeField] Animator slashAnim;
+
+
 
     void OnEnable()
     {
@@ -66,12 +74,19 @@ public class PlayerCombat : MonoBehaviour
         if (!canAttack) return;
 
         // Don't attack if currently attacking
-        if (isAttacking) return;
+        if (isAttacking && !canChainSwing) return;
 
         isAttacking = true;
 
-        // Play animation
-        player.animations.Attack1Animation(FinishedAttack);
+        if (!inSwing1)
+        {
+            FirstSwing();
+        }
+        else if (!inSwing2)
+        {
+            SecondSwing();
+        }
+
 
         // Play sound
         PlaySwordSwingSound();
@@ -80,10 +95,49 @@ public class PlayerCombat : MonoBehaviour
         sword.ActivateCollider();
     }
 
+    void FirstSwing()
+    {
+        if (inSwing2) player.animations.Attacked2();
+
+        // Play animation
+        player.animations.Attack1Animation(FinishedAttack);
+
+        // Play Slash effect
+        slashAnim.SetTrigger("attack");
+
+        // Update state
+        inSwing1 = true;
+        inSwing2 = false;
+    }
+
+    void SecondSwing()
+    {
+        if (inSwing1) player.animations.Attacked1();
+
+        // Play animation
+        player.animations.Attack2Animation(FinishedAttack);
+
+        // Play Slash effect
+        //slashAnim.SetTrigger("attack");
+
+        // Update states
+        inSwing2 = true;
+        inSwing1 = false;
+    }
+
+    public void CanChainSwing()
+    {
+        canChainSwing = true;
+    }
+
     // Animation event
     public void PlaySwordSwingSound()
     {
-        SoundManager.Singleton.Play("Sword Swing");
+        if (SoundManager.Singleton)
+        {
+            SoundManager.Singleton.Play("Sword Swing");
+        }
+        
     }
 
     void FinishedAttack()
@@ -91,6 +145,31 @@ public class PlayerCombat : MonoBehaviour
         isAttacking = false;
 
         sword.DeactivateCollider();
+
+        if (inSwing1) Invoke("FinishedFirstAttack", 0.5f);
+        if (inSwing2) Invoke("FinishedSecondAttack", 0.5f);
+    }
+
+
+    void FinishedFirstAttack()
+    {
+        inSwing1 = false;
+
+        CantChainSwing();
+    }
+
+    void FinishedSecondAttack()
+    {
+        inSwing2 = false;
+
+        CantChainSwing();
+    }
+
+    void CantChainSwing()
+    {
+        print("cant");
+        canChainSwing = false;
+        player.animations.SetCanChangeAttack(false);
     }
 
     public void HitEnemy(Enemy hitEnemy)

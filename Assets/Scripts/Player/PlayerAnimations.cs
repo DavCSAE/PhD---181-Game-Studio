@@ -114,11 +114,37 @@ public class PlayerAnimations : MonoBehaviour
         attackFinishedCallback = callback;
     }
 
-    public void Attacked()
+    public void Attack2Animation(AttackFinishedCallback callback)
+    {
+        anim.SetBool("attack2", true);
+
+        attackFinishedCallback = callback;
+    }
+
+    public void Attacked1()
     {
         anim.SetBool("attack1", false);
 
         attackFinishedCallback();
+    }
+
+    public void Attacked2()
+    {
+        anim.SetBool("attack2", false);
+
+        attackFinishedCallback();
+    }
+
+    public void CanChainAttack()
+    {
+        player.combat.CanChainSwing();
+
+        anim.SetBool("canChainAttack", true);
+    }
+
+    public void SetCanChangeAttack(bool state)
+    {
+        anim.SetBool("canChainAttack", state);
     }
 
     void HandleSpawnAnimation()
