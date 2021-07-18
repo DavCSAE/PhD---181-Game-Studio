@@ -22,6 +22,10 @@ public class PlayerCombat : MonoBehaviour
     public bool isProjectileSlash;
     public float projectileRange = 1f;
 
+    [SerializeField] Slash slash1;
+    [SerializeField] Slash slash2;
+    [SerializeField] List<ParticleSystem> slash1ParticleSystems = new List<ParticleSystem>();
+
 
 
     void OnEnable()
@@ -149,15 +153,25 @@ public class PlayerCombat : MonoBehaviour
     public void StartSlash1Effect()
     {
 
+
         // Play Slash effect
-        slashAnim.SetTrigger("attack");
+        //slashAnim.SetTrigger("attack");
+        foreach (ParticleSystem ps in slash1ParticleSystems)
+        {
+            //ps.Play();
+            //ps.Simulate(0.11f, true,);
+        }
+
+        slash1.StartCheckingForProjectileLaunch();
+        //slash1ParticleSystems[0].Simulate(0.12f, true, true);
+
     }
 
     public void StartSlash2Effect()
     {
 
         // Play Slash effect
-        slash2Anim.SetTrigger("attack2");
+        slash2.StartCheckingForProjectileLaunch();
     }
 
     public void CanChainSwing()
@@ -204,7 +218,6 @@ public class PlayerCombat : MonoBehaviour
 
     void CantChainSwing()
     {
-        print("cant");
         canChainSwing = false;
         player.animations.SetCanChangeAttack(false);
     }

@@ -24,7 +24,7 @@ public class EnemySpawner : MonoBehaviour
         if (Keyboard.current.zKey.wasPressedThisFrame)
         {
             //print("SPAWN ENEMIES : " + enemies.Count);
-            //SpawnEnemies();
+            SpawnEnemies();
         }
     }
 

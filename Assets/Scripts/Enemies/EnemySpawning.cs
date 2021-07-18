@@ -29,8 +29,8 @@ public class EnemySpawning : MonoBehaviour
         targetSpawnPoint.OpenPortal();
         GetComponent<EnemyCombat>().ActivateSword();
 
-        SoundManager.Singleton.Stop("Opening Intro");
-        SoundManager.Singleton.Play("Battle");
+        //SoundManager.Singleton.Stop("Opening Intro");
+        //SoundManager.Singleton.Play("Battle");
     }
 
     public void Spawned()

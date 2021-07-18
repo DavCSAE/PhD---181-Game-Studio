@@ -204,6 +204,6 @@ public class PlayerAnimations : MonoBehaviour
 
     public void FootstepAnimEvent()
     {
-        SoundManager.Singleton.Play("Footstep");
+        //SoundManager.Singleton.Play("Footstep");
     }
 }

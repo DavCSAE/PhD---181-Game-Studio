@@ -57,6 +57,7 @@ GameObject:
   - component: {fileID: 3098863898073621252}
   - component: {fileID: 2209352726999395637}
   - component: {fileID: 599376906530822042}
+  - component: {fileID: 191642520438824589}
   m_Layer: 9
   m_Name: Shade Enemy
   m_TagString: Untagged
@@ -233,6 +234,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f80bb15b0f13f447813101f7559f7cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!54 &191642520438824589
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9006572294894629781}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 126
+  m_CollisionDetection: 0
 --- !u!1001 &4961989526085821488
 PrefabInstance:
   m_ObjectHideFlags: 0
