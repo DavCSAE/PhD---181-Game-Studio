@@ -38,6 +38,8 @@ public class PlayerAnimations : MonoBehaviour
         HandleFallingAnimation();
         HandleDashAnimation();
         HandleSpawnAnimation();
+
+        HandleAttackAnimations();
     }
 
     void HandleRunAnimation()
@@ -107,44 +109,66 @@ public class PlayerAnimations : MonoBehaviour
     }
 
 
+    void HandleAttackAnimations()
+    {
+        anim.SetBool("attack1", player.combat.inSwing1);
+        anim.SetBool("attack2", player.combat.inSwing2);
+
+        if (!player.combat.isAttacking) player.combat.canChainSwing = false;
+
+        anim.SetBool("canChainAttack", player.combat.canChainSwing);
+    }
+
     public void Attack1Animation(AttackFinishedCallback callback)
     {
-        anim.SetBool("attack1", true);
+        //anim.SetBool("attack1", true);
 
-        attackFinishedCallback = callback;
+        //attackFinishedCallback = callback;
     }
 
     public void Attack2Animation(AttackFinishedCallback callback)
     {
-        anim.SetBool("attack2", true);
+        //anim.SetBool("attack2", true);
 
-        attackFinishedCallback = callback;
+        //attackFinishedCallback = callback;
+    }
+
+    public void StartedAttack1Event()
+    {
+        player.combat.StartSlash1Effect();
+    }
+
+    public void StartedAttack2Event()
+    {
+        player.combat.StartSlash2Effect();
     }
 
     public void Attacked1()
     {
-        anim.SetBool("attack1", false);
+        //anim.SetBool("attack1", false);
 
-        attackFinishedCallback();
+        //attackFinishedCallback();
+        player.combat.FinishedAttack();
     }
 
     public void Attacked2()
     {
-        anim.SetBool("attack2", false);
+        //anim.SetBool("attack2", false);
 
-        attackFinishedCallback();
+        //attackFinishedCallback();
+        player.combat.FinishedAttack();
     }
 
     public void CanChainAttack()
     {
         player.combat.CanChainSwing();
 
-        anim.SetBool("canChainAttack", true);
+        //anim.SetBool("canChainAttack", true);
     }
 
     public void SetCanChangeAttack(bool state)
     {
-        anim.SetBool("canChainAttack", state);
+        //anim.SetBool("canChainAttack", state);
     }
 
     void HandleSpawnAnimation()
