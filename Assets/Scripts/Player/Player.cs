@@ -24,6 +24,8 @@ public class Player : MonoBehaviour
     public PlayerReceivableItems receivables;
     [HideInInspector]
     public PlayerCombat combat;
+    [HideInInspector]
+    public PlayerTargeting targeting;
 
     // PHYSICS
     [HideInInspector]
@@ -60,6 +62,7 @@ public class Player : MonoBehaviour
         receivables = GetComponent<PlayerReceivableItems>();
         combat = GetComponent<PlayerCombat>();
         stats = GetComponent<PlayerStats>();
+        targeting = GetComponent<PlayerTargeting>();
     }
 
     // Start is called before the first frame update

@@ -20,7 +20,7 @@ public class InputManager : MonoBehaviour, PlayerControls.IPlayerActions
 
 
     Vector2 move;
-    bool isMoveFrozen;
+    [SerializeField] bool isMoveFrozen;
 
     Vector2 look;
 
