@@ -181,8 +181,15 @@ public class PlayerTargeting : MonoBehaviour
         //targetCam.Follow = followTarget.transform;
         targetCam.LookAt = lookAtTarget.transform;
 
+        // Rotate player to look at target
+        Vector3 targetPos = target.transform.position;
+        targetPos.y = transform.position.y;
+        transform.LookAt(targetPos);
+
         var transposer = targetCam.GetCinemachineComponent<CinemachineTransposer>();
         transposer.m_BindingMode = CinemachineTransposer.BindingMode.LockToTargetWithWorldUp;
+
+        CalculateTargetCameraStartSide();
     }
 
     void StopTargeting()
@@ -194,6 +201,31 @@ public class PlayerTargeting : MonoBehaviour
         //targetCam.LookAt = freeLookCamTarget.transform;
         var transposer = targetCam.GetCinemachineComponent<CinemachineTransposer>();
         transposer.m_BindingMode = CinemachineTransposer.BindingMode.SimpleFollowWithWorldUp;
+    }
+
+    void CalculateTargetCameraStartSide()
+    {
+        Vector3 rightPoint = transform.position - transform.right;
+        Vector3 leftPoint = transform.position + transform.right;
+
+        Vector3 mainCamPos = Camera.main.transform.position;
+
+        float distFromCamToRightPoint = Vector3.Distance(rightPoint, mainCamPos);
+        float distFromCamToLeftPoint = Vector3.Distance(leftPoint, mainCamPos);
+
+        if (distFromCamToRightPoint < distFromCamToLeftPoint)
+        {
+            offsetDirection = OffsetDirections.right;
+        }
+        else if (distFromCamToRightPoint > distFromCamToLeftPoint)
+        {
+            offsetDirection = OffsetDirections.left;
+        }
+        else
+        {
+            offsetDirection = (OffsetDirections)Random.Range(0, 2);
+        }
+
     }
 
     void HandleTargetIconScaling()
