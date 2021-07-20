@@ -125,9 +125,7 @@ public class PlayerMovement : MonoBehaviour
 
         HandleGrounding();
         HandleMovement();
-        if (player.rb.velocity == Vector3.zero) print(player.rb.velocity);
         CheckForObstacles();
-        if (player.rb.velocity == Vector3.zero) print(player.rb.velocity);
         HandleRotation();
         HandleSlopes();
         HandleSliding();
@@ -353,7 +351,6 @@ public class PlayerMovement : MonoBehaviour
 
         // Create normalized direction vector out of movement inputs
         Vector3 direction = new Vector3(movementInput.x, 0f, movementInput.y).normalized;
-        print("direction: " + direction);
         // Move Character if getting any move inputs
         if (direction.magnitude > 0f)
         {
@@ -427,10 +424,8 @@ public class PlayerMovement : MonoBehaviour
                 player.rb.velocity.y, moveDirection.normalized.z * speed + velocityBeforeJump.z);
 
 
-            print("player velocity: " + player.rb.velocity);
             // Set players new velocity
             player.rb.velocity = newVelocity;
-            print("after player velocity: " + player.rb.velocity);
 
             // Bit shift the index of the layer (8) to get a bit mask
             int layerMask = 1 << 8;
@@ -442,51 +437,14 @@ public class PlayerMovement : MonoBehaviour
             // RaycastHit to store hit info
             RaycastHit hit;
             // Stops player from getting too close to walls (Player will climb them if too close)
-            // Front
-            Vector3 forward = transform.TransformDirection(transform.forward);
-            Vector3 right = transform.TransformDirection(transform.right);
 
-            if (Physics.Raycast(transform.position + Vector3.up / 2, forward, player.capsColl.radius + 0.2f, layerMask)
-                && !isDashing)
+            // If there is something blocking player from moving in move direction
+            if (Physics.Raycast(transform.position + Vector3.up / 2, moveDirection, player.capsColl.radius + 0.2f, layerMask))
             {
-                player.rb.velocity -= Vector3.Project(player.rb.velocity, forward);
-                HitObstacle();
-                print("for");
-            }
-            // Front-right
-            if (Physics.Raycast(transform.position + Vector3.up / 2, forward + right, player.capsColl.radius + 0.2f, layerMask)
-                && !isDashing)
-            {
-                player.rb.velocity -= Vector3.Project(player.rb.velocity, forward + right);
-                HitObstacle();
-
-                print("front right");
-            }
-            // Front-left
-            if (Physics.Raycast(transform.position + Vector3.up / 2, forward + -right, player.capsColl.radius + 0.2f, layerMask)
-                && !isDashing)
-            {
-                player.rb.velocity -= Vector3.Project(player.rb.velocity, forward + -right);
-                HitObstacle();
-
-
-                print("front left");
-            }
-            // Right
-            if (Physics.Raycast(transform.position + Vector3.up / 2, right, player.capsColl.radius + 0.2f, layerMask))
-            {
-                player.rb.velocity -= Vector3.Project(player.rb.velocity, right);
+                player.rb.velocity -= Vector3.Project(player.rb.velocity, moveDirection);
                 HitObstacle();
             }
-            // Left
-            if (Physics.Raycast(transform.position + Vector3.up / 2, -right, player.capsColl.radius + 0.2f, layerMask))
-            {
-                player.rb.velocity -= Vector3.Project(player.rb.velocity, -right);
-                HitObstacle();
-            }
-
-
-            print("after obst player velocity: " + player.rb.velocity);
+            
 
             // If targeting
             if (player.targeting.isTargeting)
@@ -498,8 +456,6 @@ public class PlayerMovement : MonoBehaviour
                 float angleBetweenMoveDirAndDirToTarget = Vector3.Angle(moveDirection, dirFromPlayerToTarget);
                 float distToTarget = Vector3.Distance(playerPos, targetPos);
 
-                print("moveDir: " + moveDirection + " dirToTarget: " + dirFromPlayerToTarget
-                    + " angle: " + angleBetweenMoveDirAndDirToTarget + " dist: " + distToTarget);
 
                 // If player is close to target
                 if (distToTarget <= 0.5f)
@@ -507,18 +463,14 @@ public class PlayerMovement : MonoBehaviour
                     // Stop player from moving toward target
 
                     
-
                     if (angleBetweenMoveDirAndDirToTarget < 89)
                     {
-                        //player.rb.velocity -= Vector3.Project(player.rb.velocity, moveDirection);
+                        player.rb.velocity -= Vector3.Project(player.rb.velocity, moveDirection);
                     }
 
-                    
                 }
             }
 
-
-            print("after target velocity: " + player.rb.velocity);
 
             // Update 'isMoving' state based off current velocity
             if (player.rb.velocity != Vector3.zero)
@@ -556,10 +508,6 @@ public class PlayerMovement : MonoBehaviour
             player.rb.velocity = newVelocity;
         }
 
-        if (player.rb.velocity == Vector3.zero)
-        {
-            print("zero at end of movement");
-        }
     }
 
     void CheckForObstacles()
@@ -1058,9 +1006,15 @@ public class PlayerMovement : MonoBehaviour
         // Store current move direction as dash direction
         dashDir = moveDirection.normalized;
 
-        // Rotate player toward dash direction
-        Vector3 targetPos = transform.position + moveDirection;
-        transform.LookAt(targetPos);
+
+        // If not targeting
+        if (!player.targeting.isTargeting)
+        {
+            // Rotate player toward dash direction
+            Vector3 targetPos = transform.position + moveDirection;
+            transform.LookAt(targetPos);
+        }
+        
 
         //player.rb.AddForce(moveDirection * 100 * dashPower);
 

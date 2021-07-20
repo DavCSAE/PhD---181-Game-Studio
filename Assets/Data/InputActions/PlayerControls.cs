@@ -81,6 +81,14 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""ToggleTargeting"",
+                    ""type"": ""Button"",
+                    ""id"": ""f46079f8-d993-4e4b-908d-0fd1848ef4b2"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -411,6 +419,28 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
                     ""action"": ""NextDialogue"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""adbc0573-0e04-4aad-8b96-83a186805641"",
+                    ""path"": ""<Keyboard>/t"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""ToggleTargeting"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a551575b-8d88-47bf-9c9c-b7211acdd55e"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""ToggleTargeting"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -996,6 +1026,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         m_Player_PauseMenu = m_Player.FindAction("PauseMenu", throwIfNotFound: true);
         m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
         m_Player_NextDialogue = m_Player.FindAction("NextDialogue", throwIfNotFound: true);
+        m_Player_ToggleTargeting = m_Player.FindAction("ToggleTargeting", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1065,6 +1096,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_PauseMenu;
     private readonly InputAction m_Player_Interact;
     private readonly InputAction m_Player_NextDialogue;
+    private readonly InputAction m_Player_ToggleTargeting;
     public struct PlayerActions
     {
         private @PlayerControls m_Wrapper;
@@ -1077,6 +1109,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         public InputAction @PauseMenu => m_Wrapper.m_Player_PauseMenu;
         public InputAction @Interact => m_Wrapper.m_Player_Interact;
         public InputAction @NextDialogue => m_Wrapper.m_Player_NextDialogue;
+        public InputAction @ToggleTargeting => m_Wrapper.m_Player_ToggleTargeting;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1110,6 +1143,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @NextDialogue.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnNextDialogue;
                 @NextDialogue.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnNextDialogue;
                 @NextDialogue.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnNextDialogue;
+                @ToggleTargeting.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnToggleTargeting;
+                @ToggleTargeting.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnToggleTargeting;
+                @ToggleTargeting.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnToggleTargeting;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -1138,6 +1174,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @NextDialogue.started += instance.OnNextDialogue;
                 @NextDialogue.performed += instance.OnNextDialogue;
                 @NextDialogue.canceled += instance.OnNextDialogue;
+                @ToggleTargeting.started += instance.OnToggleTargeting;
+                @ToggleTargeting.performed += instance.OnToggleTargeting;
+                @ToggleTargeting.canceled += instance.OnToggleTargeting;
             }
         }
     }
@@ -1302,6 +1341,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         void OnPauseMenu(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
         void OnNextDialogue(InputAction.CallbackContext context);
+        void OnToggleTargeting(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

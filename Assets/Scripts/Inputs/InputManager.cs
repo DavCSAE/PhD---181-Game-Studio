@@ -222,4 +222,14 @@ public class InputManager : MonoBehaviour, PlayerControls.IPlayerActions
             PlayerEvents.TriggerNextDialogueEvent();
         }
     }
+
+    public void OnToggleTargeting(InputAction.CallbackContext context)
+    {
+
+        print("TOGGLETARGETINPUT");
+        if (context.started)
+        {
+            PlayerEvents.TriggerToggleTargetingEvent();
+        }
+    }
 }

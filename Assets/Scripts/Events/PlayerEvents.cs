@@ -123,4 +123,14 @@ public class PlayerEvents : MonoBehaviour
         // If event has subscribers, run event
         PlayerRevivedEvent?.Invoke();
     }
+
+    // Event for player targeting toggle
+    public delegate void ToggleTargeting();
+    public static event ToggleTargeting ToggleTargetingEvent;
+
+    public static void TriggerToggleTargetingEvent()
+    {
+        // If event has subscribers, run event
+        ToggleTargetingEvent?.Invoke();
+    }
 }
