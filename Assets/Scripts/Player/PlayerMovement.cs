@@ -46,8 +46,6 @@ public class PlayerMovement : MonoBehaviour
     float rotateTowardCurrTime;
     float rotateTowardTotalTime;
 
-    [SerializeField] Transform rotSnapTarget;
-
     [Header("SLOPES")]
     // Slopes
     [SerializeField] float maxSlopeAngle = 35f;
@@ -783,7 +781,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (player.targeting.isTargeting)
         {
-            transform.LookAt(rotSnapTarget);
+            transform.LookAt(player.targeting.target);
             transform.localEulerAngles = new Vector3(0, transform.localEulerAngles.y, 0);
             return;
         }

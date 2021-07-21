@@ -226,7 +226,6 @@ public class InputManager : MonoBehaviour, PlayerControls.IPlayerActions
     public void OnToggleTargeting(InputAction.CallbackContext context)
     {
 
-        print("TOGGLETARGETINPUT");
         if (context.started)
         {
             PlayerEvents.TriggerToggleTargetingEvent();
