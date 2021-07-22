@@ -6,9 +6,14 @@ using Cinemachine;
 
 public class PlayerTargeting : MonoBehaviour
 {
+    Player player;
+
     public Transform target;
     public bool isTargeting;
+    public bool isSwappingTarget;
     bool hasSwappedTarget;
+
+    [SerializeField] float maxTargetDistance = 30f;
 
     [SerializeField] CinemachineTargetGroup targetGroup;
 
@@ -22,13 +27,16 @@ public class PlayerTargeting : MonoBehaviour
     Vector3 endTargetCamPos;
     Vector3 endTargetCamRot;
     public float targetCamOffsetSpeed = 1f;
-    enum OffsetDirections
+
+    enum Directions
     {
+        none,
         left,
         right,
     }
 
-    OffsetDirections offsetDirection;
+    [SerializeField] Directions offsetDirection;
+    [SerializeField] Directions swapDirection;
 
     public GameObject targetingUI;
     public GameObject targetIcon;
@@ -37,6 +45,14 @@ public class PlayerTargeting : MonoBehaviour
     public Vector3 iconMaxScale = Vector3.one;
     public Vector3 scaleSpeed = Vector3.one / 3;
     private Vector3 currentScaleSpeed;
+
+
+
+    // GIZMOS
+    Vector3 start;
+    Vector3 end;
+    Vector3 obstacleHitPoint;
+    bool isDrawingCameraToTargetLineGizmo;
 
     private void OnEnable()
     {
@@ -51,6 +67,8 @@ public class PlayerTargeting : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        player = GetComponent<Player>();
+
         currentScaleSpeed = scaleSpeed;
 
     }
@@ -114,7 +132,7 @@ public class PlayerTargeting : MonoBehaviour
                 newFollowOffset.x = 1.25f;
             }
 
-            offsetDirection = OffsetDirections.left;
+            offsetDirection = Directions.left;
         }
 
         // If movement is to the right
@@ -134,15 +152,17 @@ public class PlayerTargeting : MonoBehaviour
                 newFollowOffset.x = -1.25f;
             }
 
-            offsetDirection = OffsetDirections.right;
+            offsetDirection = Directions.right;
         }
         else if(movementInput.x == 0)
         {
             switch(offsetDirection)
             {
-                case OffsetDirections.left:
+                case Directions.left:
                     if (currentOffset.x != 1.25f)
                     {
+                        print("currentOffsetx: " + currentOffset.x);
+                        print("no input, move offset left");
                         newFollowOffset.x = Mathf.Lerp(currentOffset.x, 1.25f, targetCamOffsetSpeed * 4 * Time.deltaTime);
 
                         if (newFollowOffset.x > 1.25f)
@@ -152,9 +172,11 @@ public class PlayerTargeting : MonoBehaviour
                     }
                     break;
 
-                case OffsetDirections.right:
+                case Directions.right:
                     if (currentOffset.x != -1.25f)
                     {
+                        print("no input, move offset right");
+                        print("currentOffsetx: " + currentOffset.x);
                         newFollowOffset.x = Mathf.Lerp(currentOffset.x, -1.25f, targetCamOffsetSpeed * 4 * Time.deltaTime);
 
                         if (newFollowOffset.x < -1.25f)
@@ -181,12 +203,11 @@ public class PlayerTargeting : MonoBehaviour
     void StartTargeting()
     {
         // Find target
-        Transform newTarget = FindInitialTarget();
+        FindTarget();
 
         // If no target, then return
-        if (newTarget == null) return;
+        if (target == null) return;
 
-        SetNewTarget(newTarget);
 
         targetCam.gameObject.SetActive(true);
         targetingUI.SetActive(true);
@@ -196,15 +217,23 @@ public class PlayerTargeting : MonoBehaviour
         // Rotate player to look at target
         Vector3 targetPos = target.position;
         targetPos.y = transform.position.y;
-        transform.LookAt(targetPos);
+
+        // Store start look at pos
+        Vector3 startLookAtPos = transform.position + transform.forward;
+
+        CalculateTargetCameraStartSide();
 
         var transposer = targetCam.GetCinemachineComponent<CinemachineTransposer>();
         transposer.m_BindingMode = CinemachineTransposer.BindingMode.LockToTargetWithWorldUp;
 
-        CalculateTargetCameraStartSide();
 
         // Update state
         isTargeting = true;
+
+        // Prevent swapping right after starting to target
+        hasSwappedTarget = true;
+        
+
     }
 
     void StopTargeting()
@@ -219,18 +248,28 @@ public class PlayerTargeting : MonoBehaviour
 
         // Update state
         isTargeting = false;
+
+        target = null;
     }
 
     void SetNewTarget(Transform newTarget)
     {
         target = newTarget;
 
+        if (target == null)
+        {
+            isTargeting = false;
+            return;
+        }
 
         // Update targetgroup
         targetGroup.m_Targets[1].target = target;
+        //targetCam.LookAt = target;
 
-        
-        targetCam.LookAt = target;
+        isTargeting = true;
+
+        // Start rotating to target
+        player.movement.StartRotatingToTarget();
     }
 
     void CalculateTargetCameraStartSide()
@@ -245,15 +284,15 @@ public class PlayerTargeting : MonoBehaviour
 
         if (distFromCamToRightPoint < distFromCamToLeftPoint)
         {
-            offsetDirection = OffsetDirections.right;
+            offsetDirection = Directions.right;
         }
         else if (distFromCamToRightPoint > distFromCamToLeftPoint)
         {
-            offsetDirection = OffsetDirections.left;
+            offsetDirection = Directions.left;
         }
         else
         {
-            offsetDirection = (OffsetDirections)Random.Range(0, 2);
+            offsetDirection = (Directions)Random.Range(0, 2);
         }
 
     }
@@ -276,52 +315,239 @@ public class PlayerTargeting : MonoBehaviour
         targetIcon.transform.localScale += currentScaleSpeed * Time.deltaTime;
     }
 
-    Transform FindInitialTarget()
+
+    void FindTarget()
     {
+        // Declare a new Transform variable that will be used to reference the found target
         Transform newTarget = null;
 
-        List<Transform> targets = PlayerTargetManager.Singleton.targets;
+        // Get a list of all the potential targets
+        List<Transform> potentialTargets = new List<Transform>(PlayerTargetManager.Singleton.targets);
 
-        float physicalDistance = 999999999f;
+        // Prepare a list of doubleCheckTargets
+        List<Transform> doubleCheckTargets = new List<Transform>();
+
+        // If there is already a target, remove it from list of potential targets
+        if (target) potentialTargets.Remove(target);
+
+        // Set max physical distance
+        float physicalDistance = maxTargetDistance;
+
+        // Set max screen distance from centre of screen
         float screenDistance = 999999999f;
 
+        // Get the position of the centre of the creen
         Vector2 screenMidPoint = new Vector2(Screen.width / 2, Screen.height / 2);
 
-        foreach (Transform potentialTarget in targets)
+        // Current targets screen pos
+        Vector2 currentTargetScreenPos = Vector2.zero;
+
+        // If swapping targets, get current targets screen pos
+        if (isTargeting && isSwappingTarget)
         {
-            // Distance between potential target and player
+            currentTargetScreenPos = Camera.main.WorldToScreenPoint(target.position);
+        }
+
+        // Check each target in the list of potential targets
+        foreach (Transform potentialTarget in potentialTargets)
+        {
+            // Get potential target's screen position
+            Vector2 potentialTargetScreenPos = Camera.main.WorldToScreenPoint(potentialTarget.position);
+
+            // If potential target screen pos is off screen, then skip
+            if (CheckIfScreenPositionIsOffScreen(potentialTargetScreenPos)) continue;
+
+            // Get the distance between potential target and player
             float targetDistanceToPlayer = Vector3.Distance(transform.position, potentialTarget.position);
 
-            // Distance between potential target and centre of screen
-            float targetDistanceToCentreOfScreen = Vector2.Distance(Camera.main.WorldToScreenPoint(potentialTarget.position), screenMidPoint);
+            // Get the distance between potential target screen position and centre of screen
+            float targetDistanceToCentreOfScreen = Vector2.Distance(potentialTargetScreenPos, screenMidPoint);
 
-            // Check if view blocked
-
-            if (targetDistanceToPlayer < physicalDistance)
+            // If target is not on the screen, then skip target
+            if (!potentialTarget.GetComponent<Renderer>().isVisible)
             {
-                physicalDistance = targetDistanceToPlayer;
-                screenDistance = targetDistanceToCentreOfScreen;
-
-                newTarget = potentialTarget;
-
+                continue;
             }
 
-            bool isPotentialTargetScreenPosCloser = (targetDistanceToCentreOfScreen < screenDistance);
-            bool isPotentialTargetPhysicalDistanceCloseToCurrent = targetDistanceToPlayer < physicalDistance * 2f;
-
-            if (isPotentialTargetScreenPosCloser && isPotentialTargetPhysicalDistanceCloseToCurrent)
+            // If target is out of range, then skip target
+            if (targetDistanceToPlayer > physicalDistance * 1.2f + 1.5f)
             {
-                physicalDistance = targetDistanceToPlayer;
-                screenDistance = targetDistanceToCentreOfScreen;
+                continue;
+            }
 
-                newTarget = potentialTarget;
+            
+
+            // If already targeting
+            if (isTargeting && isSwappingTarget)
+            {
+                // If swapping targets
+                if (isSwappingTarget)
+                {
+                    // Handle swapping based on swap direction
+                    switch (swapDirection)
+                    {
+                        case Directions.left:
+                            // If potential target is not in swap direction, then skip
+                            if (potentialTargetScreenPos.x > currentTargetScreenPos.x)
+                            {
+                                continue;
+                            }
+                            // If potential target is in swap direction
+                            else
+                            {
+                                // Get distance on screen from potential target to current target
+                                float screenDistBetweenPotTargetAndCurrTarget = Vector2.Distance(potentialTargetScreenPos, currentTargetScreenPos);
+
+                                // If screen distance between potential and curr targets is smaller than current shortest screen dist
+                                if (screenDistBetweenPotTargetAndCurrTarget < screenDistance)
+                                {
+                                    // If potential target has closer physical distance to player
+                                    if (targetDistanceToPlayer < physicalDistance)
+                                    {
+                                        newTarget = potentialTarget;
+
+                                        physicalDistance = targetDistanceToPlayer;
+                                        screenDistance = screenDistBetweenPotTargetAndCurrTarget;
+                                    }
+                                    // If potential target is slightly further away from player
+                                    else if (targetDistanceToPlayer < physicalDistance * 1.2f + 1.5f)
+                                    {
+                                        newTarget = potentialTarget;
+
+                                        physicalDistance = targetDistanceToPlayer;
+                                        screenDistance = screenDistBetweenPotTargetAndCurrTarget;
+                                    }
+                                    // If potential target is much further away from player
+                                    else
+                                    {
+                                        //if (newTarget) doubleCheckTargets.Add(newTarget);
+                                    }
+                                }
+                                // If potential target screen pos is further away from curr target screen pos than current closest
+                                else
+                                {
+                                    // If potential target has a much closer physical distance to player
+                                    if (targetDistanceToPlayer < physicalDistance / 1.5f)
+                                    {
+                                        newTarget = potentialTarget;
+
+                                        physicalDistance = targetDistanceToPlayer;
+                                        screenDistance = screenDistBetweenPotTargetAndCurrTarget;
+                                    }
+                                }
+                            }
+                            break;
+                        case Directions.right:
+                            // If potential target is not in swap direction, then skip
+                            if (potentialTargetScreenPos.x < currentTargetScreenPos.x)
+                            {
+                                continue;
+                            }
+                            // If potential target is in swap direction
+                            else
+                            {
+                                // Get distance on screen from potential target to current target
+                                float screenDistBetweenPotTargetAndCurrTarget = Vector2.Distance(potentialTargetScreenPos, currentTargetScreenPos);
+
+                                // If screen distance between potential and curr targets is smaller than current shortest screen dist
+                                if (screenDistBetweenPotTargetAndCurrTarget < screenDistance)
+                                {
+                                    // If potential target has closer physical distance to player
+                                    if (targetDistanceToPlayer < physicalDistance)
+                                    {
+                                        newTarget = potentialTarget;
+
+                                        physicalDistance = targetDistanceToPlayer;
+                                        screenDistance = screenDistBetweenPotTargetAndCurrTarget;
+                                    }
+                                    // If potential target is slightly further away from player
+                                    else if (targetDistanceToPlayer < physicalDistance * 1.2f + 1.5f)
+                                    {
+                                        newTarget = potentialTarget;
+
+                                        physicalDistance = targetDistanceToPlayer;
+                                        screenDistance = screenDistBetweenPotTargetAndCurrTarget;
+                                    }
+                                    // If potential target is much further away from player
+                                    else
+                                    {
+                                        //if (newTarget) doubleCheckTargets.Add(newTarget);
+                                    }
+                                }
+                                // If potential target screen pos is further away from curr target screen pos than current closest
+                                else
+                                {
+                                    // If potential target has a much closer physical distance to player
+                                    if (targetDistanceToPlayer < physicalDistance / 1.5f)
+                                    {
+                                        newTarget = potentialTarget;
+
+                                        physicalDistance = targetDistanceToPlayer;
+                                        screenDistance = screenDistBetweenPotTargetAndCurrTarget;
+                                    }
+                                }
+                            }
+                            break;
+                    }
+                }
+            } 
+            // If not already targeting (Just started targeting)
+            else
+            {
+                if (CheckIfTargetIsBlocked(potentialTarget))
+                {
+                    continue;
+                }
+
+                // If potential target is closer to centre of screen than current closest
+                if (targetDistanceToCentreOfScreen < screenDistance)
+                {
+                    // If potential target has closer physical distance to player
+                    if (targetDistanceToPlayer < physicalDistance)
+                    {
+                        newTarget = potentialTarget;
+
+                        physicalDistance = targetDistanceToPlayer;
+                        screenDistance = targetDistanceToCentreOfScreen;
+                    }
+                    // If potential target is slightly further away from player
+                    else if (targetDistanceToPlayer < physicalDistance * 1.2f + 1.5f)
+                    {
+                        newTarget = potentialTarget;
+
+                        physicalDistance = targetDistanceToPlayer;
+                        screenDistance = targetDistanceToCentreOfScreen;
+                    }
+                    // If potential target is much further away from player
+                    else
+                    {
+                        //if (newTarget) doubleCheckTargets.Add(newTarget);
+                    }
+                }
+                // If potential target is further away from centre of screen than current closest
+                else
+                {
+                    // If potential target has a much closer physical distance to player
+                    if (targetDistanceToPlayer < physicalDistance / 2)
+                    {
+                        newTarget = potentialTarget;
+
+                        physicalDistance = targetDistanceToPlayer;
+                        screenDistance = targetDistanceToCentreOfScreen;
+                    }
+                }
             }
         }
 
-        print(newTarget.name);
 
-        return newTarget;
+        if (newTarget)
+        {
+            print(newTarget.name);
+            SetNewTarget(newTarget);
+        }
+
     }
+
 
     void HandleTargetSwapping()
     {
@@ -342,6 +568,8 @@ public class PlayerTargeting : MonoBehaviour
         // Don't do anything if not targeting
         if (!isTargeting) return;
 
+        swapDirection = Directions.none;
+
         // Don't do anything if no targets to swap to
         if (PlayerTargetManager.Singleton.targets.Count <= 1) return;
 
@@ -349,128 +577,99 @@ public class PlayerTargeting : MonoBehaviour
         // If lookInput is to the left
         if (lookInput.x < 0)
         {
+            // Update swapping state
+            isSwappingTarget = true;
+
+            // Update Swap Direction
+            swapDirection = Directions.left;
+
             // Try find target to the left
-            FindTargetToLeftOfCurrent();
+            FindTarget();
+
         }
         // If lookInput is to the right
         else if (lookInput.x > 0)
         {
+            // Update swapping state
+            isSwappingTarget = true;
+
+            // Update Swap Direction
+            swapDirection = Directions.right;
+
             // Try find target to the right
-            FindTargetToRightOfCurrent();
+            FindTarget();
         }
 
 
-        // Update state
+        // Update states
         hasSwappedTarget = true;
+        isSwappingTarget = true;
     }
 
-    void FindTargetToLeftOfCurrent()
+    bool CheckIfTargetIsBlocked(Transform targetToCheck)
     {
-        print("FIND LEFT TARGET");
+        bool result = false;
 
-        Transform newTarget = null;
+        string[] layersToMask = { "Player", "Enemy" };
 
-        List<Transform> targets = new List<Transform>(PlayerTargetManager.Singleton.targets);
-        targets.Remove(target);
+        LayerMask mask = LayerMask.GetMask(layersToMask);
+        mask = ~mask;
 
-        float physicalDistance = 999999999f;
-        float screenDistance = 999999999f;
+        Vector3 cameraPos = Camera.main.transform.position;
+        Vector3 dirFromCamToTarget = targetToCheck.position - cameraPos;
 
-        Vector2 screenMidPoint = new Vector2(Screen.width / 2, Screen.height / 2);
+        float distance = Vector3.Distance(cameraPos, targetToCheck.position);
 
-        Vector2 currentTargetScreenPos = Camera.main.WorldToScreenPoint(target.position);
+        RaycastHit hit;
 
-        foreach (Transform potentialTarget in targets)
+
+
+        if (Physics.Raycast(cameraPos, dirFromCamToTarget.normalized, out hit, distance, mask))
         {
-            if (potentialTarget == target) break;
+            print("blocked: " + hit.transform.gameObject.name);
+            result = true;
 
-            // Get potential target's screen position
-            Vector2 potentialTargetScreenPos = Camera.main.WorldToScreenPoint(potentialTarget.position);
 
-            // Make sure target's screen position is to the left of current target
-            if (potentialTargetScreenPos.x > currentTargetScreenPos.x) continue;
-
-            // Distance between potential target and player
-            float targetDistanceToPlayer = Vector3.Distance(transform.position, potentialTarget.position);
-
-            // Distance between potential target and centre of screen
-            float targetDistanceToCentreOfScreen = Vector2.Distance(potentialTargetScreenPos, screenMidPoint);
-
-            // Check if view blocked
-
-            if (targetDistanceToPlayer < physicalDistance)
-            {
-                physicalDistance = targetDistanceToPlayer;
-
-                newTarget = potentialTarget;
-
-                print(newTarget.name);
-            }
+            StartDrawingCameraToTargetLineGizmo(cameraPos, cameraPos + dirFromCamToTarget.normalized * distance, hit.point);
         }
 
-        // If suitable target found
-        if (newTarget != null)
-        {
-            // Set as new target
-            SetNewTarget(newTarget);
-        }
+        return result;
     }
 
-    void FindTargetToRightOfCurrent()
+    bool CheckIfScreenPositionIsOffScreen(Vector2 screenPos)
     {
-        print("FIND Right TARGET");
+        bool result = false;
 
-        Transform newTarget = null;
-
-        List<Transform> targets = new List<Transform>(PlayerTargetManager.Singleton.targets);
-        targets.Remove(target);
-
-        float physicalDistance = 999999999f;
-        float screenDistance = 999999999f;
-
-        Vector2 screenMidPoint = new Vector2(Screen.width / 2, Screen.height / 2);
-
-        Vector2 currentTargetScreenPos = Camera.main.WorldToScreenPoint(target.position);
-
-        foreach (Transform potentialTarget in targets)
+        if (screenPos.x > Screen.width
+            || screenPos.x < 0
+            || screenPos.y > Screen.height
+            || screenPos.y < 0)
         {
-            if (potentialTarget == target) break;
-
-            // Get potential target's screen position
-            Vector2 potentialTargetScreenPos = Camera.main.WorldToScreenPoint(potentialTarget.position);
-
-            // Make sure target's screen position is to the left of current target
-            if (potentialTargetScreenPos.x < currentTargetScreenPos.x) continue;
-
-            // Distance between potential target and player
-            float targetDistanceToPlayer = Vector3.Distance(transform.position, potentialTarget.position);
-
-            // Distance between potential target and centre of screen
-            float targetDistanceToCentreOfScreen = Vector2.Distance(potentialTargetScreenPos, screenMidPoint);
-
-            // Check if view blocked
-
-            if (targetDistanceToPlayer < physicalDistance)
-            {
-                physicalDistance = targetDistanceToPlayer;
-
-                newTarget = potentialTarget;
-
-                print(newTarget.name);
-            }
+            result = true;
         }
 
-        // If suitable target found
-        if (newTarget != null)
-        {
-            // Set as new target
-            SetNewTarget(newTarget);
-        }
+        return result;
     }
 
-    void SwapTarget()
+    void StartDrawingCameraToTargetLineGizmo(Vector3 camTransform, Vector3 targetTransform, Vector3 hitPoint)
+    {
+        
+        start = camTransform;
+        end= targetTransform;
+        obstacleHitPoint = hitPoint;
+
+        isDrawingCameraToTargetLineGizmo = true;
+    }
+
+    void OnDrawGizmos()
     {
 
+        if (isDrawingCameraToTargetLineGizmo)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(start, end);
+            Gizmos.DrawSphere(obstacleHitPoint, 0.25f);
+        }
     }
 
 

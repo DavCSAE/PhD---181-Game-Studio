@@ -46,6 +46,10 @@ public class PlayerMovement : MonoBehaviour
     float rotateTowardCurrTime;
     float rotateTowardTotalTime;
 
+    bool isRotatingToTarget;
+
+    [SerializeField] float rotateToTargetSpeed;
+
     [Header("SLOPES")]
     // Slopes
     [SerializeField] float maxSlopeAngle = 35f;
@@ -781,9 +785,16 @@ public class PlayerMovement : MonoBehaviour
     {
         if (player.targeting.isTargeting)
         {
-            transform.LookAt(player.targeting.target);
-            transform.localEulerAngles = new Vector3(0, transform.localEulerAngles.y, 0);
-            return;
+            if (isRotatingToTarget)
+            {
+                HandleRotatingToTarget();
+            }
+            else
+            {
+                transform.LookAt(player.targeting.target);
+                transform.localEulerAngles = new Vector3(0, transform.localEulerAngles.y, 0);
+                return;
+            }
         }
 
         // Create normalized direction vector out of movement inputs
@@ -1100,7 +1111,61 @@ public class PlayerMovement : MonoBehaviour
                 rotateTowardTargetY,
                 transform.localEulerAngles.z);
         }
+    }
 
+    public void StartRotatingToTarget()
+    {
+        isRotatingToTarget = true;
+    }
+
+    // Not smooth version
+    /*
+    void HandleRotatingToTarget()
+    {
+        if (!isRotatingToTarget) return;
+
+        Vector3 targetPos = player.targeting.target.position;
+        targetPos.y = transform.position.y;
+
+        Vector3 dirToTarget = targetPos - transform.position;
+
+        float singleStep = rotateToTargetSpeed * Time.deltaTime;
+
+        Vector3 newDirection = Vector3.RotateTowards(transform.forward, dirToTarget, singleStep, 0.0f);
+
+        //Vector3 newDirection = Mathf.Lerp(transform.forward, dirToTarget, singleStep);
+
+        transform.rotation = Quaternion.LookRotation(newDirection);
+
+        if (Vector3.Angle(transform.forward, dirToTarget) <= 1)
+        {
+            isRotatingToTarget = false;
+        }
+    }*/
+
+        // Smooth version
+
+    void HandleRotatingToTarget()
+    {
+        if (!isRotatingToTarget) return;
+
+        Vector3 targetPos = player.targeting.target.position;
+        targetPos.y = transform.position.y;
+
+        Vector3 dirToTarget = targetPos - transform.position;
+
+        float singleStep = rotateToTargetSpeed * Time.deltaTime;
+
+        Quaternion qTo = Quaternion.LookRotation(dirToTarget);
+
+        //Vector3 newDirection = Mathf.Lerp(transform.forward, dirToTarget, singleStep);
+
+        transform.rotation = Quaternion.Slerp(transform.rotation, qTo, singleStep);
+
+        if (Vector3.Angle(transform.forward, dirToTarget) <= 1)
+        {
+            isRotatingToTarget = false;
+        }
     }
 
     public void Unfreeze()
