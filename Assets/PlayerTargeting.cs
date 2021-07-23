@@ -115,6 +115,9 @@ public class PlayerTargeting : MonoBehaviour
             currentTargetCam = targetCam1;
             isCam1Active = true;
             currentTargetCam.gameObject.SetActive(true);
+
+            var transposer = currentTargetCam.GetCinemachineComponent<CinemachineTransposer>();
+            transposer.m_BindingMode = CinemachineTransposer.BindingMode.LockToTargetWithWorldUp;
             return;
         }
         // If cam 1 is active
@@ -124,6 +127,9 @@ public class PlayerTargeting : MonoBehaviour
             isCam1Active = false;
             isCam2Active = true;
             currentTargetCam.gameObject.SetActive(true);
+
+            var transposer = currentTargetCam.GetCinemachineComponent<CinemachineTransposer>();
+            transposer.m_BindingMode = CinemachineTransposer.BindingMode.LockToTargetWithWorldUp;
             return;
         }
 
@@ -134,6 +140,9 @@ public class PlayerTargeting : MonoBehaviour
             isCam2Active = false;
             isCam1Active = true;
             currentTargetCam.gameObject.SetActive(true);
+
+            var transposer = currentTargetCam.GetCinemachineComponent<CinemachineTransposer>();
+            transposer.m_BindingMode = CinemachineTransposer.BindingMode.LockToTargetWithWorldUp;
             return;
         }
 
@@ -314,7 +323,7 @@ public class PlayerTargeting : MonoBehaviour
             return;
         }
 
-        // Update targetgroups
+        
 
         if (isTargeting)
         {
@@ -328,6 +337,13 @@ public class PlayerTargeting : MonoBehaviour
             {
                 targetGroup2.m_Targets[1].target = target;
             }
+        }
+        else
+        {
+            isCam1Active = true;
+            currentTargetCam = targetCam1;
+            targetGroup1.m_Targets[1].target = target;
+            targetCam1.gameObject.SetActive(true);
         }
 
         //isTargeting = true;
