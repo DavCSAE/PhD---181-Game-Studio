@@ -109,6 +109,9 @@ public class PlayerTargeting : MonoBehaviour
 
         currentTargetCam.gameObject.SetActive(false);
 
+        // Get transposer component on target cam
+        Vector3 currentCamOffset = currentTargetCam.GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset;
+
         // If both cams aren't active
         if (!isCam1Active && !isCam2Active)
         {
@@ -118,6 +121,8 @@ public class PlayerTargeting : MonoBehaviour
 
             var transposer = currentTargetCam.GetCinemachineComponent<CinemachineTransposer>();
             transposer.m_BindingMode = CinemachineTransposer.BindingMode.LockToTargetWithWorldUp;
+
+            //CalculateOffsetSideForSwap();
             return;
         }
         // If cam 1 is active
@@ -130,6 +135,10 @@ public class PlayerTargeting : MonoBehaviour
 
             var transposer = currentTargetCam.GetCinemachineComponent<CinemachineTransposer>();
             transposer.m_BindingMode = CinemachineTransposer.BindingMode.LockToTargetWithWorldUp;
+            //transposer.m_FollowOffset = currentCamOffset;
+
+
+            CalculateOffsetSideForSwap();
             return;
         }
 
@@ -143,6 +152,10 @@ public class PlayerTargeting : MonoBehaviour
 
             var transposer = currentTargetCam.GetCinemachineComponent<CinemachineTransposer>();
             transposer.m_BindingMode = CinemachineTransposer.BindingMode.LockToTargetWithWorldUp;
+            //transposer.m_FollowOffset = currentCamOffset;
+
+
+            CalculateOffsetSideForSwap();
             return;
         }
 
@@ -220,7 +233,7 @@ public class PlayerTargeting : MonoBehaviour
                 case Directions.left:
                     if (currentOffset.x != 1.25f)
                     {
-                        newFollowOffset.x = Mathf.Lerp(currentOffset.x, 1.25f, targetCamOffsetSpeed * 4 * Time.deltaTime);
+                        newFollowOffset.x = Mathf.Lerp(currentOffset.x, 1.25f, targetCamOffsetSpeed * 2 * Time.deltaTime);
 
                         if (newFollowOffset.x > 1.249f)
                         {
@@ -236,7 +249,7 @@ public class PlayerTargeting : MonoBehaviour
                 case Directions.right:
                     if (currentOffset.x != -1.25f)
                     {
-                        newFollowOffset.x = Mathf.Lerp(currentOffset.x, -1.25f, targetCamOffsetSpeed * 4 * Time.deltaTime);
+                        newFollowOffset.x = Mathf.Lerp(currentOffset.x, -1.25f, targetCamOffsetSpeed * 2 * Time.deltaTime);
 
                         if (newFollowOffset.x < -1.249f)
                         {
@@ -252,6 +265,21 @@ public class PlayerTargeting : MonoBehaviour
         }
 
         transposer.m_FollowOffset = newFollowOffset;
+
+
+        if (isCam2Active)
+        {
+            // Get transposer component on target cam1
+            var transposer1 = targetCam1.GetCinemachineComponent<CinemachineTransposer>();
+            transposer1.m_FollowOffset = newFollowOffset;
+        }
+        else if (isCam1Active)
+        {
+            // Get transposer component on target cam2
+            var transposer2 = targetCam2.GetCinemachineComponent<CinemachineTransposer>();
+            transposer2.m_FollowOffset = newFollowOffset;
+        }
+        
     }
 
     void ToggleTarget()
@@ -375,6 +403,41 @@ public class PlayerTargeting : MonoBehaviour
             offsetDirection = (Directions)Random.Range(0, 2);
         }
 
+    }
+
+    void CalculateOffsetSideForSwap()
+    {
+        //return;
+
+        Vector2 playerScreenPos = Camera.main.WorldToScreenPoint(transform.position);
+        Vector2 targetScreenPos = Camera.main.WorldToScreenPoint(target.position);
+
+        // Get transposer component on target cam
+        var transposer = currentTargetCam.GetCinemachineComponent<CinemachineTransposer>();
+
+        // Get current offset
+        Vector3 currentOffset = transposer.m_FollowOffset;
+
+
+        // If target is to the left of player
+        if (targetScreenPos.x > playerScreenPos.x)
+        {
+            // Set offset side as left
+            offsetDirection = Directions.left;
+
+            //currentOffset.x = 1.25f;
+            
+        }
+        // If target is to the left of player
+        if (targetScreenPos.x < playerScreenPos.x)
+        {
+            // Set offset side as left
+            offsetDirection = Directions.right;
+
+            //currentOffset.x = -1.25f;
+        }
+
+        //transposer.m_FollowOffset = currentOffset;
     }
 
     void HandleTargetIconScaling()

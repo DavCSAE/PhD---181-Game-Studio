@@ -308,6 +308,18 @@ PrefabInstance:
       propertyPath: m_LookAt
       value: 
       objectReference: {fileID: 1422060324}
+    - target: {fileID: 812211268, guid: f9926f9e7d3c10a4b82aab7da19f9bae, type: 3}
+      propertyPath: m_XDamping
+      value: 0.74
+      objectReference: {fileID: 0}
+    - target: {fileID: 812211268, guid: f9926f9e7d3c10a4b82aab7da19f9bae, type: 3}
+      propertyPath: m_YawDamping
+      value: 0.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 812211268, guid: f9926f9e7d3c10a4b82aab7da19f9bae, type: 3}
+      propertyPath: m_AngularDamping
+      value: 2.5
+      objectReference: {fileID: 0}
     - target: {fileID: 909507200, guid: f9926f9e7d3c10a4b82aab7da19f9bae, type: 3}
       propertyPath: target
       value: 
@@ -332,9 +344,25 @@ PrefabInstance:
       propertyPath: targetGroup2
       value: 
       objectReference: {fileID: 190074160}
+    - target: {fileID: 1535155476, guid: f9926f9e7d3c10a4b82aab7da19f9bae, type: 3}
+      propertyPath: m_XDamping
+      value: 0.74
+      objectReference: {fileID: 0}
+    - target: {fileID: 1535155476, guid: f9926f9e7d3c10a4b82aab7da19f9bae, type: 3}
+      propertyPath: m_YawDamping
+      value: 0.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 1535155476, guid: f9926f9e7d3c10a4b82aab7da19f9bae, type: 3}
+      propertyPath: m_AngularDamping
+      value: 2.5
+      objectReference: {fileID: 0}
     - target: {fileID: 5912218971857306097, guid: f9926f9e7d3c10a4b82aab7da19f9bae, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 5912218971857306099, guid: f9926f9e7d3c10a4b82aab7da19f9bae, type: 3}
+      propertyPath: rotateToTargetSpeed
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 5912218971857306104, guid: f9926f9e7d3c10a4b82aab7da19f9bae, type: 3}
       propertyPath: m_RootOrder
