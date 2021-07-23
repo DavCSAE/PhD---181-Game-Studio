@@ -15,17 +15,22 @@ public class PlayerTargeting : MonoBehaviour
 
     [SerializeField] float maxTargetDistance = 30f;
 
-    [SerializeField] CinemachineTargetGroup targetGroup;
+    [SerializeField] CinemachineTargetGroup targetGroup1;
+    [SerializeField] CinemachineTargetGroup targetGroup2;
 
     [SerializeField] GameObject followTarget;
     [SerializeField] GameObject lookAtTarget;
     [SerializeField] GameObject freeLookCamTarget;
 
 
-    public CinemachineVirtualCamera targetCam;
-    bool isTargetCamBlendingOut;
-    Vector3 endTargetCamPos;
-    Vector3 endTargetCamRot;
+    public CinemachineVirtualCamera targetCam1;
+    public CinemachineVirtualCamera targetCam2;
+    CinemachineVirtualCamera currentTargetCam;
+
+    bool isCam1Active;
+    bool isCam2Active;
+
+
     public float targetCamOffsetSpeed = 1f;
 
     enum Directions
@@ -71,6 +76,7 @@ public class PlayerTargeting : MonoBehaviour
 
         currentScaleSpeed = scaleSpeed;
 
+        currentTargetCam = targetCam1;
     }
 
     // Update is called once per frame
@@ -81,21 +87,57 @@ public class PlayerTargeting : MonoBehaviour
             //ToggleTarget();
         }
 
-        HandleTargeting();
+        HandleTargetIconPosition();
         HandleTargetIconScaling();
 
+        HandleTargetSwapping();
         HandleTargetCamOffset();
 
-        HandleTargetSwapping();
     }
 
 
-    void HandleTargeting()
+    void HandleTargetIconPosition()
     {
         if (!isTargeting) return;
 
         Vector2 targetScreenPos = Camera.main.WorldToScreenPoint(target.position);
         targetIcon.transform.position = targetScreenPos;
+    }
+
+    void ChangeCurrentTargetCam()
+    {
+
+        currentTargetCam.gameObject.SetActive(false);
+
+        // If both cams aren't active
+        if (!isCam1Active && !isCam2Active)
+        {
+            currentTargetCam = targetCam1;
+            isCam1Active = true;
+            currentTargetCam.gameObject.SetActive(true);
+            return;
+        }
+        // If cam 1 is active
+        if (isCam1Active)
+        {
+            currentTargetCam = targetCam2;
+            isCam1Active = false;
+            isCam2Active = true;
+            currentTargetCam.gameObject.SetActive(true);
+            return;
+        }
+
+        // If cam 2 is active
+        else if (isCam2Active)
+        {
+            currentTargetCam = targetCam1;
+            isCam2Active = false;
+            isCam1Active = true;
+            currentTargetCam.gameObject.SetActive(true);
+            return;
+        }
+
+
     }
 
     void HandleTargetCamOffset()
@@ -107,7 +149,7 @@ public class PlayerTargeting : MonoBehaviour
         //print("moveInput: " + movementInput);
 
         // Get transposer component on target cam
-        var transposer = targetCam.GetCinemachineComponent<CinemachineTransposer>();
+        var transposer = currentTargetCam.GetCinemachineComponent<CinemachineTransposer>();
 
         // Get current offset
         Vector3 currentOffset = transposer.m_FollowOffset;
@@ -122,12 +164,16 @@ public class PlayerTargeting : MonoBehaviour
             {
                 newFollowOffset.x = Mathf.Lerp(currentOffset.x, 1.25f, targetCamOffsetSpeed * Time.deltaTime);
 
-                if (newFollowOffset.x > 1.25f)
+                if (newFollowOffset.x > 1.249f)
                 {
                     newFollowOffset.x = 1.25f;
                 }
             }
-            else if (currentOffset.x >= 1.25f)
+            else if (currentOffset.x >= 1.249f)
+            {
+                newFollowOffset.x = 1.25f;
+            }
+            else if (currentOffset.x == 1.25f)
             {
                 newFollowOffset.x = 1.25f;
             }
@@ -142,12 +188,16 @@ public class PlayerTargeting : MonoBehaviour
             {
                 newFollowOffset.x = Mathf.Lerp(currentOffset.x, -1.25f, targetCamOffsetSpeed * Time.deltaTime);
 
-                if (newFollowOffset.x < -1.25f)
+                if (newFollowOffset.x < -1.249f)
                 {
                     newFollowOffset.x = -1.25f;
                 }
             }
-            else if (currentOffset.x <= -1.25f)
+            else if (currentOffset.x <= -1.249f)
+            {
+                newFollowOffset.x = -1.25f;
+            }
+            else if (currentOffset.x == -1.25f)
             {
                 newFollowOffset.x = -1.25f;
             }
@@ -161,28 +211,32 @@ public class PlayerTargeting : MonoBehaviour
                 case Directions.left:
                     if (currentOffset.x != 1.25f)
                     {
-                        print("currentOffsetx: " + currentOffset.x);
-                        print("no input, move offset left");
                         newFollowOffset.x = Mathf.Lerp(currentOffset.x, 1.25f, targetCamOffsetSpeed * 4 * Time.deltaTime);
 
-                        if (newFollowOffset.x > 1.25f)
+                        if (newFollowOffset.x > 1.249f)
                         {
                             newFollowOffset.x = 1.25f;
                         }
+                    }
+                    else
+                    {
+                        newFollowOffset.x = currentOffset.x;
                     }
                     break;
 
                 case Directions.right:
                     if (currentOffset.x != -1.25f)
                     {
-                        print("no input, move offset right");
-                        print("currentOffsetx: " + currentOffset.x);
                         newFollowOffset.x = Mathf.Lerp(currentOffset.x, -1.25f, targetCamOffsetSpeed * 4 * Time.deltaTime);
 
-                        if (newFollowOffset.x < -1.25f)
+                        if (newFollowOffset.x < -1.249f)
                         {
                             newFollowOffset.x = -1.25f;
                         }
+                    }
+                    else
+                    {
+                        newFollowOffset.x = currentOffset.x;
                     }
                     break;
             }
@@ -208,8 +262,8 @@ public class PlayerTargeting : MonoBehaviour
         // If no target, then return
         if (target == null) return;
 
+        //ChangeCurrentTargetCam();
 
-        targetCam.gameObject.SetActive(true);
         targetingUI.SetActive(true);
 
         //targetCam.Follow = followTarget.transform;
@@ -223,7 +277,7 @@ public class PlayerTargeting : MonoBehaviour
 
         CalculateTargetCameraStartSide();
 
-        var transposer = targetCam.GetCinemachineComponent<CinemachineTransposer>();
+        var transposer = currentTargetCam.GetCinemachineComponent<CinemachineTransposer>();
         transposer.m_BindingMode = CinemachineTransposer.BindingMode.LockToTargetWithWorldUp;
 
 
@@ -232,18 +286,16 @@ public class PlayerTargeting : MonoBehaviour
 
         // Prevent swapping right after starting to target
         hasSwappedTarget = true;
-        
-
     }
 
     void StopTargeting()
     {
-        targetCam.gameObject.SetActive(false);
+        currentTargetCam.gameObject.SetActive(false);
         targetingUI.SetActive(false);
 
         //targetCam.Follow = null;
         //targetCam.LookAt = freeLookCamTarget.transform;
-        var transposer = targetCam.GetCinemachineComponent<CinemachineTransposer>();
+        var transposer = currentTargetCam.GetCinemachineComponent<CinemachineTransposer>();
         transposer.m_BindingMode = CinemachineTransposer.BindingMode.SimpleFollowWithWorldUp;
 
         // Update state
@@ -262,11 +314,23 @@ public class PlayerTargeting : MonoBehaviour
             return;
         }
 
-        // Update targetgroup
-        targetGroup.m_Targets[1].target = target;
-        //targetCam.LookAt = target;
+        // Update targetgroups
 
-        isTargeting = true;
+        if (isTargeting)
+        {
+            ChangeCurrentTargetCam();
+
+            if (isCam1Active)
+            {
+                targetGroup1.m_Targets[1].target = target;
+            }
+            else if (isCam2Active)
+            {
+                targetGroup2.m_Targets[1].target = target;
+            }
+        }
+
+        //isTargeting = true;
 
         // Start rotating to target
         player.movement.StartRotatingToTarget();
@@ -626,7 +690,6 @@ public class PlayerTargeting : MonoBehaviour
 
         if (Physics.Raycast(cameraPos, dirFromCamToTarget.normalized, out hit, distance, mask))
         {
-            print("blocked: " + hit.transform.gameObject.name);
             result = true;
 
 

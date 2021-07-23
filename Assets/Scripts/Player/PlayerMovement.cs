@@ -788,6 +788,7 @@ public class PlayerMovement : MonoBehaviour
             if (isRotatingToTarget)
             {
                 HandleRotatingToTarget();
+                return;
             }
             else
             {
