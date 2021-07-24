@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerTarget : MonoBehaviour
 {
+    public Renderer renderer;
+
     private void OnEnable()
     {
         PlayerTargetManager.Singleton.AddTarget(transform);
