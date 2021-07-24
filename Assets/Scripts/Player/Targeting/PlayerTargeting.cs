@@ -284,9 +284,6 @@ public class PlayerTargeting : MonoBehaviour
 
     void ToggleTarget()
     {
-        print("toggle");
-
-
         if (!isTargeting) StartTargeting();
         else StopTargeting();
     }
@@ -351,10 +348,12 @@ public class PlayerTargeting : MonoBehaviour
             return;
         }
 
-        
+        print(2);
+
 
         if (isTargeting)
         {
+
             ChangeCurrentTargetCam();
 
             if (isCam1Active)
@@ -371,7 +370,8 @@ public class PlayerTargeting : MonoBehaviour
             isCam1Active = true;
             currentTargetCam = targetCam1;
             targetGroup1.m_Targets[1].target = target;
-            targetCam1.gameObject.SetActive(true);
+            currentTargetCam.gameObject.SetActive(true);
+            
         }
 
         //isTargeting = true;
@@ -461,6 +461,8 @@ public class PlayerTargeting : MonoBehaviour
 
     void FindTarget()
     {
+        print(0);
+
         // Declare a new Transform variable that will be used to reference the found target
         Transform newTarget = null;
 
@@ -683,9 +685,8 @@ public class PlayerTargeting : MonoBehaviour
         }
 
 
-        if (newTarget)
+        if (newTarget != null)
         {
-            print(newTarget.name);
             SetNewTarget(newTarget);
         }
 
