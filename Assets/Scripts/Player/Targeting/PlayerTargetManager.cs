@@ -7,7 +7,7 @@ public class PlayerTargetManager : MonoBehaviour
 
     public static PlayerTargetManager Singleton;
 
-    public List<Transform> targets = new List<Transform>();
+    public List<PlayerTarget> targets = new List<PlayerTarget>();
 
     private void Awake()
     {
@@ -26,14 +26,15 @@ public class PlayerTargetManager : MonoBehaviour
         
     }
 
-    public void AddTarget(Transform target)
+    public void AddTarget(PlayerTarget target)
     {
         targets.Add(target);
     }
 
-    public void RemoveTarget(Transform target)
+    public void RemoveTarget(PlayerTarget target)
     {
         targets.Remove(target);
+        Player.Singleton.targeting.TargetHasBeenRemoved(target);
     }
 
 }

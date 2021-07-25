@@ -8,13 +8,12 @@ public class PlayerTarget : MonoBehaviour
 
     private void OnEnable()
     {
-        PlayerTargetManager.Singleton.AddTarget(transform);
+        //ActivateTarget();
     }
 
     private void OnDisable()
     {
-
-        PlayerTargetManager.Singleton.RemoveTarget(transform);
+        //DeactivateTarget();
     }
 
     // Start is called before the first frame update
@@ -27,5 +26,16 @@ public class PlayerTarget : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void ActivateTarget()
+    {
+        PlayerTargetManager.Singleton.AddTarget(this);
+    }
+
+    public void DeactivateTarget()
+    {
+
+        PlayerTargetManager.Singleton.RemoveTarget(this);
     }
 }

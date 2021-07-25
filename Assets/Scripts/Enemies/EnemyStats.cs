@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class EnemyStats : MonoBehaviour
 {
+    Enemy enemy;
+
     [SerializeField] int maxHealth = 3;
     int currHealth;
 
@@ -18,6 +20,8 @@ public class EnemyStats : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        enemy = GetComponent<Enemy>();
+
         currHealth = maxHealth;
 
         bodyMat = bodySMR.material;
@@ -38,12 +42,18 @@ public class EnemyStats : MonoBehaviour
             currHealth = 0;
 
             // Enemy died
-            Destroy(gameObject);
+            Death();
         }
 
         // Make enemy flash red
         FlashRed();
 
+    }
+
+    void Death()
+    {
+        enemy.playerTarget.DeactivateTarget();
+        Destroy(gameObject);
     }
 
     void FlashRed()

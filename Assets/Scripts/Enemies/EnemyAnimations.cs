@@ -41,4 +41,24 @@ public class EnemyAnimations : MonoBehaviour
             anim.SetBool("isSpawning", false);
         }
     }
+
+    public void CanChainAttack()
+    {
+
+    }
+
+    public void Attacked1()
+    {
+
+    }
+
+    public void Attacked2()
+    {
+
+    }
+
+    public void StartedAttack1Event()
+    {
+
+    }
 }

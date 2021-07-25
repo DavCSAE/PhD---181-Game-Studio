@@ -8,7 +8,7 @@ public class PlayerTargeting : MonoBehaviour
 {
     Player player;
 
-    public Transform target;
+    public PlayerTarget target;
     public bool isTargeting;
     public bool isSwappingTarget;
     bool hasSwappedTarget;
@@ -21,7 +21,6 @@ public class PlayerTargeting : MonoBehaviour
     [SerializeField] GameObject followTarget;
     [SerializeField] GameObject lookAtTarget;
     [SerializeField] GameObject freeLookCamTarget;
-
 
     public CinemachineVirtualCamera targetCam1;
     public CinemachineVirtualCamera targetCam2;
@@ -93,6 +92,14 @@ public class PlayerTargeting : MonoBehaviour
         HandleTargetSwapping();
         HandleTargetCamOffset();
 
+        HandleTargetOutOfRange();
+    }
+
+    private void FixedUpdate()
+    {
+
+        HandleTargetViewBlocked();
+        HandleViewOfPlayerBlocked();
     }
 
 
@@ -100,7 +107,7 @@ public class PlayerTargeting : MonoBehaviour
     {
         if (!isTargeting) return;
 
-        Vector2 targetScreenPos = Camera.main.WorldToScreenPoint(target.position);
+        Vector2 targetScreenPos = Camera.main.WorldToScreenPoint(target.transform.position);
         targetIcon.transform.position = targetScreenPos;
     }
 
@@ -303,7 +310,7 @@ public class PlayerTargeting : MonoBehaviour
         //targetCam.Follow = followTarget.transform;
 
         // Rotate player to look at target
-        Vector3 targetPos = target.position;
+        Vector3 targetPos = target.transform.position;
         targetPos.y = transform.position.y;
 
         // Store start look at pos
@@ -338,7 +345,16 @@ public class PlayerTargeting : MonoBehaviour
         target = null;
     }
 
-    void SetNewTarget(Transform newTarget)
+    public void TargetHasBeenRemoved(PlayerTarget removedTarget)
+    {
+        if (removedTarget == this.target)
+        {
+            StopTargeting();
+            StartTargeting();
+        }
+    }
+
+    void SetNewTarget(PlayerTarget newTarget)
     {
         target = newTarget;
 
@@ -358,18 +374,18 @@ public class PlayerTargeting : MonoBehaviour
 
             if (isCam1Active)
             {
-                targetGroup1.m_Targets[1].target = target;
+                targetGroup1.m_Targets[1].target = target.transform;
             }
             else if (isCam2Active)
             {
-                targetGroup2.m_Targets[1].target = target;
+                targetGroup2.m_Targets[1].target = target.transform;
             }
         }
         else
         {
             isCam1Active = true;
             currentTargetCam = targetCam1;
-            targetGroup1.m_Targets[1].target = target;
+            targetGroup1.m_Targets[1].target = target.transform;
             currentTargetCam.gameObject.SetActive(true);
 
         }
@@ -410,7 +426,7 @@ public class PlayerTargeting : MonoBehaviour
         //return;
 
         Vector2 playerScreenPos = Camera.main.WorldToScreenPoint(transform.position);
-        Vector2 targetScreenPos = Camera.main.WorldToScreenPoint(target.position);
+        Vector2 targetScreenPos = Camera.main.WorldToScreenPoint(target.transform.position);
 
         // Get transposer component on target cam
         var transposer = currentTargetCam.GetCinemachineComponent<CinemachineTransposer>();
@@ -461,16 +477,14 @@ public class PlayerTargeting : MonoBehaviour
 
     void FindTarget()
     {
-        print(0);
-
         // Declare a new Transform variable that will be used to reference the found target
-        Transform newTarget = null;
+        PlayerTarget newTarget = null;
 
         // Get a list of all the potential targets
-        List<Transform> potentialTargets = new List<Transform>(PlayerTargetManager.Singleton.targets);
+        List<PlayerTarget> potentialTargets = new List<PlayerTarget>(PlayerTargetManager.Singleton.targets);
 
         // Prepare a list of doubleCheckTargets
-        List<Transform> doubleCheckTargets = new List<Transform>();
+        List<PlayerTarget> doubleCheckTargets = new List<PlayerTarget>();
 
         // If there is already a target, remove it from list of potential targets
         if (target) potentialTargets.Remove(target);
@@ -490,27 +504,33 @@ public class PlayerTargeting : MonoBehaviour
         // If swapping targets, get current targets screen pos
         if (isTargeting && isSwappingTarget)
         {
-            currentTargetScreenPos = Camera.main.WorldToScreenPoint(target.position);
+            currentTargetScreenPos = Camera.main.WorldToScreenPoint(target.transform.position);
         }
 
-        print(2);
-
         // Check each target in the list of potential targets
-        foreach (Transform potentialTarget in potentialTargets)
+        foreach (PlayerTarget potentialTarget in potentialTargets)
         {
             print(2.5);
 
             // Get potential target's screen position
-            Vector2 potentialTargetScreenPos = Camera.main.WorldToScreenPoint(potentialTarget.position);
+            Vector2 potentialTargetScreenPos = Camera.main.WorldToScreenPoint(potentialTarget.transform.position);
 
             // If potential target screen pos is off screen, then skip
             if (CheckIfScreenPositionIsOffScreen(potentialTargetScreenPos)) continue;
 
             // Get the distance between potential target and player
-            float targetDistanceToPlayer = Vector3.Distance(transform.position, potentialTarget.position);
+            float targetDistanceToPlayer = Vector3.Distance(transform.position, potentialTarget.transform.position);
+
+            // If potential target is out of range, then skip
+            if (Vector3.Distance(potentialTarget.transform.position, transform.position) > maxTargetDistance)
+            {
+                continue;
+            }
 
             // Get the distance between potential target screen position and centre of screen
             float targetDistanceToCentreOfScreen = Vector2.Distance(potentialTargetScreenPos, screenMidPoint);
+
+            
 
             // If target is not on the screen, then skip target
             if (!potentialTarget.GetComponent<PlayerTarget>().renderer.isVisible)
@@ -524,6 +544,21 @@ public class PlayerTargeting : MonoBehaviour
                 continue;
             }
 
+            // Get the distance between camera and player
+            float distBetweenCamAndPlayer = Vector3.Distance(Camera.main.transform.position, transform.position);
+
+            // Get the distance between camera and potential target
+            float distanceBetweenCamAndPotentialTarget
+                = Vector3.Distance(Camera.main.transform.position, potentialTarget.transform.position);
+
+
+            // If potential target is between player and camera
+            if (distanceBetweenCamAndPotentialTarget < distBetweenCamAndPlayer)
+            {
+                // Double check it later, if no suitable target is found
+                doubleCheckTargets.Add(potentialTarget);
+                continue;
+            }
 
 
             // If already targeting
@@ -688,11 +723,29 @@ public class PlayerTargeting : MonoBehaviour
             }
         }
 
-
-
-        if (newTarget != null)
+        // Handle double check targets if no target found
+        if (newTarget == null && doubleCheckTargets.Count > 0)
         {
-            print("found target");
+            foreach (PlayerTarget potentialTarget in doubleCheckTargets)
+            {
+
+                // Get the distance between potential target and player
+                float targetDistanceToPlayer = Vector3.Distance(transform.position, potentialTarget.transform.position);
+
+                // If potential target has closer physical distance to player
+                if (targetDistanceToPlayer < physicalDistance)
+                {
+                    newTarget = potentialTarget;
+
+                    physicalDistance = targetDistanceToPlayer;
+                    //screenDistance = screenDistBetweenPotTargetAndCurrTarget;
+                }
+            }
+        }
+
+        // Set target if target found
+        if (newTarget)
+        {
             SetNewTarget(newTarget);
         }
 
@@ -756,7 +809,37 @@ public class PlayerTargeting : MonoBehaviour
         isSwappingTarget = true;
     }
 
-    bool CheckIfTargetIsBlocked(Transform targetToCheck)
+    void HandleTargetViewBlocked()
+    {
+        if (!isTargeting) return;
+
+        if (CheckIfTargetIsBlocked(target))
+        {
+            StopTargeting();
+        }
+    }
+
+    void HandleViewOfPlayerBlocked()
+    {
+        if (!isTargeting) return;
+
+        if (CheckIfPlayerIsBlocked())
+        {
+            StopTargeting();
+        }
+    }
+
+    void HandleTargetOutOfRange()
+    {
+        if (!isTargeting) return;
+
+        if (CheckIfTargetIsOutOfRange())
+        {
+            StopTargeting();
+        }
+    }
+
+    bool CheckIfTargetIsBlocked(PlayerTarget targetToCheck)
     {
         bool result = false;
 
@@ -766,9 +849,9 @@ public class PlayerTargeting : MonoBehaviour
         mask = ~mask;
 
         Vector3 cameraPos = Camera.main.transform.position;
-        Vector3 dirFromCamToTarget = targetToCheck.position - cameraPos;
+        Vector3 dirFromCamToTarget = targetToCheck.transform.position - cameraPos;
 
-        float distance = Vector3.Distance(cameraPos, targetToCheck.position);
+        float distance = Vector3.Distance(cameraPos, targetToCheck.transform.position);
 
         RaycastHit hit;
 
@@ -776,12 +859,65 @@ public class PlayerTargeting : MonoBehaviour
 
         if (Physics.Raycast(cameraPos, dirFromCamToTarget.normalized, out hit, distance, mask))
         {
-            print("blocked!");
+            print("target blocked!");
 
             result = true;
 
 
             StartDrawingCameraToTargetLineGizmo(cameraPos, cameraPos + dirFromCamToTarget.normalized * distance, hit.point);
+        }
+
+        return result;
+    }
+
+    bool CheckIfPlayerIsBlocked()
+    {
+        bool result = false;
+
+        Vector3 playerCheckPos = freeLookCamTarget.transform.position;
+
+        string[] layersToMask = { "Player", "Enemy" };
+
+        LayerMask mask = LayerMask.GetMask(layersToMask);
+        mask = ~mask;
+
+        Vector3 cameraPos = Camera.main.transform.position;
+        Vector3 dirFromCamToTarget = playerCheckPos - cameraPos;
+
+        float distance = Vector3.Distance(cameraPos, playerCheckPos);
+
+        RaycastHit hit;
+
+
+
+        if (Physics.Raycast(cameraPos, dirFromCamToTarget.normalized, out hit, distance, mask))
+        {
+            print("player blocked!");
+
+            result = true;
+
+
+            StartDrawingCameraToTargetLineGizmo(cameraPos, cameraPos + dirFromCamToTarget.normalized * distance, hit.point);
+        }
+
+        return result;
+    }
+
+    bool CheckIfTargetIsOutOfRange()
+    {
+        bool result = false;
+
+        Vector3 targetPos = target.transform.position;
+        Vector3 playerPos = transform.position;
+
+
+        float distanceFromPlayerToTarget = Vector3.Distance(targetPos, playerPos);
+
+        
+
+        if (distanceFromPlayerToTarget > maxTargetDistance)
+        {
+            result = true;
         }
 
         return result;

@@ -452,7 +452,7 @@ public class PlayerMovement : MonoBehaviour
             if (player.targeting.isTargeting)
             {
                 Vector3 playerPos = transform.position;
-                Vector3 targetPos = player.targeting.target.position;
+                Vector3 targetPos = player.targeting.target.transform.position;
                 targetPos.y = 0;
                 Vector3 dirFromPlayerToTarget = (targetPos - playerPos).normalized;
                 float angleBetweenMoveDirAndDirToTarget = Vector3.Angle(moveDirection, dirFromPlayerToTarget);
@@ -792,7 +792,7 @@ public class PlayerMovement : MonoBehaviour
             }
             else
             {
-                transform.LookAt(player.targeting.target);
+                transform.LookAt(player.targeting.target.transform);
                 transform.localEulerAngles = new Vector3(0, transform.localEulerAngles.y, 0);
                 return;
             }
@@ -1150,7 +1150,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (!isRotatingToTarget) return;
 
-        Vector3 targetPos = player.targeting.target.position;
+        Vector3 targetPos = player.targeting.target.transform.position;
         targetPos.y = transform.position.y;
 
         Vector3 dirToTarget = targetPos - transform.position;

@@ -10,6 +10,8 @@ public class Enemy : MonoBehaviour
     public EnemyCombat combat;
     public EnemyAnimations animations;
     public EnemySpawning spawning;
+    public PlayerTarget playerTarget;
+
 
     [HideInInspector]
     public Animator anim;
@@ -22,6 +24,7 @@ public class Enemy : MonoBehaviour
         spawning = GetComponent<EnemySpawning>();
 
         anim = GetComponent<Animator>();
+        playerTarget = GetComponentInChildren<PlayerTarget>();
     }
 
     // Update is called once per frame
@@ -39,4 +42,9 @@ public class Enemy : MonoBehaviour
     {
         GetComponent<EnemySpawning>().Spawn();
     }
+
+
+
 }
+
+

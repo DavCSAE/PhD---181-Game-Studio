@@ -40,6 +40,7 @@ public class EnemySpawning : MonoBehaviour
         TurnCollidersOn();
 
         GetComponent<EnemyCombat>().StartAttacking();
+        GetComponent<Enemy>().playerTarget.ActivateTarget();
     }
 
     void TurnCollidersOff()
