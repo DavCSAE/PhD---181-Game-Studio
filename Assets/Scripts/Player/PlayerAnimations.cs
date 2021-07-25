@@ -38,6 +38,7 @@ public class PlayerAnimations : MonoBehaviour
         HandleFallingAnimation();
         HandleDashAnimation();
         HandleSpawnAnimation();
+        HandleTargetingMovementAnimation();
 
         HandleAttackAnimations();
     }
@@ -205,5 +206,61 @@ public class PlayerAnimations : MonoBehaviour
     public void FootstepAnimEvent()
     {
         //SoundManager.Singleton.Play("Footstep");
+    }
+
+    void HandleTargetingMovementAnimation()
+    {
+        if (!player.targeting.isTargeting)
+        {
+            if (anim.GetFloat("yRunning") != 1) anim.SetFloat("yRunning", 1);
+            if (anim.GetFloat("xRunning") != 0) anim.SetFloat("xRunning", 0);
+
+            return;
+        }
+
+        print("targeting movement");
+
+        float x = 0;
+        float y = 0;
+
+        Vector2 moveDir = InputManager.Singleton.GetMoveInput();
+
+        print("movDir: " + moveDir);
+
+        if (moveDir != Vector2.zero)
+        {
+            float angle = Vector2.Angle(moveDir, Vector2.up);
+
+            print("angle: " + angle);
+
+            if (angle >= 0 && angle < 45)
+            {
+                y = 1;
+
+            }
+            else if (angle > 45 && angle < 135)
+            {
+                float rightAngle = Vector2.Angle(moveDir, Vector2.right);
+                float leftAngle = Vector2.Angle(moveDir, Vector2.left);
+
+                if (rightAngle < leftAngle)
+                {
+                    x = 1;
+                }
+                else
+                {
+                    x = -1;
+                }
+            }
+            else if (angle > 135)
+            {
+                y = -1;
+            }
+        }
+        print("x: " + x);
+        print("y: " + y);
+
+        anim.SetFloat("yRunning", y);
+        anim.SetFloat("xRunning", x);
     }
 }

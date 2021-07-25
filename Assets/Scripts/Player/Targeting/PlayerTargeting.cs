@@ -510,7 +510,6 @@ public class PlayerTargeting : MonoBehaviour
         // Check each target in the list of potential targets
         foreach (PlayerTarget potentialTarget in potentialTargets)
         {
-            print(2.5);
 
             // Get potential target's screen position
             Vector2 potentialTargetScreenPos = Camera.main.WorldToScreenPoint(potentialTarget.transform.position);
@@ -564,7 +563,6 @@ public class PlayerTargeting : MonoBehaviour
             // If already targeting
             if (isTargeting && isSwappingTarget)
             {
-                print(3);
 
                 // Handle swapping based on swap direction
                 switch (swapDirection)
