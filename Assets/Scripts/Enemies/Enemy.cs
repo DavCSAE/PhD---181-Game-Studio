@@ -11,6 +11,7 @@ public class Enemy : MonoBehaviour
     public EnemyAnimations animations;
     public EnemySpawning spawning;
     public PlayerTarget playerTarget;
+    public EnemyNavigation navigation;
 
 
     [HideInInspector]
@@ -25,6 +26,7 @@ public class Enemy : MonoBehaviour
 
         anim = GetComponent<Animator>();
         playerTarget = GetComponentInChildren<PlayerTarget>();
+        navigation = GetComponent<EnemyNavigation>();
     }
 
     // Update is called once per frame

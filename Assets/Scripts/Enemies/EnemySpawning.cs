@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class EnemySpawning : MonoBehaviour
 {
+    Enemy enemy;
 
     [SerializeField] EnemySpawnPoint targetSpawnPoint;
 
@@ -13,6 +14,7 @@ public class EnemySpawning : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        enemy = GetComponent<Enemy>();
         if (isPreparingToSpawn) TurnCollidersOff();
     }
 
@@ -39,8 +41,10 @@ public class EnemySpawning : MonoBehaviour
         isSpawning = false;
         TurnCollidersOn();
 
-        GetComponent<EnemyCombat>().StartAttacking();
-        GetComponent<Enemy>().playerTarget.ActivateTarget();
+        //GetComponent<EnemyCombat>().StartAttacking();
+        enemy.playerTarget.ActivateTarget();
+        enemy.navigation.StartNavigating();
+        enemy.navigation.AllowNavigation();
     }
 
     void TurnCollidersOff()

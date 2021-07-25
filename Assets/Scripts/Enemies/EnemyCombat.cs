@@ -12,7 +12,7 @@ public class EnemyCombat : MonoBehaviour
 
     [SerializeField] bool hasStartedAttacking;
     bool inCombat;
-    bool currentlyAttacking;
+    public bool currentlyAttacking;
 
     // Start is called before the first frame update
     void Start()
@@ -28,9 +28,9 @@ public class EnemyCombat : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (hasStartedAttacking) StartAttacking();
+        //if (hasStartedAttacking) StartAttacking();
 
-        if (inCombat && !currentlyAttacking) Attack();
+        //if (inCombat && !currentlyAttacking) Attack();
     }
 
     public void ActivateSword()
@@ -47,10 +47,12 @@ public class EnemyCombat : MonoBehaviour
         Attack();
     }
 
-    public void Attacked()
+    public void Attacked1()
     {
         sword.DeactivateCollider();
         currentlyAttacking = false;
+
+        thisEnemy.navigation.StartNavigating();
 
     }
 
@@ -78,5 +80,10 @@ public class EnemyCombat : MonoBehaviour
     public void HitPlayer(PlayerStats hitPlayer)
     {
         hitPlayer.TakeDamage(1);
+    }
+
+    public void StartedAttack1Event()
+    {
+        thisEnemy.anim.SetBool("attack1", false);
     }
 }

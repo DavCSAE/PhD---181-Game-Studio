@@ -47,10 +47,6 @@ public class EnemyAnimations : MonoBehaviour
 
     }
 
-    public void Attacked1()
-    {
-
-    }
 
     public void Attacked2()
     {
