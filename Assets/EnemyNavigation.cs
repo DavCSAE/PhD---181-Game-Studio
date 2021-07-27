@@ -32,8 +32,6 @@ public class EnemyNavigation : MonoBehaviour
     {
         if (!canNavigate) return;
 
-        if (!navMeshAgent.isOnNavMesh) return;
-
         if(enemy.combat.currentlyAttacking)
         {
             StopNavigating();

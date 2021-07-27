@@ -6,8 +6,6 @@ public class Enemy : MonoBehaviour
 {
     [SerializeField] bool preparedForSpawning;
 
-    [SerializeField] bool isTargetable;
-
     public EnemyStats stats;
     public EnemyCombat combat;
     public EnemyAnimations animations;
@@ -29,8 +27,6 @@ public class Enemy : MonoBehaviour
         anim = GetComponent<Animator>();
         playerTarget = GetComponentInChildren<PlayerTarget>();
         navigation = GetComponent<EnemyNavigation>();
-
-        if (isTargetable) MakeTargetable();
     }
 
     // Update is called once per frame
@@ -49,10 +45,7 @@ public class Enemy : MonoBehaviour
         GetComponent<EnemySpawning>().Spawn();
     }
 
-    void MakeTargetable()
-    {
-        playerTarget.ActivateTarget();
-    }
+
 
 }
 

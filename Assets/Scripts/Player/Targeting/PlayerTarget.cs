@@ -5,7 +5,6 @@ using UnityEngine;
 public class PlayerTarget : MonoBehaviour
 {
     public Renderer renderer;
-    [SerializeField] bool isBcomingTargetable;
 
     private void OnEnable()
     {
@@ -26,11 +25,7 @@ public class PlayerTarget : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (isBcomingTargetable)
-        {
-            ActivateTarget();
-            isBcomingTargetable = false;
-        }
+        
     }
 
     public void ActivateTarget()
