@@ -8,52 +8,69 @@ public class Player : MonoBehaviour
     public static Player Singleton;
 
     // PLAYER COMPONENTS
-    //[HideInInspector]
+    [HideInInspector]
+    public PlayerStats stats;
+    [HideInInspector]
     public PlayerMovement movement;
-    //[HideInInspector]
+    [HideInInspector]
     public PlayerAnimations animations;
     [HideInInspector]
+    public PlayerSpawning spawning;
+    [HideInInspector]
     public PlayerCollision collision;
+    [HideInInspector]
+    public PlayerAppearance appearance;
+    [HideInInspector]
+    public PlayerReceivableItems receivables;
+    [HideInInspector]
+    public PlayerCombat combat;
 
     // PHYSICS
-    //[HideInInspector]
+    [HideInInspector]
     public Rigidbody rb;
-    //[HideInInspector]
+    [HideInInspector]
     public CapsuleCollider capsColl;
 
     // CAMERA
     [HideInInspector]
     public Camera cam;
 
+    // Unlockables
+    [HideInInspector]
+    public bool isMaskUnlocked;
+    //[HideInInspector]
+    public bool isSwordUnlocked;
+    [HideInInspector]
+    public bool isDashUnlocked;
+    [HideInInspector]
+    public bool areWingsUnlocked;
+
+    // Respawning
 
     void Awake()
     {
         Singleton = this;
+
+        // PLAYER COMPONENTS
+        movement = GetComponent<PlayerMovement>();
+        animations = GetComponent<PlayerAnimations>();
+        spawning = GetComponent<PlayerSpawning>();
+        collision = GetComponent<PlayerCollision>();
+        appearance = GetComponent<PlayerAppearance>();
+        receivables = GetComponent<PlayerReceivableItems>();
+        combat = GetComponent<PlayerCombat>();
+        stats = GetComponent<PlayerStats>();
     }
-
-
 
     // Start is called before the first frame update
     void Start()
     {
-        
-
-        // PLAYER COMPONENTS
-        movement = GetComponent<PlayerMovement>();
-        movement.player = this;
-        animations = GetComponent<PlayerAnimations>();
-        animations.player = this;
-        collision = GetComponent<PlayerCollision>();
-        collision.player = this;
-
         // PHYSICS
         rb = GetComponent<Rigidbody>();
         capsColl = GetComponent<CapsuleCollider>();
 
         // CAMERA
         cam = Camera.main;
-
-
 
         // INPUTS
         InputManager.Singleton.EnableInputs();
@@ -63,18 +80,45 @@ public class Player : MonoBehaviour
     void Update()
     {
         CheckIfPlayerFell();
+
+        if (Keyboard.current.pKey.wasPressedThisFrame)
+        {
+            SoundManager.Singleton.Play("Item sound");
+        }
     }
 
     void CheckIfPlayerFell()
     {
         if (transform.position.y < -20f)
         {
-            Vector3 respawnPos = new Vector3(0, 2, 0);
-            transform.position = respawnPos;
-
-            print("respawn!");
+            spawning.FadeForSpawn();
         }
     }
 
+    public void UnParent()
+    {
+        transform.parent = null;
+    }
+
+    public void UnlockMask()
+    {
+
+    }
+
+    public void UnlockSword()
+    {
+        combat.UnlockSword();
+    }
+
+    public void UnlockDash()
+    {
+        movement.isDashUnlocked = true;
+    }
+
+    public void UnlockWings()
+    {
+        movement.doubleJumpEnabled = true;
+        appearance.ShowWings();
+    }
     
 }

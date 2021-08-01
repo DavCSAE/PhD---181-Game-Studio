@@ -432,6 +432,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   icons: {fileID: 11400000, guid: f73ffd94f3b669f4d8c30933b322ed10, type: 2}
+  eIcon: {fileID: 21300000, guid: 4798ae8dd36c21240977c753de4e6af2, type: 3}
+  northButtonIcon: {fileID: 21300000, guid: 7bdfeced431c0234198356b982988ef8, type: 3}
+  southButtonIcon: {fileID: 21300000, guid: 225658781d8b7ad41bc996e2aa8c33bc, type: 3}
   talkPopUp: {fileID: 1554925347265545676}
   talkIcon: {fileID: 1554925345413537063}
   nextPopUp: {fileID: 451942823447882403}

@@ -5,26 +5,27 @@ using UnityEngine;
 public class PlayerAnimations : MonoBehaviour
 {
     [HideInInspector]
-    public Player player;
+    Player player;
 
     Animator anim;
 
     public Transform rootBone;
 
-    // STATES
+    public delegate void AttackFinishedCallback();
+    AttackFinishedCallback attackFinishedCallback;
+
     private void OnEnable()
     {
-        PlayerEvents.AttackEvent += Attack1Animation;
     }
 
     private void OnDisable()
     {
-        PlayerEvents.AttackEvent -= Attack1Animation;
     }
 
     // Start is called before the first frame update
     void Start()
     {
+        player = GetComponent<Player>();
         anim = GetComponent<Animator>();
     }
 
@@ -36,6 +37,7 @@ public class PlayerAnimations : MonoBehaviour
         HandleWingFlapAnimation();
         HandleFallingAnimation();
         HandleDashAnimation();
+        HandleSpawnAnimation();
     }
 
     void HandleRunAnimation()
@@ -105,14 +107,53 @@ public class PlayerAnimations : MonoBehaviour
     }
 
 
-    void Attack1Animation()
+    public void Attack1Animation(AttackFinishedCallback callback)
     {
         anim.SetBool("attack1", true);
+
+        attackFinishedCallback = callback;
     }
 
     public void Attacked()
     {
         anim.SetBool("attack1", false);
+
+        attackFinishedCallback();
     }
 
+    void HandleSpawnAnimation()
+    {
+        if (player.spawning.GetPreparingToSpawnState())
+        {
+            anim.SetBool("isPreparingToSpawn", true);
+        }
+        else
+        {
+            anim.SetBool("isPreparingToSpawn", false);
+        }
+
+        if (player.spawning.GetSpawningState())
+        {
+            anim.SetBool("isSpawning", true);
+        }
+        else
+        {
+            anim.SetBool("isSpawning", false);
+        }
+    }
+
+    public void StartReceiveItemAnim()
+    {
+        anim.SetBool("isReceivingItem", true);
+    }
+
+    public void StopReceiveItemAnim()
+    {
+        anim.SetBool("isReceivingItem", false);
+    }
+
+    public void FootstepAnimEvent()
+    {
+        SoundManager.Singleton.Play("Footstep");
+    }
 }

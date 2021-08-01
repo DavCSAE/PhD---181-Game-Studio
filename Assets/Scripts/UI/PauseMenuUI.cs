@@ -7,12 +7,24 @@ public class PauseMenuUI : MonoBehaviour
 {
     public static PauseMenuUI Singleton;
 
+    public bool isOpen = false;
+
     [SerializeField] GameObject pauseMenu;
     Animator anim;
 
     private void Awake()
     {
         Singleton = this;
+    }
+
+    private void OnEnable()
+    {
+        PlayerEvents.PauseMenuButtonEvent += TogglePauseMenu;
+    }
+
+    private void OnDisable()
+    {
+        PlayerEvents.PauseMenuButtonEvent -= TogglePauseMenu;
     }
 
     // Start is called before the first frame update
@@ -24,9 +36,18 @@ public class PauseMenuUI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Keyboard.current.escapeKey.wasPressedThisFrame)
+    
+    }
+
+    void TogglePauseMenu()
+    {
+        if (isOpen == false)
         {
             PrepareToOpenPauseMenu();
+        }
+        else
+        {
+            PrepareToClosePauseMenu();
         }
     }
 
@@ -41,6 +62,10 @@ public class PauseMenuUI : MonoBehaviour
         pauseMenu.SetActive(true);
 
         BlackScreen.Singleton.FadeFromBlack();
+
+        isOpen = true;
+
+        Cursor.visible = true;
     }
 
     public void PrepareToClosePauseMenu()
@@ -53,5 +78,9 @@ public class PauseMenuUI : MonoBehaviour
         pauseMenu.SetActive(false);
 
         BlackScreen.Singleton.FadeFromBlack();
+
+        isOpen = false;
+
+        Cursor.visible = false;
     }
 }

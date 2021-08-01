@@ -83,4 +83,44 @@ public class PlayerEvents : MonoBehaviour
         // If event has subscribers, run event
         InputDeviceChangeEvent?.Invoke();
     }
+
+    // Event for pause menu button
+    public delegate void PauseMenuButton();
+    public static event PauseMenuButton PauseMenuButtonEvent;
+
+    public static void TriggerPauseMenuButtonEvent()
+    {
+        // If event has subscribers, run event
+        PauseMenuButtonEvent?.Invoke();
+    }
+
+    // Event for unlocking mask
+    public delegate void UnlockMask();
+    public static event UnlockMask UnlockMaskEvent;
+
+    public static void TriggerUnlockMaskEvent()
+    {
+        // If event has subscribers, run event
+        UnlockMaskEvent?.Invoke();
+    }
+
+    // Event for player dying
+    public delegate void PlayerDeath();
+    public static event UnlockMask PlayerDeathEvent;
+
+    public static void TriggerPlayerDeathEvent()
+    {
+        // If event has subscribers, run event
+        PlayerDeathEvent?.Invoke();
+    }
+
+    // Event for player revived
+    public delegate void PlayerRevived();
+    public static event UnlockMask PlayerRevivedEvent;
+
+    public static void TriggerPlayerRevivedEvent()
+    {
+        // If event has subscribers, run event
+        PlayerRevivedEvent?.Invoke();
+    }
 }

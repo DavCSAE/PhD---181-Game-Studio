@@ -8,14 +8,15 @@ public class BlackScreen : MonoBehaviour
     // SELF SINGLETON
     public static BlackScreen Singleton;
 
+    [SerializeField] GameObject menuRoot;
+
     // BlACK SCREEN IMAGE
     [SerializeField]
     Image blackScreen;
 
     // Timer
     float fadingTimer; // Current timer
-    [SerializeField]float fadeLength; // Total length timer should go to
-    float adjustedFadeLength;
+    [SerializeField] float fadeLength; // Total length timer should go to
     bool isSpeedChanged;
 
     // FADING TO
@@ -26,9 +27,11 @@ public class BlackScreen : MonoBehaviour
 
     // AFTER FADE CALLBACK METHOD
     bool isCallback;
+    bool isCallbacks;
 
     public delegate void AfterFadeCallback();
     AfterFadeCallback afterFadeCallback;
+    List<AfterFadeCallback> afterFadeCallbacks = new List<AfterFadeCallback>();
 
     private void Awake()
     {
@@ -40,14 +43,17 @@ public class BlackScreen : MonoBehaviour
         // Turn black screen off
         FadeFromBlack();
 
-        // Set initial fadeLength
-        adjustedFadeLength = fadeLength;
     }
 
     private void Update()
     {
         HandleFadingTo();
         HandleFadingFrom();
+    }
+
+    public void TurnOff()
+    {
+        menuRoot.SetActive(false);
     }
 
     public void SetToBlack()
@@ -82,18 +88,20 @@ public class BlackScreen : MonoBehaviour
 
     public void FadeToBlack()
     {
-        if (!isFadingFrom) 
+        if (!isFadingFrom)
         {
             isFadingTo = true;
 
             blackScreen.gameObject.SetActive(true);
+
+            menuRoot.SetActive(true);
         }
     }
 
-    public void FadeToBlack(float speedMultiplier)
+    public void FadeToBlack(float timeInSeconds)
     {
         // Set speed
-        adjustedFadeLength = fadeLength / speedMultiplier;
+        fadeLength = timeInSeconds;
         isSpeedChanged = true;
 
         FadeToBlack();
@@ -108,13 +116,23 @@ public class BlackScreen : MonoBehaviour
         FadeToBlack();
     }
 
-    public void FadeToBlack(AfterFadeCallback method, float speedMultiplier)
+    public void FadeToBlack(AfterFadeCallback method, float timeInSeconds)
     {
         // Set speed
-        adjustedFadeLength = fadeLength / speedMultiplier;
+        fadeLength = timeInSeconds;
         isSpeedChanged = true;
 
         FadeToBlack(method);
+    }
+
+    public void FadeToBlack(List<AfterFadeCallback> methods)
+    {
+        afterFadeCallbacks.Clear();
+        afterFadeCallbacks = methods;
+
+        isCallbacks = true;
+
+        FadeToBlack();
     }
 
     void HandleFadingTo()
@@ -126,9 +144,9 @@ public class BlackScreen : MonoBehaviour
         fadingTimer += Time.deltaTime;
 
         // If fading finished
-        if (fadingTimer >= adjustedFadeLength)
+        if (fadingTimer >= fadeLength)
         {
-            fadingTimer = adjustedFadeLength;
+            fadingTimer = fadeLength;
             isFadingTo = false;
 
             FinishedFading();
@@ -137,7 +155,7 @@ public class BlackScreen : MonoBehaviour
         // Copy colour of black screen
         Color blackScreenCol = blackScreen.color;
         // Adjust alpha of colour
-        blackScreenCol.a = fadingTimer / adjustedFadeLength;
+        blackScreenCol.a = fadingTimer / fadeLength;
         // Set black screen to new colour
         blackScreen.color = blackScreenCol;
     }
@@ -145,15 +163,17 @@ public class BlackScreen : MonoBehaviour
     public void FadeFromBlack()
     {
         if (!isFadingTo)
-        { 
+        {
             isFadingFrom = true;
+
+            menuRoot.SetActive(true);
         }
     }
 
-    public void FadeFromBlack(float speedMultiplier)
+    public void FadeFromBlack(float timeInSeconds)
     {
         // Set speed
-        adjustedFadeLength = fadeLength / speedMultiplier;
+        fadeLength = timeInSeconds;
         isSpeedChanged = true;
 
         FadeFromBlack();
@@ -168,9 +188,9 @@ public class BlackScreen : MonoBehaviour
         fadingTimer += Time.deltaTime;
 
         // If fading finished
-        if (fadingTimer >= adjustedFadeLength)
+        if (fadingTimer >= fadeLength)
         {
-            fadingTimer = adjustedFadeLength;
+            fadingTimer = fadeLength;
             isFadingFrom = false;
 
             blackScreen.gameObject.SetActive(false);
@@ -181,19 +201,22 @@ public class BlackScreen : MonoBehaviour
         // Copy colour of black screen
         Color blackScreenCol = blackScreen.color;
         // Adjust alpha of colour
-        blackScreenCol.a = (adjustedFadeLength - fadingTimer) / adjustedFadeLength;
+        blackScreenCol.a = (fadeLength - fadingTimer) / fadeLength;
         // Set black screen to new colour
         blackScreen.color = blackScreenCol;
     }
 
     void FinishedFading()
     {
-        if (isFadingFrom) 
+        if (isFadingFrom)
         {
             isFadingFrom = false;
+
+
+            menuRoot.SetActive(false);
         }
 
-        if (isFadingTo) 
+        if (isFadingTo)
         {
             isFadingTo = false;
         }
@@ -201,7 +224,7 @@ public class BlackScreen : MonoBehaviour
         // Reset animator speed
         if (isSpeedChanged)
         {
-            adjustedFadeLength = fadeLength;
+            fadeLength = 1f;
             isSpeedChanged = false;
         }
 
@@ -209,6 +232,7 @@ public class BlackScreen : MonoBehaviour
         fadingTimer = 0;
 
         HandleAfterFadeFunction();
+
     }
 
     void HandleAfterFadeFunction()
@@ -221,6 +245,19 @@ public class BlackScreen : MonoBehaviour
 
             // Reset for next fade
             isCallback = false;
+        }
+
+        if (isCallbacks)
+        {
+            // Run all functions that are meant to be run after fading
+            foreach (AfterFadeCallback callback in afterFadeCallbacks)
+            {
+                // Run functions
+                callback();
+            }
+
+            // Reset for next fade
+            isCallbacks = false;
         }
     }
 }

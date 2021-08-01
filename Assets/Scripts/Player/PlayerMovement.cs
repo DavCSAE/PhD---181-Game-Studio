@@ -5,10 +5,9 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     [HideInInspector]
-    public Player player;
+    Player player;
 
     [Header("STATES")]
-    // Movement states
     public bool isMoving;
     public bool isGrounded;
     public bool isJumping;
@@ -41,6 +40,12 @@ public class PlayerMovement : MonoBehaviour
     float obstacleRaycastHeight = 0.05f;
     float obstacleRaycastDistance = 0.4f;
 
+    bool isRotatingTowardDirection;
+    float rotateTowardOriginalY;
+    float rotateTowardTargetY;
+    float rotateTowardCurrTime;
+    float rotateTowardTotalTime;
+
     [Header("SLOPES")]
     // Slopes
     [SerializeField] float maxSlopeAngle = 35f;
@@ -64,10 +69,10 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float loseVelocityInAirSpeed = 1f;
     float fallMultiplier = 2.5f;
     float lowJumpModifier = 2f;
-    bool doubleJumpEnabled = true;
+    public bool doubleJumpEnabled;
     bool canDoubleJump;
     bool unlimitedJumpsEnabled;
-    float jumpBoost = 5f;
+    [SerializeField] float wingBoost = 5f;
 
     [Header("DASHING")]
     // Dashing
@@ -77,6 +82,7 @@ public class PlayerMovement : MonoBehaviour
     Vector3 dashStartPos;
     Vector3 velocityBeforeDash;
     bool canDash = true;
+    public bool isDashUnlocked;
     Collider dashStartGround;
 
     [Header("MOVING PLATFORMS")]
@@ -103,7 +109,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Start()
     {
-        
+        player = GetComponent<Player>();
     }
 
     private void FixedUpdate()
@@ -123,6 +129,11 @@ public class PlayerMovement : MonoBehaviour
         HandleSliding();
         HandleJumping();
         HandleDashing();
+    }
+
+    private void Update()
+    {
+        HandleRotatingTowardDirection();
     }
 
     void GetMovementInputs()
@@ -332,6 +343,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    
     void HandleMovement()
     {
         //if (isDashing) return;
@@ -359,7 +371,47 @@ public class PlayerMovement : MonoBehaviour
             if (!isGrounded)
             {
                 // Reduce speed
-                speed *= 0.25f;
+                //speed *= 0.5f;
+
+                if (movementInput != Vector2.zero)
+                {
+                    if (Vector3.Angle(movDir, velocityBeforeJump) < 45)
+                    {
+                        // Reduce air velocity
+                        loseVelocityInAirSpeed = 1f;
+
+                        // Reduce speed
+                        speed *= 0.4f;
+                    }
+                    else if (Vector3.Angle(movDir, velocityBeforeJump) >= 45
+                        && Vector3.Angle(movDir, velocityBeforeJump) < 90)
+                    {
+                        // Reduce air velocity
+                        loseVelocityInAirSpeed = 2f;
+
+                        // Reduce speed
+                        speed *= 0.5f;
+                    }
+                    else if (Vector3.Angle(movDir, velocityBeforeJump) >= 90
+                        && Vector3.Angle(movDir, velocityBeforeJump) < 135)
+                    {
+                        // Reduce air velocity
+                        loseVelocityInAirSpeed = 3f;
+
+                        // Reduce speed
+                        speed *= 0.6f;
+                    }
+                    else if (Vector3.Angle(movDir, velocityBeforeJump) >= 135)
+                    {
+                        // Reduce air velocity
+                        loseVelocityInAirSpeed = 4f;
+
+                        // Reduce speed
+                        speed *= 0.7f;
+                    }
+                }
+
+                
             }
 
             // Calculate players new velocity
@@ -470,7 +522,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (Physics.Raycast(rayOrigin, rayDirection, out hit, obstacleRaycastDistance, layerMask))
         {
-            print("Obstacle!");
+            
 
             Debug.DrawRay(rayOrigin, rayDirection * obstacleRaycastDistance, Color.yellow);
 
@@ -485,7 +537,7 @@ public class PlayerMovement : MonoBehaviour
             if (obstacleSlopeAngle > maxSlopeAngle)
             {
                 player.rb.velocity = new Vector3(0, player.rb.velocity.y, 0);
-                print("slope stop dashing");
+
                 if (isDashing) isDashing = false;
             }
             else if (isDashing && !isJumping && isGrounded)
@@ -803,8 +855,8 @@ public class PlayerMovement : MonoBehaviour
                 isFlapping = true;
 
                 // Give horizontal boost in movement direction
-                player.rb.velocity = new Vector3(player.rb.velocity.x + moveDirection.normalized.x * jumpBoost,
-                    player.rb.velocity.y, player.rb.velocity.z + moveDirection.z * jumpBoost);
+                player.rb.velocity = new Vector3(player.rb.velocity.x + moveDirection.normalized.x * wingBoost,
+                    player.rb.velocity.y, player.rb.velocity.z + moveDirection.z * wingBoost);
             }
             else
             {
@@ -819,6 +871,9 @@ public class PlayerMovement : MonoBehaviour
             // Update states
             isJumping = true;
             isGrounded = false;
+
+            // Reset loseVelocityInAirSpeed
+            loseVelocityInAirSpeed = 1f;
 
             // Store velocity before jump to player's velocity at time of starting jump
             velocityBeforeJump = player.rb.velocity;
@@ -912,6 +967,9 @@ public class PlayerMovement : MonoBehaviour
 
     void Dash()
     {
+        // Don't do anything if dash locked
+        if (!isDashUnlocked) return;
+
         // Don't do anything if frozen
         if (isFrozen) return;
 
@@ -958,11 +1016,78 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    public void RotateToward(float targetYEulerAngle, float timeInSeconds)
+    {
+        // Store info in references
+        rotateTowardOriginalY = transform.localEulerAngles.y;
+        rotateTowardTargetY = targetYEulerAngle;
+        rotateTowardCurrTime = 0f;
+        rotateTowardTotalTime = timeInSeconds;
+
+
+        isRotatingTowardDirection = true;
+        print("START ROTATING");
+
+    }
+
+    void HandleRotatingTowardDirection()
+    {
+
+        // Dont do anything if not rotating toward a direction
+        if (!isRotatingTowardDirection) return;
+
+        // Calculate time since started rotating toward direction
+        rotateTowardCurrTime += Time.deltaTime;
+
+        // Calculate current percentage through rotation
+        float percentageThroughRotation = rotateTowardCurrTime / rotateTowardTotalTime;
+
+        print("percentage(" + percentageThroughRotation + "%) = currTime("
+            + rotateTowardCurrTime + ") / totalTime(" + rotateTowardTotalTime
+            + ")");
+
+        // Calculate difference between original and target rotation direction
+        float differenceBetweenRotations = Mathf.Abs((rotateTowardOriginalY - rotateTowardTargetY));
+
+        print("Difference between rotations: " + differenceBetweenRotations);
+
+        // If the difference is negative, make it positive
+        //if (differenceBetweenRotations < 0) differenceBetweenRotations *= -1;
+
+        // Calculate percentage of the difference, to add the original rotation
+        float newRotationY = rotateTowardOriginalY
+            + (differenceBetweenRotations * percentageThroughRotation);
+
+        print("Original rot: " + rotateTowardOriginalY);
+        print("New rot: " + newRotationY);
+        print("Target rot: " + rotateTowardTargetY);
+
+        // Create new rotation euler
+        Vector3 newRotationEuler = new Vector3(
+            transform.localEulerAngles.x,
+            newRotationY,
+            transform.localEulerAngles.z);
+
+        // Set players rotation to new rotation
+        transform.localEulerAngles = newRotationEuler;
+
+        // If rotation should be complete
+        if (rotateTowardCurrTime >= rotateTowardTotalTime)
+        {
+            isRotatingTowardDirection = false;
+
+            transform.localEulerAngles = new Vector3(
+                transform.localEulerAngles.x,
+                rotateTowardTargetY,
+                transform.localEulerAngles.z);
+        }
+
+    }
+
     public void Unfreeze()
     {
         isFrozen = false;
 
-        
 
         //InputManager.Singleton.EnableInputs();
     }

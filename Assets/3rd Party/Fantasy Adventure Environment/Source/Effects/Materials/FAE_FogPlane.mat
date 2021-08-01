@@ -87,7 +87,7 @@ Material:
     - _DstBlend: 0
     - _DustSpeed: 0
     - _DustStrength: 1
-    - _Emission: 1
+    - _Emission: 31.86
     - _Factor: 0.1
     - _FadeDistance: 0.01
     - _Float0: 0.805

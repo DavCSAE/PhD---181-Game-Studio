@@ -50,12 +50,14 @@ public class InputDeviceHandler : MonoBehaviour
 
         if (displayName == "Mouse" || displayName == "Keyboard")
         {
-            print(displayName);
             tempDevice = Devices.keyboard;
         }
         else if (displayName == "Wireless Controller" || displayName == "Xbox Controller")
         {
-            print(displayName);
+            tempDevice = Devices.gamepad;
+        }
+        else
+        {
             tempDevice = Devices.gamepad;
         }
 
@@ -63,11 +65,9 @@ public class InputDeviceHandler : MonoBehaviour
         if (tempDevice == device)
         {
             // Device hasn't changed
-            print("Device hasn't changed");
         }
         else
         {
-            print("Device changed");
             // Device has changed
             device = tempDevice;
             InputManager.Singleton.SetCurrentDevice(device.ToString());

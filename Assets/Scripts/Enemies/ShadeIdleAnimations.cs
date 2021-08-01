@@ -6,6 +6,8 @@ public class ShadeIdleAnimations : MonoBehaviour
 {
     Animator anim;
 
+
+    [SerializeField] bool canIdle;
     [SerializeField] bool isSitting;
     [SerializeField] bool isLying;
 
@@ -13,10 +15,19 @@ public class ShadeIdleAnimations : MonoBehaviour
     [SerializeField] Collider sitColl;
     [SerializeField] Collider lyingColl;
 
+    Collider currentColl;
+
+    private void Awake()
+    {
+        SetInitialCurrCollider();
+    }
+
     // Start is called before the first frame update
     void Start()
     {
         anim = GetComponent<Animator>();
+
+        
     }
 
     // Update is called once per frame
@@ -26,8 +37,15 @@ public class ShadeIdleAnimations : MonoBehaviour
         HandleLying();
     }
 
+    void SetInitialCurrCollider()
+    {
+        currentColl = defaultColl;
+    }
+
     void HandleSitting()
     {
+        if (!canIdle) return;
+
         bool currSitState = anim.GetBool("isSitting");
 
         if (isSitting && !currSitState)
@@ -46,6 +64,8 @@ public class ShadeIdleAnimations : MonoBehaviour
 
     void HandleLying()
     {
+        if (!canIdle) return;
+
         bool currLyingState = anim.GetBool("isLying");
 
         if (isLying && !currLyingState)
@@ -69,5 +89,31 @@ public class ShadeIdleAnimations : MonoBehaviour
         if (lyingColl != coll) lyingColl.enabled = false;
 
         coll.enabled = true;
+
+        currentColl = coll;
+    }
+
+    public void StopIdling()
+    {
+        if (isLying) isLying = false;
+        if (isSitting) isSitting = false;
+
+        canIdle = false;
+    }
+
+    public void AllowIdling()
+    {
+        canIdle = true;
+    }
+
+    public void ActivateColliders()
+    {
+        print("ACTIVATED");
+        currentColl.enabled = true;
+    }
+
+    public void DeactivateColldiers()
+    {
+        currentColl.enabled = false;
     }
 }

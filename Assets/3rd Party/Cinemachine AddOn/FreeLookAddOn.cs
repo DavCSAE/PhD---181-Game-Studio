@@ -13,16 +13,27 @@ public class FreeLookAddOn : MonoBehaviour
     public bool invertY = true;
     private CinemachineFreeLook _freeLookComponent;
 
-    bool isLocked = true;
+    bool isLocked;
 
     private void Awake()
     {
         Singleton = this;
     }
 
+    private void OnEnable()
+    {
+        PlayerEvents.InputDeviceChangeEvent += HandleDeviceChange;
+    }
+
+    private void OnDisable()
+    {
+        PlayerEvents.InputDeviceChangeEvent -= HandleDeviceChange;
+    }
+
     public void Start()
     {
         _freeLookComponent = GetComponent<CinemachineFreeLook>();
+        HandleDeviceChange();
     }
 
     public void Update()
@@ -53,5 +64,20 @@ public class FreeLookAddOn : MonoBehaviour
     public void Unlock()
     {
         isLocked = false;
+    }
+
+    void HandleDeviceChange()
+    {
+        string device = InputManager.Singleton.GetCurrentDevice();
+
+        if (device == "keyboard")
+        {
+            LookSpeed = 0.15f;
+        }
+
+        if (device == "gamepad")
+        {
+            LookSpeed = 1f;
+        }
     }
 }

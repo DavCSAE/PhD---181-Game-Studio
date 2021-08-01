@@ -8,6 +8,9 @@ public class InteractionUI : MonoBehaviour
     public static InteractionUI Singleton;
 
     [SerializeField] InteractionIcons icons;
+    [SerializeField] Sprite eIcon;
+    [SerializeField] Sprite northButtonIcon;
+    [SerializeField] Sprite southButtonIcon;
 
 
 
@@ -32,7 +35,6 @@ public class InteractionUI : MonoBehaviour
 
         PlayerEvents.StartDialogueEvent += ShowNextPopUp;
 
-        PlayerEvents.EndDialogueEvent += ShowTalkPopUp;
     }
 
     private void OnDisable()
@@ -41,7 +43,6 @@ public class InteractionUI : MonoBehaviour
 
         PlayerEvents.StartDialogueEvent -= ShowNextPopUp;
 
-        PlayerEvents.EndDialogueEvent -= ShowTalkPopUp;
     }
 
     // Start is called before the first frame update
@@ -53,7 +54,7 @@ public class InteractionUI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        UpdateIcons();
     }
 
     public void ShowTalkPopUp()
@@ -86,16 +87,17 @@ public class InteractionUI : MonoBehaviour
     {
         string currDevice = InputManager.Singleton.GetCurrentDevice();
 
+        print("icondevice " + currDevice);
 
         if (currDevice == "keyboard")
         {
-            talkIcon.sprite = icons.eIcon;
-            nextIcon.sprite = icons.eIcon;
+            talkIcon.sprite = eIcon;
+            nextIcon.sprite = eIcon;
         }
         else if (currDevice == "gamepad")
         {
-            talkIcon.sprite = icons.northButtonIcon;
-            nextIcon.sprite = icons.southButtonIcon;
+            talkIcon.sprite = northButtonIcon;
+            nextIcon.sprite = southButtonIcon;
         }
     }
 }
