@@ -26,7 +26,7 @@ public class MovingPlatform : MonoBehaviour
 
     void InitializePlatform()
     {
-        transform.position = startPosition;
+        transform.localPosition = startPosition;
     }
 
     void HandleMovement()
@@ -39,14 +39,14 @@ public class MovingPlatform : MonoBehaviour
             {
                 // Reached end
 
-                transform.position = endPosition;
+                transform.localPosition = endPosition;
                 timeOfCurrentMovement = 0f;
                 movingToEnd = false;
             }
             else
             {
                 Vector3 currentPosition = startPosition + ((endPosition - startPosition) * (timeOfCurrentMovement / timeToTakeMovingFromStartToEnd));
-                transform.position = currentPosition;
+                transform.localPosition = currentPosition;
             }
         }
         else
@@ -57,14 +57,14 @@ public class MovingPlatform : MonoBehaviour
             {
                 // Reached start
 
-                transform.position = startPosition;
+                transform.localPosition = startPosition;
                 timeOfCurrentMovement = 0f;
                 movingToEnd = true;
             }
             else
             {
                 Vector3 currentPosition = endPosition + ((startPosition - endPosition) * (timeOfCurrentMovement / timeToTakeMovingFromStartToEnd));
-                transform.position = currentPosition;
+                transform.localPosition = currentPosition;
             }
         }
     }
