@@ -149,6 +149,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   portalEffect: {fileID: 0}
+  mat1: {fileID: 2100000, guid: 29e88b3c5fc04d84e8b32615ed08c2a2, type: 2}
+  mat2: {fileID: 2100000, guid: ded543b0f74f0d143af6981d560478b6, type: 2}
+  isColourChanging: 0
+  speed: 1
 --- !u!1 &1291190365095888246
 GameObject:
   m_ObjectHideFlags: 0

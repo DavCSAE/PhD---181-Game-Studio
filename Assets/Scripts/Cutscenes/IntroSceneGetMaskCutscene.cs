@@ -109,7 +109,8 @@ public class IntroSceneGetMaskCutscene : MonoBehaviour
             180,
             playerTransform.localEulerAngles.z);
 
-        GetDash();
+        //GetDash();
+        ExitCutscene();
     }
 
     void GetDash()

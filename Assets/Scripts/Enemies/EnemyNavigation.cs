@@ -10,7 +10,7 @@ public class EnemyNavigation : MonoBehaviour
     [SerializeField] bool isNavigating;
     NavMeshAgent navMeshAgent;
 
-    bool canNavigate;
+    [SerializeField] bool canNavigate;
 
     [SerializeField] float rangeToAttackWithin = 1.5f;
     
@@ -71,6 +71,8 @@ public class EnemyNavigation : MonoBehaviour
 
     public void StartNavigating()
     {
+        if (!canNavigate) return;
+
         if (CheckDistanceToTarget() <= rangeToAttackWithin) return;
 
         isNavigating = true;

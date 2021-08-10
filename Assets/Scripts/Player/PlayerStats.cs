@@ -8,6 +8,12 @@ public class PlayerStats : MonoBehaviour
     [SerializeField] int maxHealth = 3;
     int currHealth;
 
+    public int Health
+    {
+        get => currHealth;
+        set => currHealth = value;
+    }
+
     [SerializeField] SkinnedMeshRenderer bodySMR;
     Material playerBodyMat;
 

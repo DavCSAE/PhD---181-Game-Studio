@@ -20,7 +20,7 @@ public class IntroSceneOpeningCutscene : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Keyboard.current.tabKey.wasPressedThisFrame) Skip();
+        if (Keyboard.current.digit1Key.wasPressedThisFrame) Skip();
 
         if (Gamepad.current.buttonEast.wasPressedThisFrame) Skip();
     }

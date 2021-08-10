@@ -44,7 +44,7 @@ public class EnemySpawning : MonoBehaviour
         //GetComponent<EnemyCombat>().StartAttacking();
         enemy.playerTarget.ActivateTarget();
         enemy.navigation.StartNavigating();
-        enemy.navigation.AllowNavigation();
+        //enemy.navigation.AllowNavigation();
     }
 
     void TurnCollidersOff()

@@ -17,6 +17,8 @@ public class IntroSceneGetSwordCutscene : MonoBehaviour
 
     [SerializeField] EnemySpawner enemySpawner;
 
+    [SerializeField] PortalDoor door;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -95,6 +97,8 @@ public class IntroSceneGetSwordCutscene : MonoBehaviour
         Player.Singleton.animations.StopReceiveItemAnim();
 
 
+
+        door.Corrupt();
         ExitCutscene();
     }
 
