@@ -46,6 +46,10 @@ public class PlayerMovement : MonoBehaviour
     float rotateTowardCurrTime;
     float rotateTowardTotalTime;
 
+    bool isRotatingToTarget;
+
+    [SerializeField] float rotateToTargetSpeed;
+
     [Header("SLOPES")]
     // Slopes
     [SerializeField] float maxSlopeAngle = 35f;
@@ -187,7 +191,6 @@ public class PlayerMovement : MonoBehaviour
                 //if (isDashing) isDashing = false;
             }
             
-
             // Player is on the ground
             isGrounded = true;
             isFalling = false;
@@ -343,20 +346,25 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    
     void HandleMovement()
     {
         //if (isDashing) return;
 
         // Create normalized direction vector out of movement inputs
         Vector3 direction = new Vector3(movementInput.x, 0f, movementInput.y).normalized;
-
         // Move Character if getting any move inputs
         if (direction.magnitude > 0f)
         {
             // Get the angle that the input direction needs to be rotated so that direction is based off camera
             float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg
-                + player.cam.transform.eulerAngles.y;
+                + player.cameras.mainCam.transform.eulerAngles.y;
+
+            // Base rotation off player when targeting something
+            if (player.targeting.isTargeting)
+            {
+                targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg
+                + player.transform.eulerAngles.y;
+            }
 
             //Set the move direction based on the camera
             moveDirection = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
@@ -410,8 +418,6 @@ public class PlayerMovement : MonoBehaviour
                         speed *= 0.7f;
                     }
                 }
-
-                
             }
 
             // Calculate players new velocity
@@ -420,16 +426,6 @@ public class PlayerMovement : MonoBehaviour
 
             // Set players new velocity
             player.rb.velocity = newVelocity;
-
-            // Update 'isMoving' state based off current velocity
-            if (player.rb.velocity != Vector3.zero)
-            {
-                isMoving = true;
-            }
-            else
-            {
-                isMoving = false;
-            }
 
             // Bit shift the index of the layer (8) to get a bit mask
             int layerMask = 1 << 8;
@@ -441,38 +437,47 @@ public class PlayerMovement : MonoBehaviour
             // RaycastHit to store hit info
             RaycastHit hit;
             // Stops player from getting too close to walls (Player will climb them if too close)
-            // Front
-            if (Physics.Raycast(transform.position + Vector3.up / 2, transform.forward, player.capsColl.radius + 0.2f, layerMask)
-                && !isDashing)
+
+            // If there is something blocking player from moving in move direction
+            if (Physics.Raycast(transform.position + Vector3.up / 2, moveDirection, player.capsColl.radius + 0.2f, layerMask))
             {
-                player.rb.velocity -= Vector3.Project(player.rb.velocity, transform.forward);
+                player.rb.velocity -= Vector3.Project(player.rb.velocity, moveDirection);
                 HitObstacle();
             }
-            // Front-right
-            if (Physics.Raycast(transform.position + Vector3.up / 2, transform.forward + transform.right, player.capsColl.radius + 0.2f, layerMask)
-                && !isDashing)
+            
+            // If targeting
+            if (player.targeting.isTargeting)
             {
-                player.rb.velocity -= Vector3.Project(player.rb.velocity, transform.forward + transform.right);
-                HitObstacle();
+                Vector3 playerPos = transform.position;
+                Vector3 targetPos = player.targeting.target.transform.position;
+                targetPos.y = 0;
+                Vector3 dirFromPlayerToTarget = (targetPos - playerPos).normalized;
+                float angleBetweenMoveDirAndDirToTarget = Vector3.Angle(moveDirection, dirFromPlayerToTarget);
+                float distToTarget = Vector3.Distance(playerPos, targetPos);
+
+
+                // If player is close to target
+                if (distToTarget <= 0.5f)
+                {
+                    // Stop player from moving toward target
+
+                    
+                    if (angleBetweenMoveDirAndDirToTarget < 89)
+                    {
+                        player.rb.velocity -= Vector3.Project(player.rb.velocity, moveDirection);
+                    }
+
+                }
             }
-            // Front-left
-            if (Physics.Raycast(transform.position + Vector3.up / 2, transform.forward + -transform.right, player.capsColl.radius + 0.2f, layerMask)
-                && !isDashing)
+
+            // Update 'isMoving' state based off current velocity
+            if (player.rb.velocity != Vector3.zero)
             {
-                player.rb.velocity -= Vector3.Project(player.rb.velocity, transform.forward + -transform.right);
-                HitObstacle();
+                isMoving = true;
             }
-            // Right
-            if (Physics.Raycast(transform.position + Vector3.up / 2, transform.right, player.capsColl.radius + 0.2f, layerMask))
+            else
             {
-                player.rb.velocity -= Vector3.Project(player.rb.velocity, transform.right);
-                HitObstacle();
-            }
-            // Left
-            if (Physics.Raycast(transform.position + Vector3.up / 2, -transform.right, player.capsColl.radius + 0.2f, layerMask))
-            {
-                player.rb.velocity -= Vector3.Project(player.rb.velocity, -transform.right);
-                HitObstacle();
+                isMoving = false;
             }
         }
         // If there is no movement input and player is on the ground
@@ -536,7 +541,7 @@ public class PlayerMovement : MonoBehaviour
 
             if (obstacleSlopeAngle > maxSlopeAngle)
             {
-                player.rb.velocity = new Vector3(0, player.rb.velocity.y, 0);
+                //player.rb.velocity -= Vector3.Project(player.rb.velocity, moveDirection);
 
                 if (isDashing) isDashing = false;
             }
@@ -619,7 +624,7 @@ public class PlayerMovement : MonoBehaviour
 
             // Get the angle that the input direction needs to be rotated so that direction is based off camera
             float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg
-                + player.cam.transform.eulerAngles.y;
+                + player.cameras.mainCam.transform.eulerAngles.y;
 
             // Get move direction based on camera
             moveDirection = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
@@ -773,6 +778,21 @@ public class PlayerMovement : MonoBehaviour
 
     void HandleRotation()
     {
+        if (player.targeting.isTargeting)
+        {
+            if (isRotatingToTarget)
+            {
+                HandleRotatingToTarget();
+                return;
+            }
+            else
+            {
+                transform.LookAt(player.targeting.target.transform);
+                transform.localEulerAngles = new Vector3(0, transform.localEulerAngles.y, 0);
+                return;
+            }
+        }
+
         // Create normalized direction vector out of movement inputs
         Vector3 direction = new Vector3(movementInput.x, 0f, movementInput.y).normalized;
 
@@ -780,7 +800,7 @@ public class PlayerMovement : MonoBehaviour
         {
             // Get the angle that the input direction needs to be rotated so that direction is based off camera
             float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg
-            + player.cam.transform.eulerAngles.y;
+            + player.cameras.mainCam.transform.eulerAngles.y;
 
             // Get smoothed out angle
             float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle,
@@ -891,7 +911,6 @@ public class PlayerMovement : MonoBehaviour
             player.rb.AddForce(player.rb.velocity + jumpVector * 100);
         }
 
-
         // If player is on a moving platform (Has the platform as their parent object)
         if (transform.parent != null)
         {
@@ -991,12 +1010,15 @@ public class PlayerMovement : MonoBehaviour
         // Store current move direction as dash direction
         dashDir = moveDirection.normalized;
 
-        // Rotate player toward dash direction
-        Vector3 targetPos = transform.position + moveDirection;
-        transform.LookAt(targetPos);
 
-        //player.rb.AddForce(moveDirection * 100 * dashPower);
-
+        // If not targeting
+        if (!player.targeting.isTargeting)
+        {
+            // Rotate player toward dash direction
+            Vector3 targetPos = transform.position + moveDirection;
+            transform.LookAt(targetPos);
+        }
+        
         if (isGrounded)
         {
             dashStartGround = groundingHit.collider;
@@ -1024,10 +1046,7 @@ public class PlayerMovement : MonoBehaviour
         rotateTowardCurrTime = 0f;
         rotateTowardTotalTime = timeInSeconds;
 
-
         isRotatingTowardDirection = true;
-        print("START ROTATING");
-
     }
 
     void HandleRotatingTowardDirection()
@@ -1081,15 +1100,39 @@ public class PlayerMovement : MonoBehaviour
                 rotateTowardTargetY,
                 transform.localEulerAngles.z);
         }
+    }
 
+    public void StartRotatingToTarget()
+    {
+        isRotatingToTarget = true;
+    }
+
+    void HandleRotatingToTarget()
+    {
+        if (!isRotatingToTarget) return;
+
+        Vector3 targetPos = player.targeting.target.transform.position;
+        targetPos.y = transform.position.y;
+
+        Vector3 dirToTarget = targetPos - transform.position;
+
+        float singleStep = rotateToTargetSpeed * Time.deltaTime;
+
+        Quaternion qTo = Quaternion.LookRotation(dirToTarget);
+
+        //Vector3 newDirection = Mathf.Lerp(transform.forward, dirToTarget, singleStep);
+
+        transform.rotation = Quaternion.Slerp(transform.rotation, qTo, singleStep);
+
+        if (Vector3.Angle(transform.forward, dirToTarget) <= 1)
+        {
+            isRotatingToTarget = false;
+        }
     }
 
     public void Unfreeze()
     {
         isFrozen = false;
-
-
-        //InputManager.Singleton.EnableInputs();
     }
 
     public void Freeze()
@@ -1103,8 +1146,5 @@ public class PlayerMovement : MonoBehaviour
         isFalling = false;
         isJumping = false;
         isDashing = false;
-
-        
-        //InputManager.Singleton.DisableInputs();
     }
 }

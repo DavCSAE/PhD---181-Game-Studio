@@ -15,6 +15,9 @@ public class RequiredForPlay : MonoBehaviour
     [SerializeField] GameObject freeLookCinemachinePrefab;
     public GameObject freeLookCinemachineObj;
 
+    // Targeting
+    [SerializeField] GameObject targetingManagerPrefab;
+
     // Dialogue System
     [SerializeField] GameObject dialogueManagerPrefab;
     GameObject dialogueSystem;
@@ -56,6 +59,8 @@ public class RequiredForPlay : MonoBehaviour
         SpawnPauseMenuUI();
 
         SpawnHUDUI();
+
+        SpawnTargetingManager();
     }
 
     void SpawnRequiredObjects()
@@ -108,5 +113,10 @@ public class RequiredForPlay : MonoBehaviour
     void SpawnHUDUI()
     {
         Instantiate(hudUI, requiredForPlay.transform);
+    }
+
+    void SpawnTargetingManager()
+    {
+        Instantiate(targetingManagerPrefab);
     }
 }

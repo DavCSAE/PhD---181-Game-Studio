@@ -20,7 +20,7 @@ public class InputManager : MonoBehaviour, PlayerControls.IPlayerActions
 
 
     Vector2 move;
-    bool isMoveFrozen;
+    [SerializeField] bool isMoveFrozen;
 
     Vector2 look;
 
@@ -220,6 +220,15 @@ public class InputManager : MonoBehaviour, PlayerControls.IPlayerActions
         if (context.started)
         {
             PlayerEvents.TriggerNextDialogueEvent();
+        }
+    }
+
+    public void OnToggleTargeting(InputAction.CallbackContext context)
+    {
+
+        if (context.started)
+        {
+            PlayerEvents.TriggerToggleTargetingEvent();
         }
     }
 }

@@ -87,7 +87,7 @@ public class InteractionUI : MonoBehaviour
     {
         string currDevice = InputManager.Singleton.GetCurrentDevice();
 
-        print("icondevice " + currDevice);
+        
 
         if (currDevice == "keyboard")
         {

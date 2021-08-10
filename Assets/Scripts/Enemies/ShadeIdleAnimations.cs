@@ -108,7 +108,6 @@ public class ShadeIdleAnimations : MonoBehaviour
 
     public void ActivateColliders()
     {
-        print("ACTIVATED");
         currentColl.enabled = true;
     }
 
