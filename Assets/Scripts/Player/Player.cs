@@ -26,16 +26,14 @@ public class Player : MonoBehaviour
     public PlayerCombat combat;
     [HideInInspector]
     public PlayerTargeting targeting;
+    [HideInInspector]
+    public PlayerCameras cameras;
 
     // PHYSICS
     [HideInInspector]
     public Rigidbody rb;
     [HideInInspector]
     public CapsuleCollider capsColl;
-
-    // CAMERA
-    [HideInInspector]
-    public Camera cam;
 
     // Unlockables
     [HideInInspector]
@@ -63,6 +61,7 @@ public class Player : MonoBehaviour
         combat = GetComponent<PlayerCombat>();
         stats = GetComponent<PlayerStats>();
         targeting = GetComponent<PlayerTargeting>();
+        cameras = GetComponent<PlayerCameras>();
     }
 
     // Start is called before the first frame update
@@ -71,9 +70,6 @@ public class Player : MonoBehaviour
         // PHYSICS
         rb = GetComponent<Rigidbody>();
         capsColl = GetComponent<CapsuleCollider>();
-
-        // CAMERA
-        cam = Camera.main;
 
         // INPUTS
         InputManager.Singleton.EnableInputs();

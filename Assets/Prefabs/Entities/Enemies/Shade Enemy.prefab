@@ -55,7 +55,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5e80a5051049fc43826d51adb8b52bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  renderer: {fileID: 6882338687269263326}
+  targetRenderer: {fileID: 6882338687269263326}
+  makeTargetable: 0
 --- !u!65 &185400141779331851
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -256,6 +257,7 @@ MonoBehaviour:
   sword: {fileID: 1834154331149074951}
   hasSword: 0
   hasStartedAttacking: 0
+  currentlyAttacking: 0
 --- !u!114 &2209352726999395637
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -312,7 +314,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isNavigating: 0
-  navMeshAgent: {fileID: 661475351963402363}
+  rangeToAttackWithin: 1.5
 --- !u!195 &661475351963402363
 NavMeshAgent:
   m_ObjectHideFlags: 0

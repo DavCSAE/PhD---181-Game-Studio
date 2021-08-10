@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class PlayerTarget : MonoBehaviour
 {
-    public Renderer renderer;
+    public Renderer targetRenderer;
+    [SerializeField] bool makeTargetable;
 
     private void OnEnable()
     {
@@ -19,7 +20,7 @@ public class PlayerTarget : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        if (makeTargetable) ActivateTarget();
     }
 
     // Update is called once per frame

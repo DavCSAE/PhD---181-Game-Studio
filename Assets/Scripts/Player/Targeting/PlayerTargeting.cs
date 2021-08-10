@@ -15,8 +15,8 @@ public class PlayerTargeting : MonoBehaviour
 
     [SerializeField] float maxTargetDistance = 30f;
 
-    [SerializeField] CinemachineTargetGroup targetGroup1;
-    [SerializeField] CinemachineTargetGroup targetGroup2;
+    CinemachineTargetGroup targetGroup1;
+    CinemachineTargetGroup targetGroup2;
 
     [SerializeField] GameObject followTarget;
     [SerializeField] GameObject lookAtTarget;
@@ -76,15 +76,14 @@ public class PlayerTargeting : MonoBehaviour
         currentScaleSpeed = scaleSpeed;
 
         currentTargetCam = targetCam1;
+
+        targetGroup1 = PlayerTargetManager.Singleton.GetTargetGroup1();
+        targetGroup2 = PlayerTargetManager.Singleton.GetTargetGroup2();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Keyboard.current.tKey.wasPressedThisFrame)
-        {
-            //ToggleTarget();
-        }
 
         HandleTargetIconPosition();
         HandleTargetIconScaling();
@@ -532,7 +531,7 @@ public class PlayerTargeting : MonoBehaviour
             
 
             // If target is not on the screen, then skip target
-            if (!potentialTarget.GetComponent<PlayerTarget>().renderer.isVisible)
+            if (!potentialTarget.targetRenderer.isVisible)
             {
                 continue;
             }

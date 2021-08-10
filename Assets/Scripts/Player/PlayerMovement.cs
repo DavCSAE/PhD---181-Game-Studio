@@ -191,7 +191,6 @@ public class PlayerMovement : MonoBehaviour
                 //if (isDashing) isDashing = false;
             }
             
-
             // Player is on the ground
             isGrounded = true;
             isFalling = false;
@@ -358,7 +357,7 @@ public class PlayerMovement : MonoBehaviour
         {
             // Get the angle that the input direction needs to be rotated so that direction is based off camera
             float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg
-                + player.cam.transform.eulerAngles.y;
+                + player.cameras.mainCam.transform.eulerAngles.y;
 
             // Base rotation off player when targeting something
             if (player.targeting.isTargeting)
@@ -425,7 +424,6 @@ public class PlayerMovement : MonoBehaviour
             Vector3 newVelocity = new Vector3(moveDirection.normalized.x * speed + velocityBeforeJump.x,
                 player.rb.velocity.y, moveDirection.normalized.z * speed + velocityBeforeJump.z);
 
-
             // Set players new velocity
             player.rb.velocity = newVelocity;
 
@@ -447,7 +445,6 @@ public class PlayerMovement : MonoBehaviour
                 HitObstacle();
             }
             
-
             // If targeting
             if (player.targeting.isTargeting)
             {
@@ -472,7 +469,6 @@ public class PlayerMovement : MonoBehaviour
 
                 }
             }
-
 
             // Update 'isMoving' state based off current velocity
             if (player.rb.velocity != Vector3.zero)
@@ -509,7 +505,6 @@ public class PlayerMovement : MonoBehaviour
             // Set the player's velocity
             player.rb.velocity = newVelocity;
         }
-
     }
 
     void CheckForObstacles()
@@ -629,7 +624,7 @@ public class PlayerMovement : MonoBehaviour
 
             // Get the angle that the input direction needs to be rotated so that direction is based off camera
             float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg
-                + player.cam.transform.eulerAngles.y;
+                + player.cameras.mainCam.transform.eulerAngles.y;
 
             // Get move direction based on camera
             moveDirection = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
@@ -805,7 +800,7 @@ public class PlayerMovement : MonoBehaviour
         {
             // Get the angle that the input direction needs to be rotated so that direction is based off camera
             float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg
-            + player.cam.transform.eulerAngles.y;
+            + player.cameras.mainCam.transform.eulerAngles.y;
 
             // Get smoothed out angle
             float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle,
@@ -916,7 +911,6 @@ public class PlayerMovement : MonoBehaviour
             player.rb.AddForce(player.rb.velocity + jumpVector * 100);
         }
 
-
         // If player is on a moving platform (Has the platform as their parent object)
         if (transform.parent != null)
         {
@@ -1025,9 +1019,6 @@ public class PlayerMovement : MonoBehaviour
             transform.LookAt(targetPos);
         }
         
-
-        //player.rb.AddForce(moveDirection * 100 * dashPower);
-
         if (isGrounded)
         {
             dashStartGround = groundingHit.collider;
@@ -1055,10 +1046,7 @@ public class PlayerMovement : MonoBehaviour
         rotateTowardCurrTime = 0f;
         rotateTowardTotalTime = timeInSeconds;
 
-
         isRotatingTowardDirection = true;
-        print("START ROTATING");
-
     }
 
     void HandleRotatingTowardDirection()
@@ -1119,33 +1107,6 @@ public class PlayerMovement : MonoBehaviour
         isRotatingToTarget = true;
     }
 
-    // Not smooth version
-    /*
-    void HandleRotatingToTarget()
-    {
-        if (!isRotatingToTarget) return;
-
-        Vector3 targetPos = player.targeting.target.position;
-        targetPos.y = transform.position.y;
-
-        Vector3 dirToTarget = targetPos - transform.position;
-
-        float singleStep = rotateToTargetSpeed * Time.deltaTime;
-
-        Vector3 newDirection = Vector3.RotateTowards(transform.forward, dirToTarget, singleStep, 0.0f);
-
-        //Vector3 newDirection = Mathf.Lerp(transform.forward, dirToTarget, singleStep);
-
-        transform.rotation = Quaternion.LookRotation(newDirection);
-
-        if (Vector3.Angle(transform.forward, dirToTarget) <= 1)
-        {
-            isRotatingToTarget = false;
-        }
-    }*/
-
-        // Smooth version
-
     void HandleRotatingToTarget()
     {
         if (!isRotatingToTarget) return;
@@ -1172,9 +1133,6 @@ public class PlayerMovement : MonoBehaviour
     public void Unfreeze()
     {
         isFrozen = false;
-
-
-        //InputManager.Singleton.EnableInputs();
     }
 
     public void Freeze()
@@ -1188,8 +1146,5 @@ public class PlayerMovement : MonoBehaviour
         isFalling = false;
         isJumping = false;
         isDashing = false;
-
-        
-        //InputManager.Singleton.DisableInputs();
     }
 }
