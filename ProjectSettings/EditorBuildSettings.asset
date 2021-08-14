@@ -14,4 +14,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Hub Area/Hub Area.unity
     guid: fb3a96287a49e90459002567f359a0bb
+  - enabled: 1
+    path: Assets/Scenes/Dash Level 1/Dash Level 1.unity
+    guid: b7cbd053ae40ec047bfc10ba125e49d5
+  - enabled: 1
+    path: Assets/Scenes/Level 1/Level 1.unity
+    guid: ac76a7581d1961e4191698c62071b98e
   m_configObjects: {}

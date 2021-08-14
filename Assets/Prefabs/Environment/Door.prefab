@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6155410029457172682}
   - component: {fileID: 8846773050597014332}
   - component: {fileID: 7383507957422827700}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Door_Handle.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -59,7 +59,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: ded543b0f74f0d143af6981d560478b6, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -92,7 +92,8 @@ GameObject:
   - component: {fileID: 998576381993109081}
   - component: {fileID: 743409021233094958}
   - component: {fileID: 743409021233094961}
-  m_Layer: 0
+  - component: {fileID: 1324927499}
+  m_Layer: 8
   m_Name: Door
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -148,11 +149,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09c8c9956f1bd5f43bdae9a35a75cb3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  portalEffect: {fileID: 0}
+  portalEffect: {fileID: 473009083530098454}
   mat1: {fileID: 2100000, guid: 29e88b3c5fc04d84e8b32615ed08c2a2, type: 2}
   mat2: {fileID: 2100000, guid: ded543b0f74f0d143af6981d560478b6, type: 2}
+  sceneToLoad: 0
   isColourChanging: 0
-  speed: 1
+  speed: 2.5
+  startOpen: 0
+--- !u!65 &1324927499
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 473009083465276643}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 0
+  serializedVersion: 2
+  m_Size: {x: 9.2, y: 20.09, z: 0.22}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1291190365095888246
 GameObject:
   m_ObjectHideFlags: 0
@@ -162,7 +178,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1024126456362296319}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Door_Hinge.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -195,7 +211,7 @@ GameObject:
   - component: {fileID: 7746158451833669073}
   - component: {fileID: 7060318506311794634}
   - component: {fileID: 943241074168202563}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Door_Frame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -243,7 +259,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: ded543b0f74f0d143af6981d560478b6, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -276,7 +292,7 @@ GameObject:
   - component: {fileID: 4206470618866279186}
   - component: {fileID: 6254918372026708252}
   - component: {fileID: 1259795917088256911}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Door.001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -325,7 +341,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -876546973899608171, guid: f390ebf860d0f414eabfeb0ef26ded22, type: 3}
+  - {fileID: 2100000, guid: 29e88b3c5fc04d84e8b32615ed08c2a2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -356,7 +372,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 367108056671429815}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Door_Hinge.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -389,7 +405,7 @@ GameObject:
   - component: {fileID: 5362484779423615864}
   - component: {fileID: 731426208294136556}
   - component: {fileID: 139725162957254647}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Door.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -438,7 +454,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -876546973899608171, guid: f390ebf860d0f414eabfeb0ef26ded22, type: 3}
+  - {fileID: 2100000, guid: 29e88b3c5fc04d84e8b32615ed08c2a2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -471,7 +487,7 @@ GameObject:
   - component: {fileID: 7330740141780639185}
   - component: {fileID: 2279281549901919381}
   - component: {fileID: 2678777213906976}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Door_Handle.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -519,7 +535,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: ded543b0f74f0d143af6981d560478b6, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -600,8 +616,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: Door_Portal
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 7116680fe6e9eff458b3edad0f57c4fe, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 7116680fe6e9eff458b3edad0f57c4fe, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7116680fe6e9eff458b3edad0f57c4fe, type: 3}
+--- !u!1 &473009083530098454 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 7116680fe6e9eff458b3edad0f57c4fe, type: 3}
+  m_PrefabInstance: {fileID: 743409020459878983}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &998576382062128556 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 7116680fe6e9eff458b3edad0f57c4fe, type: 3}

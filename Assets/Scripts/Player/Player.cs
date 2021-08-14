@@ -84,6 +84,11 @@ public class Player : MonoBehaviour
         {
             SoundManager.Singleton.Play("Item sound");
         }
+
+        if (Keyboard.current.hKey.wasPressedThisFrame)
+        {
+            LevelLoader.Singleton.LoadLevel(2);
+        }
     }
 
     void CheckIfPlayerFell()

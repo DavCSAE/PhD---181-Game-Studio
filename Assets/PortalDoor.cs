@@ -9,6 +9,8 @@ public class PortalDoor : MonoBehaviour
     [SerializeField] Material mat1;
     [SerializeField] Material mat2;
 
+    [SerializeField] int sceneToLoad;
+
 
     [SerializeField] bool isColourChanging;
     float startValue = 10.7f;
@@ -16,6 +18,7 @@ public class PortalDoor : MonoBehaviour
     float currentValue = 10.7f;
     [SerializeField] float speed = 1f;
 
+    [SerializeField] bool startOpen;
     bool isOpen;
     Collider enterPortalCollider;
 
@@ -31,6 +34,8 @@ public class PortalDoor : MonoBehaviour
         InitializeMaterials();
 
         enterPortalCollider = GetComponent<BoxCollider>();
+
+        if (startOpen) TriggerOpenDoorAnimation();
     }
 
     // Update is called once per frame
@@ -93,7 +98,7 @@ public class PortalDoor : MonoBehaviour
     {
         if (other.GetComponent<Player>())
         {
-            LevelLoader.Singleton.LoadLevel(2);
+            LevelLoader.Singleton.LoadLevel(sceneToLoad);
         }
     }
 }
