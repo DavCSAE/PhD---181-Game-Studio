@@ -6848,7 +6848,7 @@ MonoBehaviour:
   rb: {fileID: 0}
   capsColl: {fileID: 0}
   isMaskUnlocked: 0
-  isSwordUnlocked: 1
+  isSwordUnlocked: 0
   isDashUnlocked: 0
   areWingsUnlocked: 0
 --- !u!114 &5912218971857306099
@@ -6883,7 +6883,7 @@ MonoBehaviour:
   wingBoost: 3
   dashSpeed: 15
   dashLength: 3
-  isDashUnlocked: 1
+  isDashUnlocked: 0
   onPlatform: 0
 --- !u!114 &5912218971857306098
 MonoBehaviour:

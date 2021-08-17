@@ -26,6 +26,7 @@ public class LevelManager : MonoBehaviour
 
     public void LoadPlayerAbilities()
     {
+        if (!GameManager.Singleton) return;
         GameManager.Singleton.LoadPlayerAbilities();
     }
 }
