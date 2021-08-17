@@ -33,6 +33,8 @@ public class EnemySpawning : MonoBehaviour
 
         //SoundManager.Singleton.Stop("Opening Intro");
         //SoundManager.Singleton.Play("Battle");
+
+        GetComponent<EnemyStats>().MakeDamageable();
     }
 
     public void Spawned()

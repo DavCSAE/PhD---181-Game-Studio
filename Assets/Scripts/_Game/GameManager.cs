@@ -4,7 +4,17 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager Singleton;
 
+    bool isMaskUnlocked;
+    bool isSwordUnlocked;
+    bool isDashUnlocked;
+    bool areWingsUnlocked;
+
+    void Awake()
+    {
+        Singleton = this;
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -39,5 +49,39 @@ public class GameManager : MonoBehaviour
     public void QuitGame()
     {
         Application.Quit();
+    }
+
+
+
+    // Unlocking player abilities
+
+    public void UnlockMask()
+    {
+        isMaskUnlocked = true;
+    }
+
+    public void UnlockSword()
+    {
+        isSwordUnlocked = true;
+    }
+
+    public void UnlockDash()
+    {
+        isDashUnlocked = true;
+    }
+
+    public void UnlockWings()
+    {
+        areWingsUnlocked = true;
+    }
+
+    public void LoadPlayerAbilities()
+    {
+        Player player = Player.Singleton;
+
+        if (isMaskUnlocked) player.UnlockMask();
+        if (isSwordUnlocked) player.UnlockSword();
+        if (isDashUnlocked) player.UnlockDash();
+        if (areWingsUnlocked) player.UnlockWings();
     }
 }

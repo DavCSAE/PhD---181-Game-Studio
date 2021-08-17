@@ -22,6 +22,7 @@ public class IntroSceneOpeningCutscene : MonoBehaviour
     {
         if (Keyboard.current.digit1Key.wasPressedThisFrame) Skip();
 
+        if (InputManager.Singleton.GetCurrentDevice() == "keyboard") return;
         if (Gamepad.current.buttonEast.wasPressedThisFrame) Skip();
     }
 

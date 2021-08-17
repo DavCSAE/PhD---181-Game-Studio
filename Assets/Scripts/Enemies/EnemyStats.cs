@@ -12,7 +12,7 @@ public class EnemyStats : MonoBehaviour
     [SerializeField] SkinnedMeshRenderer bodySMR;
     Material bodyMat;
 
-
+    bool isDamageable;
     bool isFlashingRed;
     float flashRedCurrTime;
     float flashRedTimeLength = 0.15f;
@@ -35,6 +35,8 @@ public class EnemyStats : MonoBehaviour
 
     public void TakeDamage(int amount)
     {
+        if (!isDamageable) return;
+
         currHealth -= amount;
 
         if (currHealth <= 0)
@@ -91,5 +93,10 @@ public class EnemyStats : MonoBehaviour
     public int GetCurrentHealth()
     {
         return currHealth;
+    }
+
+    public void MakeDamageable()
+    {
+        isDamageable = true;
     }
 }

@@ -97,7 +97,9 @@ public class IntroSceneGetMaskCutscene : MonoBehaviour
 
         Player.Singleton.animations.StopReceiveItemAnim();
 
-        PlayerEvents.TriggerUnlockMaskEvent();
+        //PlayerEvents.TriggerUnlockMaskEvent();
+
+        Player.Singleton.UnlockMask();
 
         // Hide mask that player is holding in hands
         Player.Singleton.receivables.HideMask();

@@ -106,21 +106,30 @@ public class Player : MonoBehaviour
 
     public void UnlockMask()
     {
+        
+        GameManager.Singleton.UnlockMask();
 
+        appearance.ShowMask();
     }
 
     public void UnlockSword()
     {
+        GameManager.Singleton.UnlockSword();
+
         combat.UnlockSword();
     }
 
     public void UnlockDash()
     {
+        GameManager.Singleton.UnlockDash();
+
         movement.isDashUnlocked = true;
     }
 
     public void UnlockWings()
     {
+        GameManager.Singleton.UnlockWings();
+
         movement.doubleJumpEnabled = true;
         appearance.ShowWings();
     }
