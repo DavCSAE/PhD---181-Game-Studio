@@ -115,6 +115,7 @@ public class Player : MonoBehaviour
     public void UnlockSword()
     {
         GameManager.Singleton.UnlockSword();
+        isSwordUnlocked = true;
 
         combat.UnlockSword();
     }

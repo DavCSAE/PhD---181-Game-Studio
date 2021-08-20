@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WingsPickUp : MonoBehaviour
+public class DashPickUp : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()
@@ -20,8 +20,10 @@ public class WingsPickUp : MonoBehaviour
     {
         if (c.GetComponent<Player>())
         {
-            c.GetComponent<Player>().UnlockWings();
+            c.GetComponent<Player>().UnlockDash();
             Destroy(gameObject);
+
+            ReceivedItemUI.Singleton.ShowDashText();
         }
     }
 }
