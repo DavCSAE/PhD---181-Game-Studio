@@ -41,6 +41,8 @@ public class PauseMenuUI : MonoBehaviour
 
     void TogglePauseMenu()
     {
+        return;
+
         if (isOpen == false)
         {
             PrepareToOpenPauseMenu();

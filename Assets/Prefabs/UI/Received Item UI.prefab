@@ -254,7 +254,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'The Dash Ability!
 
-    Press Ctrl to Dash.
+    Press Shift to Dash.
 
     Or ''B'' on Controller.'
   m_isRightToLeft: 0
